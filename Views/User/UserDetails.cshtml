@@ -1,0 +1,30 @@
+@*@model TModel*@
+@*@{
+    Layout = null;
+}*@
+
+@Model eLibrary.Models.User
+
+@*<!DOCTYPE html>*@
+
+<html>
+<head>
+    <title>User Details : @Model.FirstName @Model.LastName</title>
+</head>
+<body>
+<div>
+      Username: @Model.UserName
+      <br />
+      Password: @Model.Password
+      <br />
+      Email: @Model.Email
+      <br />
+      Created At: @Model.CreatedAt
+      <br />
+      Address: @Model.Address
+      <br />
+      is Admin: @Model.IsAdmin
+      <br />
+</div>
+</body>
+</html>

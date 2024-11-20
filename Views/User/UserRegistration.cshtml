@@ -1,0 +1,34 @@
+@*@model TModel*@
+@*@{
+    Layout = null;
+}*@
+
+@Model eLibrary.Models.User
+
+@*<!DOCTYPE html>*@
+
+<html>
+<head>
+    <title>Sign Up</title>
+</head>
+<body>
+<h1> Insert your details and press Submit :</h1>
+<div>
+    <form action="RegistrationSubmit" method="post">
+        First Name: <input id="Text1" name="FirstName" type="text"/>
+        <br/>
+        Last Name: <input id="Text2" name="LastName" type="text"/>
+        <br/>
+        Username: <input id="Text3" name="UserName" type="text"/>
+        <br/>
+        Password: <input id="Text4" name="Password" type="text"/>
+        <br/>
+        Email: <input id="Text5" name="Email" type="text"/>
+        <br/>
+        Address: <input id="Text6" name="Address" type="text"/>
+        <br/>
+        <input id="Submit" type="submit" value="Submit"/>
+    </form>
+</div>
+</body>
+</html>
