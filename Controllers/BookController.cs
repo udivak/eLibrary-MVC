@@ -12,4 +12,5 @@ public class BookController : Controller
             100, 25, 18, "pdf");
         return View("BookDetails", LOTR);
     }
+    
 }
