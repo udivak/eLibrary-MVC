@@ -1,0 +1,28 @@
+@*@model TModel*@
+@*@{
+    Layout = null;
+}*@
+
+@Model eLibrary.Models.Book
+
+@*<!DOCTYPE html>*@
+
+<html lang="eng">
+<head>
+    <meta name="viewport" content="width-device-width" />
+    <title> Book Details : @Model.Title </title>
+</head>
+<body>
+<div>
+    Title: @Model.Title <br />
+    Author: @Model.Author <br />
+    ISBN: @Model.ISBN <br />
+    Publisher: @Model.Publisher <br />
+    Year: @Model.Year <br />
+    Buy Price: @Model.BuyPrice <br />
+    Borrow Price: @Model.BorrowPrice <br />
+    Age Limit: @Model.AgeLimit+<br />
+    Format: @Model.Format
+</div>
+</body>
+</html>
