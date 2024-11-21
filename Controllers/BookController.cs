@@ -2,10 +2,7 @@ using System.Text.Json.Serialization;
 using eLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-
 namespace eLibrary.Controllers;
-
-
 public class BookController : Controller
 {
     // GET

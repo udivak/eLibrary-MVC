@@ -27,7 +27,6 @@ public class UserController : Controller
 
         return View("UserRegistration", newuser);
     }
-
     public IActionResult LoginPage()
     {
         return View("UserLogin");
@@ -58,7 +57,6 @@ public class UserController : Controller
             // Invalid credentials
             // ViewBag.ErrorMessage = "Invalid username or password.";
             //return dashboard for simple users
-            
             return RedirectToAction();
         }
     }
