@@ -1,2 +1,13 @@
+# Ignore build directories
 /bin/
 /obj/
+
+# Ignore Visual Studio and Rider directories
+.vs/
+.idea/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.userprefs
