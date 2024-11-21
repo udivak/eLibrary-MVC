@@ -38,7 +38,7 @@ public class User
         this.created_at = createdAt;
         this.address = address;
     }
-
+/*
     private bool validateUserName()
     {
         if (username.Length < 6 || username.Length > 8)
@@ -72,7 +72,7 @@ public class User
         }
         return true;
     }
-    
+    */
     public string FirstName { get => firstName; set => firstName = value; }
     public string LastName { get => lastName; set => lastName = value; }
     public string UserName { get => username; set => username = value; }
