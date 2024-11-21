@@ -55,20 +55,20 @@
     ]
   },
   "packageFolders": {
-    "/Users/udivak/.nuget/packages/": {}
+    "/Users/mosesberco/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/udivak/Desktop/Software-Engineering/Computer-Networking-MVC/eLibrary/eLibrary.csproj",
+      "projectUniqueName": "/Users/mosesberco/eLibrary-MVC/eLibrary-MVC/eLibrary.csproj",
       "projectName": "eLibrary",
-      "projectPath": "/Users/udivak/Desktop/Software-Engineering/Computer-Networking-MVC/eLibrary/eLibrary.csproj",
-      "packagesPath": "/Users/udivak/.nuget/packages/",
-      "outputPath": "/Users/udivak/Desktop/Software-Engineering/Computer-Networking-MVC/eLibrary/obj/",
+      "projectPath": "/Users/mosesberco/eLibrary-MVC/eLibrary-MVC/eLibrary.csproj",
+      "packagesPath": "/Users/mosesberco/.nuget/packages/",
+      "outputPath": "/Users/mosesberco/eLibrary-MVC/eLibrary-MVC/obj/",
       "projectStyle": "PackageReference",
       "UsingMicrosoftNETSdk": false,
       "configFilePaths": [
-        "/Users/udivak/.nuget/NuGet/NuGet.Config"
+        "/Users/mosesberco/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -121,7 +121,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/Users/udivak/.dotnet/sdk/9.0.100/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
