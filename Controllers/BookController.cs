@@ -9,7 +9,7 @@ public class BookController : Controller
     public IActionResult BookDetails() //test func
     {
         Book LOTR = new Book("Lord Of The Rings", "author", "12345", "publisher", 2024,
-            100, 25, 18, "pdf");
+            100, 25, 18, "pdf", "");
         return View("BookDetails", LOTR);
     }
     public IActionResult AddBook()
