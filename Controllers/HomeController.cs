@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using eLibrary.Models;
+using Microsoft.Extensions.Logging;
 using static eLibrary.Controllers.UserController;
 
 namespace eLibrary.Controllers;
