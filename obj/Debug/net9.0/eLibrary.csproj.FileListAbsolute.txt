@@ -96,3 +96,6 @@
 /Users/udivak/Desktop/Software-Engineering/Computer-Networking-MVC/eLibrary/obj/Debug/net9.0/eLibrary.pdb
 /Users/udivak/Desktop/Software-Engineering/Computer-Networking-MVC/eLibrary/obj/Debug/net9.0/eLibrary.genruntimeconfig.cache
 /Users/udivak/Desktop/Software-Engineering/Computer-Networking-MVC/eLibrary/obj/Debug/net9.0/ref/eLibrary.dll
+/Users/udivak/Desktop/Software-Engineering/Computer-Networking-MVC/eLibrary/bin/Debug/net9.0/Newtonsoft.Json.dll
+/Users/udivak/Desktop/Software-Engineering/Computer-Networking-MVC/eLibrary/obj/Debug/net9.0/eLibrary.csproj.AssemblyReference.cache
+/Users/udivak/Desktop/Software-Engineering/Computer-Networking-MVC/eLibrary/obj/Debug/net9.0/eLibrary.csproj.Up2Date

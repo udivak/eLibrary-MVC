@@ -22,7 +22,6 @@ public class UserController : Controller
         //user.CreatedAt = Request.Form["CreatedAt"];
         user.CreatedAt = DateTime.Today.ToShortDateString();
         user.Address = Request.Form["Address"];
-
         return View("UserDetails", user);
     }
 }
