@@ -25,7 +25,7 @@ public class UserController : Controller
         // user.Address = Request.Form["Address"];
         newuser.IsAdmin = false;
 
-        return View("UserDetails", newuser);
+        return View("UserRegistration", newuser);
     }
 
     public IActionResult LoginPage()
