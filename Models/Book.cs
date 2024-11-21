@@ -11,6 +11,12 @@ public class Book
     private int borrowPrice;
     private int ageLimit;
     private string format;          //eBook formats - epub, f2b, mobi, pdf
+
+    public Book()
+    {
+        //default ctor    
+    }
+    
     public Book(string title, string author, string isbnNumber, string publisher, int year, int buyPrice, int borrowPrice,
         int ageLimit, string format)
     {

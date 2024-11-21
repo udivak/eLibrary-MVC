@@ -1,28 +1,41 @@
-@*@model TModel*@
-@*@{
+@model eLibrary.Models.Book
+@{
     Layout = null;
-}*@
-
-@Model eLibrary.Models.Book
-
-@*<!DOCTYPE html>*@
-
-<html>
+}
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width-device-width" />
-    <title> Book Details : @Model.Title </title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Details: @Model.Title</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<div>
-    Title: @Model.Title <br />
-    Author: @Model.Author <br />
-    ISBN: @Model.ISBN <br />
-    Publisher: @Model.Publisher <br />
-    Year: @Model.Year <br />
-    Buy Price: @Model.BuyPrice <br />
-    Borrow Price: @Model.BorrowPrice <br />
-    Age Limit: @Model.AgeLimit+<br />
-    Format: @Model.Format
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4>Book Details</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>Title:</strong> @Model.Title</p>
+            <p><strong>Author:</strong> @Model.Author</p>
+            <p><strong>ISBN:</strong> @Model.ISBN</p>
+            <p><strong>Publisher:</strong> @Model.Publisher</p>
+            <p><strong>Year:</strong> @Model.Year</p>
+            <p><strong>Buy Price:</strong> $@Model.BuyPrice</p>
+            <p><strong>Borrow Price:</strong> $@Model.BorrowPrice</p>
+            <p><strong>Age Limit:</strong> @Model.AgeLimit+</p>
+            <p><strong>Format:</strong> @Model.Format</p>
+        </div>
+        <div class="card-footer text-end">
+            <a href="/Book/AddBook/" class="btn btn-warning">Edit</a>
+            <a href="/Book/DeleteBook/" class="btn btn-danger">Delete</a>
+            <a href="/Books" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
 </div>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
