@@ -10,7 +10,8 @@ public class Book
     private int buyPrice;
     private int borrowPrice;
     private int ageLimit;
-    private string format;          //eBook formats - epub, f2b, mobi, pdf
+    private string format; //eBook formats - epub, f2b, mobi, pdf
+    private string category;
 
     public Book()
     {
@@ -18,7 +19,7 @@ public class Book
     }
     
     public Book(string title, string author, string isbnNumber, string publisher, int year, int buyPrice, int borrowPrice,
-        int ageLimit, string format)
+        int ageLimit, string format, string category)
     {
         this.title = title;
         this.author = author;
@@ -29,6 +30,7 @@ public class Book
         this.borrowPrice = borrowPrice;
         this.ageLimit = ageLimit;
         this.format = format;
+        this.category = category;
     }
     
     public string Title { get => title; set => title = value; }
@@ -40,4 +42,5 @@ public class Book
     public int BorrowPrice { get => borrowPrice; set => borrowPrice = value; }
     public int AgeLimit { get => ageLimit; set => ageLimit = value; }
     public string Format { get => format; set => format = value; }
+    public string Category { get => category; set => category = value; }
 }
