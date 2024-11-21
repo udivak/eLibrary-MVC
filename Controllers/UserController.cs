@@ -27,6 +27,10 @@ public class UserController : Controller
         return View("UserDetails", newuser);
     }
 
+    public IActionResult LoginPage()
+    {
+        return View("UserLogin");
+    }
     public IActionResult Login(string UserName, string Password)
     {
         //Assume that verify user details for now;

@@ -1,11 +1,11 @@
-<html>
+<html lang="en">
 <head>
     <title>@ViewData["Title"]</title>
 </head>
 <body>
 
 <h1>Login</h1>
-<form asp-controller="User" asp-action="Login" method="post">
+<form action="@Url.Action("Login", "User")" method="post">
     <div>
         <label for="UserName">Username:</label>
         <input type="text" id="UserName" name="UserName" required />

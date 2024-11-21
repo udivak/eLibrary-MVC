@@ -14,7 +14,7 @@
 <body>
 <h1> Insert your details and press Submit :</h1>
 <div>
-    <form action="RegistrationSubmit" method="post">
+    <form action="@Url.Action("RegistrationSubmit", "User")" method="post">
         First Name: <input id="FirstName" name="FirstName" type="text"/>
         <br/>
         Last Name: <input id="LastName" name="LastName" type="text"/>
