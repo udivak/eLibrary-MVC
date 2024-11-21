@@ -1,0 +1,23 @@
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+
+<h1>Login</h1>
+<form asp-controller="User" asp-action="Login" method="post">
+    <div>
+        <label for="UserName">Username:</label>
+        <input type="text" id="UserName" name="UserName" required />
+    </div>
+    <br />
+    <div>
+        <label for="Password">Password:</label>
+        <input type="password" id="Password" name="Password" required />
+    </div>
+    <br />
+    <button type="submit">Login</button>
+</form>
+
+</body>
+</html>
