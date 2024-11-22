@@ -1,31 +1,99 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
+/* General Styles */
 body {
-  margin-bottom: 60px;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f7f9fc;
+  margin: 0;
+  padding: 0;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+/* Container */
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding-top: 50px;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+/* Heading */
+h1.display-4 {
+  font-size: 3rem;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  color: #007bff;
+}
+
+/* Paragraph */
+p.lead {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+/* Button Styles */
+.btn {
+  font-size: 1rem;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* Primary Button */
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+  border: 1px solid #007bff;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+/* Secondary Button */
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  border: 1px solid #6c757d;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #5a6268;
+}
+
+/* Button Container */
+.mt-4 {
+  margin-top: 40px;
+}
+
+/* Margin between buttons */
+.mx-3 {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+/* Register and Login Section Fixed to Top-Right */
+.auth-section {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+  text-align: right;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .btn {
+    font-size: 1rem;
+    padding: 10px 15px;
+  }
+
+  .auth-section {
+    top: 10px;
+    right: 10px;
+  }
 }
