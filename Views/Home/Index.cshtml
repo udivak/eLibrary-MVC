@@ -1,12 +1,38 @@
-﻿@{
+﻿@model eLibrary.Models.BookList
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    
-    <a asp-controller="User" asp-action="Registration" class="btn btn-primary">Register</a>
-    
-    <a asp-controller="User" asp-action="LoginPage" class="btn btn-secondary">Login</a>
+<div class="container">
+    <!-- Main Content Section -->
+    <div class="text-center main-content">
+        <h1 class="display-4" style="color: #007bff; font-weight: bold;">Welcome to MyReader</h1>
+        <p class="lead" style="color: #555;">
+            Rent and read eBooks easily, anywhere and anytime. <br>
+            
+        </p>
+        
+        <!-- Book Display Section (Placeholder for now) -->
+        <div class="book-display">
+            <h2>Featured Books</h2>
+            <div class="row" id="books-list">
+                <!-- Books from DB will be displayed here -->
+                <!-- Example Placeholder -->
+                <div class="col-md-3">
+                    <div class="book-card">
+                        <img src="~/images/book1.png" class="book-img" alt="Book 1">
+                        <p>Book 1 Title</p>
+                    </div>
+                </div>
+                <!-- Add more book cards as needed -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Register and Login Section on Top-Right -->
+<div class="auth-section">
+    <a asp-controller="User" asp-action="Registration" class="btn btn-lg btn-primary register-btn">Register</a>
+    <p class="login-link">Already a member? <a asp-controller="User" asp-action="LoginPage">Log in here</a></p>
 </div>
