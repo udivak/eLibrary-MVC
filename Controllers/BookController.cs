@@ -21,15 +21,21 @@ public class BookController : Controller
         if (ModelState.IsValid) {
             string jsonBook = JsonConvert.SerializeObject(newBook); // Serialize the book object to JSON
             // Store it in TempData or use it as needed
-            TempData["newBook"] = jsonBook;
+           TempData["newBook"] = jsonBook;
             return View("BookDetails", newBook);
         }
         return View("AddBook", newBook);
     }
-    public IActionResult DeleteBook()
+    public IActionResult DeleteBook(/*Book deletedBook*/)
     {
         Book deletedBook = JsonConvert.DeserializeObject<Book>(TempData["newBook"].ToString());
         return View("DeleteBook", deletedBook);
+    }
+
+    public IActionResult BookAdded(/*Book book*/)
+    {
+        Book addedBook = JsonConvert.DeserializeObject<Book>(TempData["newBook"].ToString());
+        return View("BookAdded", addedBook);
     }
     
 }

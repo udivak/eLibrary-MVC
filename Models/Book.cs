@@ -32,13 +32,13 @@ public class Book
     public string Format { get; set; }                        //eBook formats - epub, f2b, mobi, pdf
     [Required]
     [StringLength(50, MinimumLength = 1, ErrorMessage = "Category must be be 1-50 characters.")]
-    public string Category { get; set; }
+    public string Genre { get; set; }
     public Book()
     {
         //default ctor    
     }
     public Book(string title, string author, string ISBN, string publisher, int year, int buyPrice, int borrowPrice,
-        int ageLimit, string format, string category)
+        int ageLimit, string format, string genre)
     {
         Title = title;
         Author = author;
@@ -49,7 +49,7 @@ public class Book
         BorrowPrice = borrowPrice;
         AgeLimit = ageLimit;
         Format = format;
-        Category = category;
+        Genre = genre;
     }
    /*
     public string Title { get => title; set => title = value; }
