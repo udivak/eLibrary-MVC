@@ -1,3 +1,4 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model eLibrary.Models.Book
 @{
     Layout = null;
@@ -17,39 +18,43 @@
     <form action="AddBookSubmit" method="post" class="p-4 border rounded shadow-sm bg-light">
         <div class="mb-3">
             <label for="title" class="form-label">Title</label>
-            <input type="text" class="form-control" id="title" name="title" required>
+            <input type="text" class="form-control" id="title" name="Title" value="@Model.Title"> @Html.ValidationMessageFor(x => x.Title)
         </div>
         <div class="mb-3">
             <label for="author" class="form-label">Author</label>
-            <input type="text" class="form-control" id="author" name="author" required>
+            <input type="text" class="form-control" id="author" name="Author" value="@Model.Author"> @Html.ValidationMessageFor(x => x.Author)
         </div>
         <div class="mb-3">
             <label for="isbnNumber" class="form-label">ISBN Number</label>
-            <input type="text" class="form-control" id="isbnNumber" name="isbnNumber" required>
+            <input type="text" class="form-control" id="isbnNumber" name="isbnNumber" value="@Model.isbnNumber"> @Html.ValidationMessageFor(x => x.isbnNumber)
         </div>
         <div class="mb-3">
             <label for="publisher" class="form-label">Publisher</label>
-            <input type="text" class="form-control" id="publisher" name="publisher">
+            <input type="text" class="form-control" id="publisher" name="Publisher" value="@Model.Publisher"> @Html.ValidationMessageFor(x => x.Publisher)
         </div>
         <div class="mb-3">
             <label for="year" class="form-label">Year</label>
-            <input type="number" class="form-control" id="year" name="year" required>
+            <input type="number" class="form-control" id="year" name="Year" value="@Model.Year"> @Html.ValidationMessageFor(x => x.Year)
         </div>
         <div class="mb-3">
             <label for="buyPrice" class="form-label">Buy Price</label>
-            <input type="number" class="form-control" id="buyPrice" name="buyPrice" required>
+            <input type="number" class="form-control" id="buyPrice" name="BuyPrice" value="@Model.BuyPrice"> @Html.ValidationMessageFor(x => x.BuyPrice)
         </div>
         <div class="mb-3">
             <label for="borrowPrice" class="form-label">Borrow Price</label>
-            <input type="number" class="form-control" id="borrowPrice" name="borrowPrice" required>
+            <input type="number" class="form-control" id="borrowPrice" name="BorrowPrice" value="@Model.BorrowPrice"> @Html.ValidationMessageFor(x => x.BorrowPrice)
         </div>
         <div class="mb-3">
             <label for="ageLimit" class="form-label">Age Limit</label>
-            <input type="number" class="form-control" id="ageLimit" name="ageLimit">
+            <input type="number" class="form-control" id="ageLimit" name="AgeLimit" value="@Model.AgeLimit">
+        </div>
+        <div class="mb-3">
+            <label for="category" class="form-label">Category</label>
+            <input type="text" class="form-control" id="category" name="Category" value="@Model.Category"> @Html.ValidationMessageFor(x => x.Category)
         </div>
         <div class="mb-3">
             <label for="format" class="form-label">Format</label>
-            <select class="form-select" id="format" name="format" required>
+            <select class="form-select" id="format" name="Format" required>
                 <option value="" disabled selected>Select a format</option>
                 <option value="PDF">PDF</option>
                 <option value="ePub">ePub</option>
@@ -62,5 +67,9 @@
 </div>
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Validations -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
 </body>
 </html>

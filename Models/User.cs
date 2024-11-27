@@ -15,7 +15,6 @@ public class User
     {
         //default ctor
     }
-    
     public User(string firstName, string lastName, string username, string password, string email, string createdAt,
                 string address)
     {
