@@ -20,12 +20,13 @@
         <div class="card-body">
             <p><strong>Title:</strong> @Model.Title</p>
             <p><strong>Author:</strong> @Model.Author</p>
-            <p><strong>ISBN:</strong> @Model.ISBN</p>
+            <p><strong>ISBN:</strong> @Model.isbnNumber</p>
             <p><strong>Publisher:</strong> @Model.Publisher</p>
             <p><strong>Year:</strong> @Model.Year</p>
-            <p><strong>Buy Price:</strong> $@Model.BuyPrice</p>
-            <p><strong>Borrow Price:</strong> $@Model.BorrowPrice</p>
+            <p><strong>Buy Price:</strong> @Model.BuyPrice$</p>
+            <p><strong>Borrow Price:</strong> @Model.BorrowPrice$</p>
             <p><strong>Age Limit:</strong> @Model.AgeLimit+</p>
+            <p><strong>Category:</strong> @Model.Category</p>
             <p><strong>Format:</strong> @Model.Format</p>
         </div>
         <div class="card-footer text-end">

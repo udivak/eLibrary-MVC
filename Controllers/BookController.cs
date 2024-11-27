@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json.Serialization;
 using eLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -6,33 +7,24 @@ namespace eLibrary.Controllers;
 public class BookController : Controller
 {
     // GET
-    public IActionResult BookDetails() //test func
+    public IActionResult BookDetails(Book book)
     {
-        Book LOTR = new Book("Lord Of The Rings", "author", "12345", "publisher", 2024,
-            100, 25, 18, "pdf", "");
-        return View("BookDetails", LOTR);
+        return View("BookDetails", book);
     }
     public IActionResult AddBook()
     {
-        return View("AddBook");
+        return View("AddBook", new Book());
     }
-    public IActionResult AddBookSubmit()
+    [HttpPost]
+    public IActionResult AddBookSubmit(Book newBook)
     {
-        Book newBook = new Book();
-        newBook.Title = Request.Form["title"];
-        newBook.Author = Request.Form["author"];
-        newBook.ISBN = Request.Form["isbnNumber"];
-        newBook.Publisher = Request.Form["publisher"];
-        newBook.Year = int.Parse(Request.Form["year"]);
-        newBook.BuyPrice = int.Parse(Request.Form["buyPrice"]);
-        newBook.BorrowPrice = int.Parse(Request.Form["borrowPrice"]);
-        newBook.AgeLimit = int.Parse(Request.Form["ageLimit"]);
-        newBook.Format = Request.Form["format"];
-        // Serialize the book object to JSON
-        string jsonBook = JsonConvert.SerializeObject(newBook);
-        // Store it in TempData or use it as needed
-        TempData["newBook"] = jsonBook;
-        return View("BookDetails", newBook);
+        if (ModelState.IsValid) {
+            string jsonBook = JsonConvert.SerializeObject(newBook); // Serialize the book object to JSON
+            // Store it in TempData or use it as needed
+            TempData["newBook"] = jsonBook;
+            return View("BookDetails", newBook);
+        }
+        return View("AddBook", newBook);
     }
     public IActionResult DeleteBook()
     {
