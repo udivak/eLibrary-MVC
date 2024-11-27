@@ -1,9 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 using eLibrary.Models;
-
 namespace eLibrary.Controllers;
-
 public class UserController : Controller
 {
     // GET
@@ -11,21 +9,12 @@ public class UserController : Controller
     {
         return View("UserRegistration");
     }
-    
-    public IActionResult RegistrationSubmit(User newuser)
+    public IActionResult RegistrationSubmit(User newUser)
     {
-        // User user = new User();
-        // user.FirstName = Request.Form["FirstName"];
-        // user.LastName = Request.Form["LastName"];
-        // user.UserName = Request.Form["UserName"];
-        // user.Password = Request.Form["Password"];
-        // user.Email = Request.Form["Email"];
-        //user.CreatedAt = Request.Form["CreatedAt"];
-        newuser.CreatedAt = DateTime.Today.ToShortDateString();
-        // user.Address = Request.Form["Address"];
-        newuser.IsAdmin = false;
+        newUser.CreatedAt = DateTime.Today.ToShortDateString();
+        newUser.IsAdmin = false;
 
-        return View("UserRegistration", newuser);
+        return View("UserRegistration", newUser);
     }
     public IActionResult LoginPage()
     {
@@ -34,7 +23,7 @@ public class UserController : Controller
     public IActionResult Login(string UserName, string Password)
     {
         //Assume that verify user details for now;
-        //cheeck if the user is in the db
+        //check if the user is in the db
         User currentUser = new User
         {
             UserName = UserName,
