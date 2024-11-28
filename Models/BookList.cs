@@ -9,7 +9,7 @@ public class BookList
 
     public BookList()
     {
-        this.books = new List<Book>();
+        books = new List<Book>();
     }
     public BookList(List<Book> books, string search = null)
     {
