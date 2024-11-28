@@ -1,15 +1,72 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace eLibrary.Models;
 
 public class User
 {
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string UserName { get; set; }
-    public string Password { get; set; }
-    public string Email { get; set; }
-    public string CreatedAt { get; set; }
-    public string Address { get; set; }
-    public bool IsAdmin { get; set; }
+    private string _firstName;
+    [Required]
+    public string FirstName
+    {
+        get => _firstName;
+        set => _firstName = value;
+    }
+
+    private string _lastName;
+    [Required]
+    public string LastName
+    {
+        get => _lastName;
+        set => _lastName = value;
+    }
+
+    private string _userName;
+    [Required]
+    public string UserName
+    {
+        get => _userName;
+        set => _userName = value;
+    }
+
+    private string _password;
+    [Required]
+    public string Password
+    {
+        get => _password;
+        set => _password = value;
+    }
+
+    private string _email;
+    [Required]
+    public string Email
+    {
+        get => _email;
+        set => _email = value;
+    }
+
+    private string _createdAt;
+    [Required]
+    public string CreatedAt
+    {
+        get => _createdAt;
+        set => _createdAt = value;
+    }
+
+    private string _address;
+    [Required]
+    public string Address
+    {
+        get => _address;
+        set => _address = value;
+    }
+
+    private bool _isAdmin;
+    [Required]
+    public bool IsAdmin
+    {
+        get => _isAdmin;
+        set => _isAdmin = value;
+    }
 
     public User()
     {
