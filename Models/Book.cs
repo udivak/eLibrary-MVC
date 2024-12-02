@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace eLibrary.Models;
 
@@ -6,6 +7,7 @@ public class Book
 {
     private string _title;
     [Required]
+    [Column("Title")]
     [StringLength(50, MinimumLength = 1, ErrorMessage = "Title must be be 1-50 characters.")]
     public string Title 
     { 
@@ -15,6 +17,7 @@ public class Book
     
     private string _author;
     [Required]
+    [Column("Author")]
     [StringLength(50, MinimumLength = 1, ErrorMessage = "Author name must be be 1-50 characters.")]
     public string Author
     {
@@ -23,6 +26,8 @@ public class Book
     }
     
     private string _isbn;
+    [Key]
+    [Column("ISBN")]
     [Required]
     [RegularExpression("^[0-9]{1,13}$", ErrorMessage = "ISBN Number must be 1-13 digits.")] //a number between 1-13 digits
     public string isbnNumber
@@ -33,6 +38,7 @@ public class Book
 
     private string _publisher;
     [Required]
+    [Column("Publisher")]
     [StringLength(50, MinimumLength = 1, ErrorMessage = "Publisher name must be be 1-50 characters.")]
     public string Publisher
     {
@@ -41,6 +47,7 @@ public class Book
     }
 
     private int _year;
+    [Column("Year")]
     [Required]
     [Range(0, 2024, ErrorMessage = "Year must be between 0-2024.")]
     public int Year
@@ -50,6 +57,7 @@ public class Book
     }
 
     private int _buyPrice;
+    [Column("BuyPrice")]
     [Required]
     [Range(0, int.MaxValue, ErrorMessage = "Buy Price must be a positive number.")]
     public int BuyPrice
@@ -59,6 +67,7 @@ public class Book
     }
 
     private int _borrowPrice;
+    [Column("BorrowPrice")]
     [Required]
     [Range(0, int.MaxValue, ErrorMessage = "Borrow Price must be a positive number.")]
     public int BorrowPrice
@@ -68,6 +77,7 @@ public class Book
     }
 
     private int _ageLimit;
+    [Column("AgeLimit")]
     [Range(0, 18, ErrorMessage = "Age Limit must be a number between 0-18.")]
     public int AgeLimit
     {
@@ -75,7 +85,8 @@ public class Book
         set => _ageLimit = value;
     }
 
-    private string _format;         //eBook formats - epub, f2b, mobi, pdf
+    private string _format; //eBook formats - epub, f2b, mobi, pdf
+    [Column("Format")]
     [Required]
     [RegularExpression("^(PDF|ePub|f2b|mobi)$")]
     public string Format
@@ -85,6 +96,7 @@ public class Book
     }
 
     private string _genre;
+    [Column("Genre")]
     [Required]
     [StringLength(50, MinimumLength = 1, ErrorMessage = "Category must be be 1-50 characters.")]
     public string Genre
