@@ -3,9 +3,38 @@ using System.Text.Json.Serialization;
 using eLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using eLibrary.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+
 namespace eLibrary.Controllers;
 public class BookController : Controller
 {
+    private readonly DBConnection _context;
+    public BookController(DBConnection context)
+    {
+        _context = context;
+    }
+    //TESTING CONNECTION TO DB
+    public async Task<IActionResult> GetFirstBook()
+    {
+        // Retrieve the first book from the Books table
+        var book = await _context.Books.FirstOrDefaultAsync();
+
+        if (book != null)
+        {
+            // Print the first book to console
+            Console.WriteLine($"Title: {book.Title}, Author: {book.Author}, ISBN: {book.isbnNumber}, Publisher: {book.Publisher}");
+        }
+        else
+        {
+            Console.WriteLine("No books found.");
+        }
+
+        return View("BookDetails", book);  // Optionally return the first book to the view
+    }
+    
+    
     // GET
     public IActionResult BookDetails(Book book)
     {

@@ -10,6 +10,7 @@ public class Book
     [Required]
     [StringLength(50, MinimumLength = 1, ErrorMessage = "Author name must be be 1-50 characters.")]
     public string Author { get; set; }
+    [Key]
     [Required]
     [RegularExpression("^[0-9]{1,13}$", ErrorMessage = "ISBN Number must be 1-13 digits.")]        //a number between 1-13 digits
     public string isbnNumber  { get; set; }
