@@ -15,10 +15,12 @@ public class BookController : Controller
         _dbContext = dbContext;
     }
     
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> GetFirstBook()
     {
         var books = await _dbContext.GetAllBooksAsync();
-        return View(books);
+        Book temp = books.FirstOrDefault(); //get first book from db 
+        
+        return View("BookDetails",temp);
     }
     
     // GET
