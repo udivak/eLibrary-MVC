@@ -37,6 +37,8 @@ public class User
     }
 
     private string _email;
+    [Key]
+    [EmailAddress]
     [Required]
     public string Email
     {
