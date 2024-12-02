@@ -40,6 +40,7 @@ public class User
     [Key]
     [EmailAddress]
     [Required]
+    [RegularExpression("^\\w+@\\w+\\.com$", ErrorMessage = "Email must contain @ and end with '.com'.")]
     public string Email
     {
         get => _email;
