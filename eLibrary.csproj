@@ -17,4 +17,8 @@
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Include="wwwroot\images\Harry Potter 1.jpg" />
+    </ItemGroup>
+
 </Project>

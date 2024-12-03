@@ -24,12 +24,18 @@ namespace eLibrary.Models
                 .HasKey(b => b.isbnNumber);
         }
 
-        // Retrieve all books
+        // Retrieve all books async
         public async Task<List<Book>> GetAllBooksAsync()
         {
             return await Books.ToListAsync();
         }
-
+        
+        // Retrieve all books sync
+        public List<Book> GetAllBooks()
+        {
+            return Books.ToList();
+        }
+        
         // Retrieve a book by ISBN
         public async Task<Book> GetBookByIsbnAsync(string isbn)
         {

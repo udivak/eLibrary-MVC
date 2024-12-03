@@ -7,7 +7,8 @@ public class UserController : Controller
     // GET
     public IActionResult Registration()
     {
-        return View("UserRegistration");
+        User user = new User();
+        return View("UserRegistration", user);
     }
     public IActionResult RegistrationSubmit(User newUser)
     {
