@@ -1,6 +1,15 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
 <!DOCTYPE html>
 <style>
+    body {
+        background-color: #2d2b2b !important;
+        color: #ffffff !important; /* White font color */
+    }
+    
+    .bg-dark {
+        background-color: #2d2b2b !important;
+    }
+    
     .custom-navbar {
         background-color: #2d2b2b; /* Replace with your desired background color */
         color: white; /* Text color */
@@ -10,26 +19,29 @@
     .custom-navbar .navbar-brand {
         color: #007bff; /* Brand name color */
         font-weight: bold;
-        font-size: 2rem;
+        font-size: 3rem;
+        margin-right: 25px;
     }
 
     .custom-navbar .navbar-brand:hover {
         color: #ffffff; /* Brand name color */
         font-weight: bold;
-        font-size: 2rem;
+        font-size: 3rem;
     }
-
+    /*
     .custom-navbar .nav-link {
-        color: #ffffff; /* Links color */
+        color: #ffffff; 
+        margin-right: 15px;
     }
 
     .custom-navbar .nav-link:hover {
-        color: #4cb1ae; /* Links hover color */
-    }
-
+        color: #4cb1ae; 
+        margin-right: 15px;
+    }*/
+    
     .navbar-nav .nav-item .nav-link {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* Apple-style font */
-        font-size: 16px; /* Adjust the font size */
+        font-size: 20px; /* Adjust the font size */
         color: #ffffff; /* Change text color */
         border: 1px solid #007bff; /* Optional: Add a border */
         padding: 10px 15px; /* Space inside the buttons */
@@ -37,7 +49,7 @@
         text-align: center; /* Center-align text */
         text-decoration: none; /* Remove underline */
         transition: background-color 0.3s ease; /* Add hover effect transition */
-        margin-right: 10px;
+        margin-right: 15px;
     }
 
     .navbar-nav .nav-item .nav-link:hover {
@@ -57,22 +69,22 @@
     }
 
     /* Flex container for the page layout */
-    .container {
+    .container-general {
         display: flex;
         flex-direction: column;
         min-height: 100%;
+        padding: 0;
+        margin: 0;
     }
 
     /* Makes sure the main content area expands to fill available space */
     main {
         flex: 1;
     }
-
-    /* Ensure footer stays at the bottom */
-    #main-footer {
-        margin-top: auto; /* Pushes the footer to the bottom */
+    
+    .container-fluid {
+        margin-bottom: 3px;
     }
-
 </style>
 
 <html lang="en">
@@ -89,7 +101,7 @@
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm custom-navbar border-bottom box-shadow mb-3">
         <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">@ViewData["Title"]</a>
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">iReadIt</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -108,7 +120,7 @@
     </nav>
 </header>
 
-<div class="container">
+<div class="container-general">
     <main role="main" class="pb-3">
         @RenderBody()
     </main>

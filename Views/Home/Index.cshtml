@@ -7,7 +7,7 @@
 }
 <style>
     body {
-        background-color: #2d2b2b; 
+        background-color: #2d2b2b;
         color: #fff; /* White font color */
     }
     .main-content h1 {
@@ -49,7 +49,6 @@
         font-size: 0.9rem;
     }
     
-    
     /*Authentications buttons styling*/
     /* Ensure the container is positioned in the top-right corner */
     .auth-section {
@@ -63,12 +62,13 @@
 
     /* Style the register button */
     .register-btn {
-        margin-bottom: 5px; /* Space between button and the login text */
+        margin-bottom: 8px; /* Space between button and the login text */
+        font-size: 20px ;
     }
 
     /* Style the login text to align with the button */
     .login-link {
-        font-size: 14px;
+        font-size: 18px;
         text-align: center;
     }
 
@@ -82,12 +82,8 @@
         text-decoration: underline; /* Underline on hover */
     }
     
-    .container {
-        
-    }
 
 </style>
-
 
 
 <div class="container">
@@ -101,6 +97,7 @@
         <!-- Featured Books Section -->
         <div class="featured-books">
             <h2>Featured Books</h2>
+            <br>
             <div class="row">
                 @foreach (var book in Model.Take(4)) // First row of 4 books
                 {
@@ -138,5 +135,5 @@
 <!-- Register and Login Section on Top-Right -->
 <div class="auth-section">
     <a asp-controller="User" asp-action="Registration" class="btn btn-lg btn-primary register-btn">Register</a>
-    <p class="login-link">Already a member? <a asp-controller="User" asp-action="LoginPage">Log in here</a></p>
+    <p class="login-link">Already a member? <a asp-controller="User" asp-action="LoginPage">Log in</a></p>
 </div>
