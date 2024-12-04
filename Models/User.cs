@@ -49,6 +49,7 @@ public class User
 
     private string _createdAt;
     [Required]
+    [RegularExpression(@"^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$", ErrorMessage = "Invalid date format. Please use DD/MM/YYYY.")]
     public string CreatedAt
     {
         get => _createdAt;
@@ -63,9 +64,9 @@ public class User
         set => _address = value;
     }
 
-    private bool _isAdmin;
+    private int _isAdmin;
     [Required]
-    public bool IsAdmin
+    public int IsAdmin
     {
         get => _isAdmin;
         set => _isAdmin = value;

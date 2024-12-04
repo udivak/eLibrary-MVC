@@ -24,12 +24,18 @@ namespace eLibrary.Models
                 .HasKey(b => b.isbnNumber);
         }
 
-        // Retrieve all books
+        // Retrieve all books async
         public async Task<List<Book>> GetAllBooksAsync()
         {
             return await Books.ToListAsync();
         }
-
+        
+        // Retrieve all books sync
+        public List<Book> GetAllBooks()
+        {
+            return Books.ToList();
+        }
+        
         // Retrieve a book by ISBN
         public async Task<Book> GetBookByIsbnAsync(string isbn)
         {
@@ -60,15 +66,11 @@ namespace eLibrary.Models
                 await SaveChangesAsync();
             }
         }
-
-        // Retrieve all users
-        public async Task<List<User>> GetAllUsersAsync()
+        public async Task<List<User>> GetAllUsersAsync()        // Retrieve all users
         {
             return await Users.ToListAsync();
         }
-
-        // Retrieve a user by ID
-        public async Task<User> GetUserByEmailAsync(string userEmail)
+        public async Task<User> GetUserByEmailAsync(string userEmail)       // Retrieve a user by ID
         {
             return await Users.FirstOrDefaultAsync(u => u.Email == userEmail);
         }

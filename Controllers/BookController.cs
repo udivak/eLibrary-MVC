@@ -22,8 +22,11 @@ public class BookController : Controller
         
         return View("BookDetails",temp);
     }
-    
-    // GET
+    public IActionResult BookDetailsTest()
+    {
+        Book test = new Book("title", "author", "ISBN", "publisher", 2024, 200, 100, 6, "pdf", "novel");
+        return View("BookDetails", test);
+    }
     public IActionResult BookDetails(Book book)
     {
         return View("BookDetails", book);
@@ -37,38 +40,25 @@ public class BookController : Controller
     {
         if (ModelState.IsValid)
         {
-            // Add the new book to the database
-            _dbContext.Books.Add(book);
+            _dbContext.Books.Add(book);     // Add the new book to the database
             _dbContext.SaveChangesAsync();
-            TempData["newBook"] = JsonConvert.SerializeObject(book);
-
-
-            // Redirect to a different page or show a success message
-            return RedirectToAction("BookAdded", new { title = book.Title });
+            return RedirectToAction("BookAdded", new { isbn = book.isbnNumber });   //Success Message
         }
-
         return View("AddBook", book);
-
-        // If model is not valid, re-display the form with validation errors
     }
-    public IActionResult DeleteBook(/*Book deletedBook*/)
+    public IActionResult DeleteBook(Book deletedBook)       //Delete new book without adding to DB
     {
-        Book deletedBook = JsonConvert.DeserializeObject<Book>(TempData["newBook"].ToString());
         return View("DeleteBook", deletedBook);
     }
-
-    public IActionResult BookAdded(string title)
+    
+    [HttpGet]
+    public IActionResult BookAdded(string isbn)
     {
-        // Retrieve the added book from TempData
-        var addedBook = _dbContext.Books.FirstOrDefault(b => b.Title == title);
-
-        if (addedBook == null)
+        var addedBook = _dbContext.Books.FirstOrDefault(b => b.isbnNumber == isbn);
+        if (addedBook == null)             // If the book is not found in DB
         {
-            // If the book is not found in TempData, redirect to an appropriate page
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
-
-        // Return the BookAdded view with the added book
         return View("BookAdded", addedBook);
     }
     

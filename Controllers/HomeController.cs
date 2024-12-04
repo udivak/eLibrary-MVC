@@ -9,17 +9,20 @@ namespace eLibrary.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private DB_context _dbContext;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, DB_context dbContext)
     {
         _logger = logger;
+        _dbContext = dbContext;
     }
-
-    public IActionResult Index()
+    
+    public IActionResult Index()        // Home Page
     {
-        return View();
+        List<Book> featuredBooks = _dbContext.GetAllBooks().Take(8).ToList();
+        return View("Index", featuredBooks);
     }
-
+    
     public IActionResult Privacy()
     {
         return View();
@@ -30,11 +33,5 @@ public class HomeController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
-
-    public IActionResult Register()
-    {
-        //Create new user
-        Models.User user = new Models.User();
-        return RedirectToAction( "RegistrationSubmit","UserController", user);
-    }
+    
 }
