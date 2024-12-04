@@ -22,13 +22,12 @@
         align-content: center;
     }
     
-    
 </style>
 
 
 <div class="container mt-5">
     <h1 class="text-center">Add a Book</h1>
-    <form action="AddBookSubmit" method="post" class="p-4 border rounded shadow-sm top-0">
+    <form action="BookDetails/" method="post" class="p-4 border rounded shadow-sm top-0">
         <div class="mb-3">
             <label for="title" class="form-label">Title</label>
             <input type="text" class="form-control" id="title" name="Title" value="@Model.Title"> @Html.ValidationMessageFor(x => x.Title)
