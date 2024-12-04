@@ -1,24 +1,66 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-<html lang="en">
-<head>
-    <title>@ViewData["Title"]</title>
-</head>
-<body>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Log In";
+}
 
-<h1>Login</h1>
-<form action="@Url.Action("Login", "User")" method="post">
-    <div>
-        <label for="UserName">Username:</label>
-        <input type="text" id="UserName" name="UserName" required />
-    </div>
-    <br />
-    <div>
-        <label for="Password">Password:</label>
-        <input type="password" id="Password" name="Password" required />
-    </div>
-    <br />
-    <button type="submit">Login</button>
-</form>
+<style>
+    body {
+        background-color: #2d2b2b;
+        color: #fff; /* White font color */
+    }
 
-</body>
-</html>
+    h1 {
+        margin-top: 0;
+    }
+
+    .mt-5 {
+        padding: 0;
+        align-content: center;
+    }
+    
+    .p-4 {
+        background-color: #2d2b2b;
+        color: #fff; /* White font color */
+    }
+</style>
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Log In</h1>
+    <div class="card shadow p-4">
+        <form action="@Url.Action("Login", "User")" method="post">
+            <!-- Email -->
+            <div class="mb-3">
+                <label for="Email" class="form-label">Email</label>
+                <input type="text" id="Email" name="Email" class="form-control" placeholder="Enter your email" required />
+            </div>
+            <!-- Password -->
+            <div class="mb-3">
+                <label for="Password" class="form-label">Password</label>
+                <div class="d-flex align-items-center">
+                    <input type="password" id="Password" name="Password" class="form-control me-2" placeholder="Enter your password" required />
+                    <div class="form-check">
+                        <input type="checkbox" id="togglePassword" class="form-check-input" />
+                        <label for="togglePassword" class="form-check-label">Show Password</label>
+                    </div>
+                </div>
+            </div>
+            <!-- Submit Button -->
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // JavaScript to toggle password visibility
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('Password');
+
+    togglePassword.addEventListener('change', () => {
+        passwordInput.type = togglePassword.checked ? 'text' : 'password';
+    });
+</script>

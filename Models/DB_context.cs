@@ -66,15 +66,11 @@ namespace eLibrary.Models
                 await SaveChangesAsync();
             }
         }
-
-        // Retrieve all users
-        public async Task<List<User>> GetAllUsersAsync()
+        public async Task<List<User>> GetAllUsersAsync()        // Retrieve all users
         {
             return await Users.ToListAsync();
         }
-
-        // Retrieve a user by ID
-        public async Task<User> GetUserByEmailAsync(string userEmail)
+        public async Task<User> GetUserByEmailAsync(string userEmail)       // Retrieve a user by ID
         {
             return await Users.FirstOrDefaultAsync(u => u.Email == userEmail);
         }
