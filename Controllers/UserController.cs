@@ -19,18 +19,30 @@ public class UserController : Controller
     [HttpPost]
     public async Task<IActionResult> RegistrationSubmit(User newUser)
     {
+        // Set the creation date and other default properties
         newUser.CreatedAt = DateTime.Today.ToString("d");
         ModelState.Remove("CreatedAt");
-        
+    
+        // Hash the password before saving to database
+        newUser.Password = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
+    
+        // Set default IsAdmin value
         newUser.IsAdmin = 0;
+
         if (ModelState.IsValid)
         {
+            // Add the new user to the database
             _dbContext.Users.Add(newUser);
             await _dbContext.SaveChangesAsync();
-            return RedirectToAction("RegistrationSuccessful", "User", new {email = newUser.Email});
+
+            // Redirect to RegistrationSuccessful page with email
+            return RedirectToAction("RegistrationSuccessful", "User", new { email = newUser.Email });
         }
+
+        // If model state is invalid, return the registration view
         return View("UserRegistration", newUser);
     }
+
     public IActionResult RegistrationSuccessful(string email)
     {
         var userAdded = _dbContext.Users.FirstOrDefault(u => u.Email == email);
@@ -40,6 +52,7 @@ public class UserController : Controller
         }
         return View("UserAdded", userAdded);
     }
+
     public IActionResult LoginPage()
     {
         return View("UserLogin");
@@ -47,14 +60,21 @@ public class UserController : Controller
 
     public IActionResult Login(string email, string password)
     {
-        var user = _dbContext.Users.FirstOrDefault(u => (u.Email == email && u.Password == password));
-        if (user == null)
+        var user = _dbContext.Users.FirstOrDefault(u => u.Email == email);
+    
+        // If user not found or password is incorrect
+        if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
         {
-            return RedirectToAction("LoginPage", "User");
+            // Handle invalid login attempt (e.g., show an error message)
+            ModelState.AddModelError("", "Invalid login attempt.");
+            return View("UserLogin");
         }
+
+        // If user is found and password is correct, log the user in
         Console.WriteLine("Logged In");
         return RedirectToAction("Index", "Home");
     }
+
     
     public IActionResult LoginTest(string userName, string password)
     {
