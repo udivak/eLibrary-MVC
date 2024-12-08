@@ -1,14 +1,71 @@
-# Ignore build directories
-*/bin/
-*/obj/
+# Ignore build and VS artifacts
+bin/
 obj/
-*.dll
-# Ignore Visual Studio and Rider directories
-.vs/
-.idea/
-
-# User-specific files
 *.user
-*.userosscache
+*.rsuser
 *.suo
-*.userprefs
+*.userosscache
+*.sln.docstates
+.vscode/
+
+# Ignore packages
+packages/
+*.nupkg
+*.snupkg
+
+# Ignore logs
+*.log
+
+# Ignore temporary and database files
+*.tmp
+*.ldb
+*.mdf
+*.ldf
+
+# Ignore configuration files containing secrets
+appsettings*.json
+app.config
+web.config
+
+# Ignore CSV files (adjust if you want to include them)
+*.csv
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore Rider IDE files
+.idea/
+*.iml
+
+# Ignore by Visual Studio Code
+.vscode/
+
+# Ignore coverage and test results
+coverage/
+*.coverage
+TestResults/
+
+# Ignore generated files
+*.generated.cs
+
+# Ignore build and publish output
+*.dll
+*.exe
+*.pdb
+*.cache
+*.pyc
+*.ilk
+*.pyo
+*.pyd
+*.idb
+*.obj
+*.so
+*.dylib
+*.dSYM/
+*.stackdump
+*.plist
+
+# Ignore dependency cache
+node_modules/
+dist/
