@@ -1,6 +1,6 @@
 # Ignore build directories
-/bin/
-/obj/
+*/bin/
+*/obj/
 obj/
 # Ignore Visual Studio and Rider directories
 .vs/

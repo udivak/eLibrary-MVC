@@ -29,7 +29,7 @@ public class Book
     [Key]
     [Column("ISBN")]
     [Required]
-    [RegularExpression("^[0-9]{1,13}$", ErrorMessage = "ISBN Number must be 1-13 digits.")] //a number between 1-13 digits
+    [RegularExpression("^[0-9]{13}$", ErrorMessage = "ISBN Number must be 1-13 digits.")] //a number between 1-13 digits
     public string isbnNumber
     {
         get => _isbn;
