@@ -51,6 +51,44 @@ public class BookController : Controller
         return View("DeleteBook", deletedBook);
     }
     
+    
+    public IActionResult Searchbooks(string title, string author, string genre, string publisher, int? year, string format)
+    {
+        // Start with an empty list of books
+        var books = new List<eLibrary.Models.Book>();
+
+        // Apply filters based on the user's input
+        if (!string.IsNullOrEmpty(title))
+        {
+            books = _dbContext.Books.Where(b => b.Title.Contains(title)).ToList();
+        }
+        else if (!string.IsNullOrEmpty(author))
+        {
+            books = _dbContext.Books.Where(b => b.Author.Contains(author)).ToList();
+        }
+        else if (!string.IsNullOrEmpty(genre))
+        {
+            books = _dbContext.Books.Where(b => b.Genre.Contains(genre)).ToList();
+        }
+        else if (!string.IsNullOrEmpty(publisher))
+        {
+            books = _dbContext.Books.Where(b => b.Publisher.Contains(publisher)).ToList();
+        }
+        else if (year.HasValue)
+        {
+            books = _dbContext.Books.Where(b => b.Year == year.Value).ToList();
+        }
+        else if (!string.IsNullOrEmpty(format))
+        {
+            books = _dbContext.Books.Where(b => b.Format == format).ToList();
+        }
+        // Return an empty list if no filters are applied (first time visiting)
+        return View(books);
+    }
+
+
+
+    
     [HttpGet]
     public IActionResult BookAdded(string isbn)
     {
