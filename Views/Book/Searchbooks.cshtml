@@ -1,0 +1,80 @@
+@model IEnumerable<eLibrary.Models.Book>
+
+@{
+    ViewBag.Title = "Search Books";
+}
+
+<h2>Search Books</h2>
+
+<form asp-action="Searchbooks" method="get">
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" class="form-control" id="title" name="title" value="@ViewData["Title"]" />
+    </div>
+
+    <div class="form-group">
+        <label for="author">Author</label>
+        <input type="text" class="form-control" id="author" name="author" value="@ViewData["Author"]" />
+    </div>
+
+    <div class="form-group">
+        <label for="genre">Genre</label>
+        <input type="text" class="form-control" id="genre" name="genre" value="@ViewData["Genre"]" />
+    </div>
+
+    <div class="form-group">
+        <label for="publisher">Publisher</label>
+        <input type="text" class="form-control" id="publisher" name="publisher" value="@ViewData["Publisher"]" />
+    </div>
+
+    <div class="form-group">
+        <label for="year">Year</label>
+        <input type="number" class="form-control" id="year" name="year" value="@ViewData["Year"]" />
+    </div>
+
+    @* <div class="form-group"> *@
+    @*     <label for="format">Format</label> *@
+    @*     <select class="form-control" id="format" name="format"> *@
+    @*         <option value="">All</option> *@
+    @* <option value="PDF" @(ViewData["Format"]?.ToString() == "PDF" ? "selected" : "")>PDF</option> *@
+    @* <option value="ePub" @(ViewData["Format"]?.ToString() == "ePub" ? "selected" : "")>ePub</option> *@
+    @* <option value="f2b" @(ViewData["Format"]?.ToString() == "f2b" ? "selected" : "")>f2b</option> *@
+    @* <option value="mobi" @(ViewData["Format"]?.ToString() == "mobi" ? "selected" : "")>mobi</option> *@
+    @*     </select> *@
+    @* </div> *@
+
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+@if (Model != null && Model.Any())
+{
+    <h3>Books Found</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Publisher</th>
+            <th>Year</th>
+            <th>Genre</th>
+            <th>Format</th>
+            <th>Buy Price</th>
+            <th>Borrow Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var book in Model)
+        {
+            <tr>
+                <td>@book.Title</td>
+                <td>@book.Author</td>
+                <td>@book.Publisher</td>
+                <td>@book.Year</td>
+                <td>@book.Genre</td>
+                <td>@book.Format</td>
+                <td>@book.BuyPrice</td>
+                <td>@book.BorrowPrice</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
