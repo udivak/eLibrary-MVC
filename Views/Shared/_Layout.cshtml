@@ -28,6 +28,12 @@
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Book" asp-action="AddBook">Add Book</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Book" asp-action="SearchBooks">Search Book</a>
+                    </li>
                 </ul>
                 <div class="auth-section">
                     @if (_context.HttpContext.Session.GetString("userName") != null)

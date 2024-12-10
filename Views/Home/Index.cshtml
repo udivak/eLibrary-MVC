@@ -6,6 +6,46 @@
     Layout = "_Layout";
     var userName = _context.HttpContext.Session.GetString("userName");
 }
+<style>
+    body {
+        background-color: #2d2b2b;
+        color: #fff; /* White font color */
+    }
+    .main-content h1 {
+        text-transform: none; 
+        font-weight: bold;
+        color: #007bff; 
+    }
+
+    .card {
+        height: 350px; /* Fixed height for all cards */
+        background-color: #4cb1ae; /* Dark gray background */
+        color: #000000; /* White text color */
+        border: 1px solid #444444; /* Subtle border for design */
+    }
+
+    .book-img {
+        height: 200px; /* Fixed height */
+        width: 100%; /* Optional: Make the image span the card's width */
+        object-fit: cover; /* Ensure the entire image is visible */
+        background-color: #f0f0f0; /* Optional: Add a background color to handle empty spaces */
+    }
+    
+    .card-title {
+        font-size: 1rem; /* Ensure title font is uniform */
+        font-weight: bold;
+        white-space: wrap; /* Prevent text wrapping */
+        overflow: hidden; /* Hide overflowing text */
+        text-overflow: ellipsis; /* Add ellipsis (...) for long titles */
+    }
+
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; /* Spread content evenly */
+        height: 100%;
+    }
+</style>    
 
 <link rel="stylesheet" href="/css/index.css">
 <div class="container">
@@ -15,44 +55,91 @@
         <p class="lead" style="color: #ffffff;">
             Borrow and read eBooks easily, anywhere and anytime. <br>
         </p>
-
-        <!-- Featured Books Section -->
-        <div class="featured-books">
-            <h2>Featured Books</h2>
-            <br>
-            <div class="row">
-                @foreach (var book in Model.Take(4)) // First row of 4 books
-                {
-                    <div class="col-md-3">
-                        <div class="card book-card mb-4">
-                            <img src="~/images/Harry Potter 1.jpg" class="card-img-top book-img" alt="@book.Title">
-                            <div class="card-body">
-                                <h5 class="card-title">@book.Title</h5>
-                                <p class="card-text"><bold class="text-muted"><u>Format:</u> @book.Format</bold></p>
-                                <p class="card-text"><bold class="text-muted"><u>Buy Price:</u> @book.BuyPrice$</bold></p>
-                            </div>
+    </div>
+</div>
+<div>
+    <div>
+    <!-- Featured Books Section -->
+    <div class="featured-books">
+        <h2>Featured Books</h2>
+        <br>
+        <div class="row">
+            @foreach (var book in Model.Take(4)) // First row of 4 books
+            {
+                <div class="col-md-3">
+                    <div class="card book-card mb-4">
+                        <img src="~/images/Harry Potter 1.jpg" class="card-img-top book-img" alt="@book.Title">
+                        <div class="card-body">
+                            <h5 class="card-title">@book.Title</h5>
+                            <p class="card-text"><bold class="text-muted"><u>Format:</u> @book.Format</bold></p>
+                            <p class="card-text"><bold class="text-muted"><u>Buy Price:</u> @book.BuyPrice$</bold></p>
                         </div>
                     </div>
-                }
-            </div>
-            <div class="row">
-                @foreach (var book in Model.Skip(4).Take(4)) // Second row of 4 books
-                {
-                    <div class="col-md-3">
-                        <div class="card book-card mb-4">
-                            <img src="~/images/Harry Potter 1.jpg" class="card-img-top book-img" alt="@book.Title">
-                            <div class="card-body">
-                                <h5 class="card-title">@book.Title</h5>
-                                <p class="card-text"><bold class="text-muted"><u>Format:</u> @book.Format</bold></p>
-                                <p class="card-text"><bold class="text-muted"><u>Buy Price:</u> @book.BuyPrice$</bold></p>
-                            </div>
+                </div>
+            }
+        </div>
+        <div class="row">
+            @foreach (var book in Model.Skip(4).Take(4)) // Second row of 4 books
+            {
+                <div class="col-md-3">
+                    <div class="card book-card mb-4">
+                        <img src="~/images/Harry Potter 1.jpg" class="card-img-top book-img" alt="@book.Title">
+                        <div class="card-body">
+                            <h5 class="card-title">@book.Title</h5>
+                            <p class="card-text"><bold class="text-muted"><u>Format:</u> @book.Format</bold></p>
+                            <p class="card-text"><bold class="text-muted"><u>Buy Price:</u> @book.BuyPrice$</bold></p>
                         </div>
                     </div>
-                }
-            </div>
+                </div>
+            }
         </div>
     </div>
 </div>
+</div>
+
+<!-- The Overlay (always visible) -->
+<div class="modal-overlay"></div>
+
+@* <button onclick="showLoginModal()">Open Login</button> *@
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const loginLink = document.getElementById('loginLink');
+        const loginModal = document.getElementById('loginModal');
+        const closeModal = document.getElementById('closeModal');
+        const modalOverlay = document.querySelector('.modal-overlay');
+
+        // Function to show the modal with a dropdown effect
+        function showModal() {
+            loginModal.style.display = 'block';  // Show modal
+            modalOverlay.style.display = 'block';  // Show overlay
+
+            // Ensure that the modal is not initially visible
+            loginModal.style.visibility = 'visible';
+            loginModal.style.opacity = '1';  // Make modal fully visible
+            loginModal.style.transition = 'none';  // Temporarily remove the transition
+
+            // Trigger a reflow to reset the layout and enable the transition
+            loginModal.offsetHeight; // Accessing offsetHeight forces a reflow
+
+            // Now apply the transition
+            loginModal.style.transition = 'all 0.5s ease-in-out';  // Apply transition for animation
+            loginModal.style.maxHeight = '300px';  // Adjust this value based on the content height
+        }
+
+        // Function to hide the modal
+        function hideModal() {
+            loginModal.style.maxHeight = '0';  // Collapse modal (sliding up effect)
+            loginModal.style.opacity = '0';  // Make modal invisible
+            loginModal.style.visibility = 'hidden';  // Ensure modal is hidden
+            modalOverlay.style.display = 'none';  // Hide overlay
+        }
+
+        // Event listeners
+        loginLink.addEventListener('click', showModal);
+        closeModal.addEventListener('click', hideModal);
+        modalOverlay.addEventListener('click', hideModal);
 
 <!-- Register and Login Section on Top-Right -->
 <div class="auth-section">
@@ -66,3 +153,15 @@
         <p class="login-link">Not a member? <a asp-controller="User" asp-action="Registration">Register</a></p>
     }
 </div>
+        // Close the modal when clicking outside of it
+        window.addEventListener('click', function(event) {
+            if (event.target === modalOverlay) {
+                hideModal();
+            }
+        });
+    });
+
+
+
+
+</script>
