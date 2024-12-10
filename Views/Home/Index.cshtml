@@ -1,89 +1,13 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model IEnumerable<eLibrary.Models.Book>
-
+@inject IHttpContextAccessor _context;
 @{
     ViewData["Title"] = "iReadIt";
     Layout = "_Layout";
+    var userName = _context.HttpContext.Session.GetString("userName");
 }
-<style>
-    body {
-        background-color: #2d2b2b;
-        color: #fff; /* White font color */
-    }
-    .main-content h1 {
-        text-transform: none; 
-        font-weight: bold;
-        color: #007bff; 
-    }
 
-    .card {
-        height: 350px; /* Fixed height for all cards */
-        background-color: #4cb1ae; /* Dark gray background */
-        color: #000000; /* White text color */
-        border: 1px solid #444444; /* Subtle border for design */
-    }
-
-    .book-img {
-        height: 200px; /* Fixed height */
-        width: 100%; /* Optional: Make the image span the card's width */
-        object-fit: cover; /* Ensure the entire image is visible */
-        background-color: #f0f0f0; /* Optional: Add a background color to handle empty spaces */
-    }
-    
-    .card-title {
-        font-size: 1rem; /* Ensure title font is uniform */
-        font-weight: bold;
-        white-space: wrap; /* Prevent text wrapping */
-        overflow: hidden; /* Hide overflowing text */
-        text-overflow: ellipsis; /* Add ellipsis (...) for long titles */
-    }
-
-    .card-body {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between; /* Spread content evenly */
-        height: 100%;
-    }
-
-    .card-text {
-        font-size: 0.9rem;
-    }
-    
-    /*Authentications buttons styling*/
-    /* Ensure the container is positioned in the top-right corner */
-    .auth-section {
-        position: absolute;
-        top: 10px; /* Adjust the distance from the top */
-        right: 10px; /* Adjust the distance from the right */
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    /* Style the register button */
-    .register-btn {
-        margin-bottom: 8px; /* Space between button and the login text */
-        font-size: 20px ;
-    }
-
-    /* Style the login text to align with the button */
-    .login-link {
-        font-size: 18px;
-        text-align: center;
-    }
-
-    /* Style the link */
-    .login-link a {
-        text-decoration: none;
-        color: #007bff; /* Link color */
-    }
-
-    .login-link a:hover {
-        text-decoration: underline; /* Underline on hover */
-    }
-</style>
-
-
+<link rel="stylesheet" href="/css/index.css">
 <div class="container">
     <!-- Main Content Section -->
     <div class="text-center main-content">
@@ -132,6 +56,13 @@
 
 <!-- Register and Login Section on Top-Right -->
 <div class="auth-section">
-    <a asp-controller="User" asp-action="LoginPage" class="btn btn-lg btn-primary register-btn">Login</a>
-    <p class="login-link">Not a member? <a asp-controller="User" asp-action="Registration">Register</a></p>
+    @if (userName != null)
+    {
+        <span>Welcome, @userName</span>
+    }
+    else
+    {
+        <a asp-controller="User" asp-action="LoginPage" class="btn btn-lg btn-primary register-btn">Login</a>
+        <p class="login-link">Not a member? <a asp-controller="User" asp-action="Registration">Register</a></p>
+    }
 </div>
