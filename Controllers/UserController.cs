@@ -69,9 +69,9 @@ public class UserController : Controller
         {
             // Handle invalid login attempt (e.g., show an error message)
             ModelState.AddModelError("", "Invalid login attempt.");
-            return View("UserLogin");
+            return RedirectToAction("Index", "Home");
         }
-
+        
         // If user is found and password is correct, log the user in
         Console.WriteLine("Logged In");
         _context.HttpContext.Session.SetString("userName", user.UserName); 
