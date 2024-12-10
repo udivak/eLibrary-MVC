@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace eLibrary.Models;
-
+[Table("Books")]
 public class Book
 {
     private string _title;
@@ -85,10 +85,10 @@ public class Book
         set => _ageLimit = value;
     }
 
-    private string _format; //eBook formats - epub, f2b, mobi, pdf
+    private string _format; //eBook formats - PDF, epub, f2b, mobi, Hard Cover, Soft Cover
     [Column("Format")]
     [Required]
-    [RegularExpression("^(PDF|ePub|f2b|mobi)$")]
+    [RegularExpression("^(PDF|ePub|fb2|mobi|Physical)$")]
     public string Format
     {
         get => _format;
@@ -98,11 +98,20 @@ public class Book
     private string _genre;
     [Column("Genre")]
     [Required]
-    [StringLength(50, MinimumLength = 1, ErrorMessage = "Category must be be 1-50 characters.")]
+    [StringLength(50, MinimumLength = 1, ErrorMessage = "Genre must be be 1-50 characters.")]
     public string Genre
     {
         get => _genre;
         set => _genre = value;
+    }
+    
+    private int _quantity = 0;
+    [Column("Quantity")]
+    [Required]
+    public int Quantity
+    {
+        get => _quantity;
+        set => _quantity = value;
     }
     
     public Book()
@@ -124,16 +133,5 @@ public class Book
         Format = format;
         Genre = genre;
     }
-   /*
-    public string Title { get => title; set => title = value; }
-    public string Author { get => author; set => author = value; }
-    public string ISBN { get => isbnNumber; set => isbnNumber = value; }
-    public string Publisher { get => publisher; set => publisher = value; }
-    public int Year { get => year; set => year = value; }
-    public int BuyPrice { get => buyPrice; set => buyPrice = value; }
-    public int BorrowPrice { get => borrowPrice; set => borrowPrice = value; }
-    public int AgeLimit { get => ageLimit; set => ageLimit = value; }
-    public string Format { get => format; set => format = value; }
-    public string Category { get => category; set => category = value; }
-    */
+
 }

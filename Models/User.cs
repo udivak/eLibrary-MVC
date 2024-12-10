@@ -1,7 +1,8 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace eLibrary.Models;
-
+[Table("Users")]
 public class User
 {
     private string _firstName;
