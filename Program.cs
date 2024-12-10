@@ -17,7 +17,8 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
+
+options.IdleTimeout = TimeSpan.FromMinutes(30);
 });
 //
 var app = builder.Build();

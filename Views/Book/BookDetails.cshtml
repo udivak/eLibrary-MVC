@@ -36,6 +36,11 @@
             <p><strong>Age Limit:</strong> @Model.AgeLimit+</p>
             <p><strong>Genre:</strong> @Model.Genre</p>
             <p><strong>Format:</strong> @Model.Format</p>
+            @if (Model.Format == "Physical")
+            {
+                <p><strong>Quantity:</strong> @Model.Quantity</p>
+            }
+            
         </div>
         <div class="card-footer text-end">
             <a href="/Book/AddBook/" class="btn btn-warning">Edit</a>
@@ -51,6 +56,7 @@
                 <input type="hidden" name="AgeLimit" value="@Model.AgeLimit" />
                 <input type="hidden" name="Genre" value="@Model.Genre" />
                 <input type="hidden" name="Format" value="@Model.Format" />
+                <input type="hidden" name="Quantity" value="@Model.Quantity" />
                 <button type="submit" class="btn btn-success">Add to Library</button>
             </form>
             <a href="/Book/DeleteBook/" class="btn btn-danger">Delete</a>
