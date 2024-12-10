@@ -27,25 +27,34 @@ public class BookController : Controller
         Book test = new Book("title", "author", "ISBN", "publisher", 2024, 200, 100, 6, "pdf", "novel");
         return View("BookDetails", test);
     }
-    public IActionResult BookDetails(Book book)
+    public async Task<IActionResult> BookDetails(string isbn)
     {
-        return View("BookDetails", book);
+        var book = _dbContext.Books.FirstOrDefault(b => b.isbnNumber == isbn);
+
+        if (book == null)
+        {
+            return NotFound(); // Return 404 if the book is not found
+        }
+
+        return View(book); // Pass the book to the view
     }
+
     public IActionResult AddBook()
     {
         return View("AddBook", new Book());
     }
     [HttpPost]
-    public IActionResult AddBookSubmit(Book book)
+    public async Task<IActionResult> AddBookSubmit(Book book)
     {
         if (ModelState.IsValid)
         {
             _dbContext.Books.Add(book);     // Add the new book to the database
-            _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(); 
             return RedirectToAction("BookAdded", new { isbn = book.isbnNumber });   //Success Message
         }
         return View("AddBook", book);
     }
+
     public IActionResult DeleteBook(Book deletedBook)       //Delete new book without adding to DB
     {
         return View("DeleteBook", deletedBook);
