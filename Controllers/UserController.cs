@@ -6,9 +6,11 @@ namespace eLibrary.Controllers;
 public class UserController : Controller
 {
     private DB_context _dbContext;
-    public UserController(DB_context dbContext)
+    private readonly IHttpContextAccessor _context;
+    public UserController(DB_context dbContext, IHttpContextAccessor context)
     {
         _dbContext = dbContext;
+        _context = context;
     }
     
     public IActionResult Registration()
@@ -72,6 +74,7 @@ public class UserController : Controller
 
         // If user is found and password is correct, log the user in
         Console.WriteLine("Logged In");
+        _context.HttpContext.Session.SetString("userName", user.UserName); 
         return RedirectToAction("Index", "Home");
     }
 

@@ -12,7 +12,14 @@ builder.Services.AddDbContext<DB_context>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+//added
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+});
+//
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -23,6 +30,10 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+//added
+app.UseStaticFiles();
+app.UseSession();
+//
 app.UseRouting();
 app.UseAuthorization();
 

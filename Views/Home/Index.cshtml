@@ -1,9 +1,12 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model IEnumerable<eLibrary.Models.Book>
+@inject IHttpContextAccessor _context;
 
 @{
     ViewData["Title"] = "iReadIt";
     Layout = "_Layout";
+    var userName = _context.HttpContext.Session.GetString("userName");
+
 }
 
 <style>
@@ -11,6 +14,13 @@
         background-color: #2d2b2b;
         color: #fff;
     }
+    .welcome-message {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #007bff;
+        margin-top: 8px;
+    }
+
 
     .main-content h1 {
         text-transform: none;
@@ -202,23 +212,43 @@
 <!-- Register and Login Section -->
 <!-- Auth Section -->
 <div class="auth-section">
-    <!-- Trigger for the modal -->
-        <a href="javascript:void(0)" class="btn btn-lg btn-primary register-btn" id="loginLink">Login</a>
-    <p class="login-link">Not a member? <a href="#">Register</a></p>
+    @if (!string.IsNullOrEmpty(userName))
+    {
+        <!-- Welcome message when the user is logged in -->
+        <p class="welcome-message">Welcome, @userName</p>
+    }
+    else
+    {
+        <!-- Login and Register buttons when the user is not logged in -->
+        <a href="javascript:void(0)" class="btn btn-lg btn-primary register-btn animate-btn" id="loginLink">Login</a>
+        <p class="login-link">Not a member? <a asp-controller="User" asp-action="Registration">Register</a></p>
+
+
+        <!-- Modal for Login -->
+        <div class="modal-overlay" style="display: none;"></div>
+        <div class="modal" id="loginModal">
+            <div class="modal-content">
+                <button id="closeModal" class="close-btn">X</button>
+                <h2>Login</h2>
+                <form action="@Url.Action("Login", "User")" method="post">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="email" name="email" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required />
+                    </div>
+                    <button type="submit" class="btn btn-lg btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    }
 </div>
 
-<!-- The Modal (always visible) -->
-<div id="loginModal" class="modal">
-    <div class="modal-content">
-        <h3>Login Form</h3>
-        <form>
-            <input type="text" placeholder="Username" required><br><br>
-            <input type="password" placeholder="Password" required><br><br>
-            <button type="submit" class="btn btn-primary">Login</button>
-        </form>
-        <a href="javascript:void(0)" id="closeModal">Close</a>
-    </div>
-</div>
+
+
+
 <!-- Featured Books Section -->
 <div class="featured-books">
     <h2>Featured Books</h2>
@@ -304,6 +334,19 @@
             if (event.target === modalOverlay) {
                 hideModal();
             }
+        });
+        // Hover effect for animated buttons
+        const animatedButtons = document.querySelectorAll(".animate-btn");
+
+        animatedButtons.forEach(button => {
+            button.addEventListener("mouseover", () => {
+                button.style.transform = "scale(1.1)";
+                button.style.transition = "transform 0.3s";
+            });
+
+            button.addEventListener("mouseout", () => {
+                button.style.transform = "scale(1)";
+            });
         });
     });
 
