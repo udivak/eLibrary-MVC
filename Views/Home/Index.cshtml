@@ -137,6 +137,25 @@
         cursor: pointer;
     }
 
+    /* New style for the top links */
+    .top-links {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px 0;
+    }
+
+    .top-links a {
+        color: #007bff;
+        font-weight: bold;
+        font-size: 1.1rem;
+        text-decoration: none;
+    }
+
+    .top-links a:hover {
+        text-decoration: underline;
+        color: #0056b3;
+    }
+
     /* Styling for Register and Login Links */
     .register-btn {
         margin-bottom: 8px;
@@ -165,6 +184,12 @@
 
 
 <div class="container">
+    <!-- Top Links Section -->
+    <div class="top-links">
+        <a href="@Url.Action("AddBook", "Book")">Add New Book</a>
+        <a href="@Url.Action("SearchBook", "Book")">Search for a Book</a>
+    </div>
+
     <!-- Main Content Section -->
     <div class="text-center main-content">
         <h1 class="display-4">Welcome to iReadIt</h1>
@@ -178,7 +203,7 @@
 <!-- Auth Section -->
 <div class="auth-section">
     <!-- Trigger for the modal -->
-    <a href="javascript:void(0)" class="btn btn-lg btn-primary register-btn" id="loginLink">Login</a>
+        <a href="javascript:void(0)" class="btn btn-lg btn-primary register-btn" id="loginLink">Login</a>
     <p class="login-link">Not a member? <a href="#">Register</a></p>
 </div>
 

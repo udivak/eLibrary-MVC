@@ -2,14 +2,30 @@
 
 @{
     ViewBag.Title = "Search Books";
-}
 
+}
+<link rel="stylesheet" href="../Style/Book/SearchBooks.css">
+
+<!-- Loading Spinner -->
+<div id="loadingSpinner" style="display:none;">
+    <div class="spinner"></div>
+</div>
 <h2>Search Books</h2>
 
-<form asp-action="Searchbooks" method="get">
+
+
+<!-- Loading Overlay with Spinner -->
+<div id="loadingOverlay">
+    <div class="spinner"></div>
+</div>
+
+
+<form asp-action="Searchbooks" method="get" id="searchForm">
     <div class="form-group">
         <label for="title">Title</label>
-        <input type="text" class="form-control" id="title" name="title" value="@ViewData["Title"]" />
+        @* <input type="text" class="form-control" id="title" name="title" value="@ViewData["Title"]" /> *@
+        <input type="text" class="form-control" id="title" name="title"  />
+
     </div>
 
     <div class="form-group">
@@ -32,23 +48,13 @@
         <input type="number" class="form-control" id="year" name="year" value="@ViewData["Year"]" />
     </div>
 
-    @* <div class="form-group"> *@
-    @*     <label for="format">Format</label> *@
-    @*     <select class="form-control" id="format" name="format"> *@
-    @*         <option value="">All</option> *@
-    @* <option value="PDF" @(ViewData["Format"]?.ToString() == "PDF" ? "selected" : "")>PDF</option> *@
-    @* <option value="ePub" @(ViewData["Format"]?.ToString() == "ePub" ? "selected" : "")>ePub</option> *@
-    @* <option value="f2b" @(ViewData["Format"]?.ToString() == "f2b" ? "selected" : "")>f2b</option> *@
-    @* <option value="mobi" @(ViewData["Format"]?.ToString() == "mobi" ? "selected" : "")>mobi</option> *@
-    @*     </select> *@
-    @* </div> *@
-
     <button type="submit" class="btn btn-primary">Search</button>
 </form>
+
 @if (Model != null && Model.Any())
 {
     <h3>Books Found</h3>
-    <table>
+    <table id="resultsTable" style="display:none;">
         <thead>
         <tr>
             <th>Title</th>
@@ -78,3 +84,38 @@
         </tbody>
     </table>
 }
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchForm = document.getElementById("searchForm");
+        const loadingOverlay = document.getElementById("loadingOverlay");
+        const resultsTable = document.getElementById("resultsTable");
+
+        // Initially hide the results table
+        if (resultsTable) {
+            resultsTable.style.display = "none";
+        }
+
+        // Show the loading overlay and spinner as soon as the form is submitted
+        searchForm.addEventListener("submit", function (event) {
+            loadingOverlay.style.display = "block"; // Show the overlay and spinner
+
+            // Prevent the default form submission to allow the spinner to show before the reload
+            event.preventDefault();
+
+            // Wait 2-3 seconds before submitting the form to simulate delay
+            setTimeout(function () {
+                searchForm.submit(); // Submit the form after the delay
+            }, 2000); // Adjust the delay time (2-3 seconds)
+        });
+
+        // Delay showing results on the page (if Model is present)
+        setTimeout(function () {
+            loadingOverlay.style.display = "none"; // Hide the overlay and spinner after the delay
+
+            if (resultsTable) {
+                resultsTable.style.display = "block"; // Show the results
+            }
+        }, 0); // Adjust the delay as needed (2-3 seconds)
+    });
+</script>
