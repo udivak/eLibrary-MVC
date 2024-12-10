@@ -8,15 +8,32 @@
         padding-top: 0;
         background-color: #2d2b2b;
     }
-    
+
     .card-body {
         background-color: #2d2b2b;
         color : #ffffff;
+        display: flex;
+        align-items: center;
     }
-    
+
+    .book-details-text {
+        flex: 1;
+    }
+
+    .book-image {
+        margin-left: 20px;
+        max-width: 150px;
+        height: auto;
+        border-radius: 8px;
+    }
+
     .card-footer {
         background-color: #0d6efd;
         color : #ffffff;
+    }
+
+    .btn-back {
+        margin-right: 10px;
     }
 </style>
 
@@ -26,20 +43,23 @@
             <h4>Book Details</h4>
         </div>
         <div class="card-body">
-            <p><strong>Title:</strong> @Model.Title</p>
-            <p><strong>Author:</strong> @Model.Author</p>
-            <p><strong>ISBN:</strong> @Model.isbnNumber</p>
-            <p><strong>Publisher:</strong> @Model.Publisher</p>
-            <p><strong>Year:</strong> @Model.Year</p>
-            <p><strong>Buy Price:</strong> @Model.BuyPrice$</p>
-            <p><strong>Borrow Price:</strong> @Model.BorrowPrice$</p>
-            <p><strong>Age Limit:</strong> @Model.AgeLimit+</p>
-            <p><strong>Genre:</strong> @Model.Genre</p>
-            <p><strong>Format:</strong> @Model.Format</p>
+            <div class="book-details-text">
+                <p><strong>Title:</strong> @Model.Title</p>
+                <p><strong>Author:</strong> @Model.Author</p>
+                <p><strong>ISBN:</strong> @Model.isbnNumber</p>
+                <p><strong>Publisher:</strong> @Model.Publisher</p>
+                <p><strong>Year:</strong> @Model.Year</p>
+                <p><strong>Buy Price:</strong> @Model.BuyPrice$</p>
+                <p><strong>Borrow Price:</strong> @Model.BorrowPrice$</p>
+                <p><strong>Age Limit:</strong> @Model.AgeLimit+</p>
+                <p><strong>Genre:</strong> @Model.Genre</p>
+                <p><strong>Format:</strong> @Model.Format</p>
+            </div>
+            <img src="~/images/Harry Potter 1.jpg" alt="Book Image" class="book-image" />
         </div>
         <div class="card-footer text-end">
+            <button type="button" class="btn btn-secondary btn-back" onclick="window.history.back()">Back</button>
             <a href="/Book/AddBook/" class="btn btn-warning">Edit</a>
-            <!--a href="/Book/AddBookSubmit/" class="btn btn-success">Add to Library</--a-->
             <form asp-action="AddBookSubmit" asp-controller="Book" method="post" style="display:inline;">
                 <input type="hidden" name="Title" value="@Model.Title" />
                 <input type="hidden" name="Author" value="@Model.Author" />
@@ -57,6 +77,6 @@
         </div>
     </div>
 </div>
+
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-
