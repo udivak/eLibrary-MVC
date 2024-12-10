@@ -1,76 +1,58 @@
-﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model IEnumerable<eLibrary.Models.Book>
-
+@inject IHttpContextAccessor _context;
 @{
     ViewData["Title"] = "iReadIt";
     Layout = "_Layout";
+    var userName = _context.HttpContext.Session.GetString("userName");
 }
-
-
 <div class="container">
     <!-- Main Content Section -->
     <div class="text-center main-content">
-        <h1 class="display-4">Welcome to iReadIt</h1>
-        <p class="lead">
-            Borrow and read eBooks easily, anywhere and anytime.
+        <h1 class="display-4" style="color: #007bff; font-weight: bold; text-transform: none;">Welcome to iReadIt</h1>
+        <p class="lead" style="color: #ffffff;">
+            Borrow and read eBooks easily, anywhere and anytime. <br>
         </p>
     </div>
 </div>
-
-<!-- Register and Login Section -->
-<!-- Auth Section -->
-<div class="auth-section">
-    <!-- Trigger for the modal -->
-    <a href="javascript:void(0)" class="btn btn-lg btn-primary register-btn" id="loginLink">Login</a>
-    <p class="login-link">Not a member? <a href="#">Register</a></p>
-</div>
-
-<!-- The Modal (always visible) -->
-<div id="loginModal" class="modal">
-    <div class="modal-content">
-        <h3>Login Form</h3>
-        <form>
-            <input type="text" placeholder="Username" required><br><br>
-            <input type="password" placeholder="Password" required><br><br>
-            <button type="submit" class="btn btn-primary">Login</button>
-        </form>
-        <a href="javascript:void(0)" id="closeModal">Close</a>
-    </div>
-</div>
-<!-- Featured Books Section -->
-<div class="featured-books">
-    <h2>Featured Books</h2>
-    <br>
-    <div class="row">
-        @foreach (var book in Model.Take(4)) // First row of 4 books
-        {
-            <div class="col-md-3">
-                <div class="card book-card mb-4">
-                    <img src="~/images/Harry Potter 1.jpg" class="card-img-top book-img" alt="@book.Title">
-                    <div class="card-body">
-                        <h5 class="card-title">@book.Title</h5>
-                        <p class="card-text"><bold class="text-muted"><u>Format:</u> @book.Format</bold></p>
-                        <p class="card-text"><bold class="text-muted"><u>Buy Price:</u> @book.BuyPrice$</bold></p>
+<div>
+    <div>
+    <!-- Featured Books Section -->
+    <div class="featured-books">
+        <h2>Featured Books</h2>
+        <br>
+        <div class="row">
+            @foreach (var book in Model.Take(4)) // First row of 4 books
+            {
+                <div class="col-md-3">
+                    <div class="card book-card mb-4">
+                        <img src="~/images/Harry Potter 1.jpg" class="card-img-top book-img" alt="@book.Title">
+                        <div class="card-body">
+                            <h5 class="card-title">@book.Title</h5>
+                            <p class="card-text"><bold class="text-muted"><u>Format:</u> @book.Format</bold></p>
+                            <p class="card-text"><bold class="text-muted"><u>Buy Price:</u> @book.BuyPrice$</bold></p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
-    </div>
-    <div class="row">
-        @foreach (var book in Model.Skip(4).Take(4)) // Second row of 4 books
-        {
-            <div class="col-md-3">
-                <div class="card book-card mb-4">
-                    <img src="~/images/Harry Potter 1.jpg" class="card-img-top book-img" alt="@book.Title">
-                    <div class="card-body">
-                        <h5 class="card-title">@book.Title</h5>
-                        <p class="card-text"><bold class="text-muted"><u>Format:</u> @book.Format</bold></p>
-                        <p class="card-text"><bold class="text-muted"><u>Buy Price:</u> @book.BuyPrice$</bold></p>
+            }
+        </div>
+        <div class="row">
+            @foreach (var book in Model.Skip(4).Take(4)) // Second row of 4 books
+            {
+                <div class="col-md-3">
+                    <div class="card book-card mb-4">
+                        <img src="~/images/Harry Potter 1.jpg" class="card-img-top book-img" alt="@book.Title">
+                        <div class="card-body">
+                            <h5 class="card-title">@book.Title</h5>
+                            <p class="card-text"><bold class="text-muted"><u>Format:</u> @book.Format</bold></p>
+                            <p class="card-text"><bold class="text-muted"><u>Buy Price:</u> @book.BuyPrice$</bold></p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
     </div>
+</div>
 </div>
 
 <!-- The Overlay (always visible) -->
@@ -117,6 +99,18 @@
         closeModal.addEventListener('click', hideModal);
         modalOverlay.addEventListener('click', hideModal);
 
+<!-- Register and Login Section on Top-Right -->
+<div class="auth-section">
+    @if (userName != null)
+    {
+        <span>Welcome, @userName</span>
+    }
+    else
+    {
+        <a asp-controller="User" asp-action="LoginPage" class="btn btn-lg btn-primary register-btn">Login</a>
+        <p class="login-link">Not a member? <a asp-controller="User" asp-action="Registration">Register</a></p>
+    }
+</div>
         // Close the modal when clicking outside of it
         window.addEventListener('click', function(event) {
             if (event.target === modalOverlay) {
