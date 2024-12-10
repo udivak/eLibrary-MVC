@@ -202,14 +202,14 @@
         @foreach (var book in Model.Take(4)) // First row of 4 books
         {
             <div class="col-md-3">
-                <div class="card book-card mb-4">
+                <a href="@Url.Action("BookDetails", "Book", new { id = book.isbnNumber })" class="card book-card mb-4">
                     <img src="~/images/Harry Potter 1.jpg" class="card-img-top book-img" alt="@book.Title">
                     <div class="card-body">
                         <h5 class="card-title">@book.Title</h5>
-                        <p class="card-text"><bold class="text-muted"><u>Format:</u> @book.Format</bold></p>
-                        <p class="card-text"><bold class="text-muted"><u>Buy Price:</u> @book.BuyPrice$</bold></p>
+                        <p class="card-text"><strong class="text-muted"><u>Format:</u> @book.Format</strong></p>
+                        <p class="card-text"><strong class="text-muted"><u>Buy Price:</u> @book.BuyPrice$</strong></p>
                     </div>
-                </div>
+                </a>
             </div>
         }
     </div>
@@ -217,18 +217,19 @@
         @foreach (var book in Model.Skip(4).Take(4)) // Second row of 4 books
         {
             <div class="col-md-3">
-                <div class="card book-card mb-4">
+                <a href="@Url.Action("BookDetails", "Book",new {isbn =  book.isbnNumber})" class="card book-card mb-4">
                     <img src="~/images/Harry Potter 1.jpg" class="card-img-top book-img" alt="@book.Title">
                     <div class="card-body">
                         <h5 class="card-title">@book.Title</h5>
-                        <p class="card-text"><bold class="text-muted"><u>Format:</u> @book.Format</bold></p>
-                        <p class="card-text"><bold class="text-muted"><u>Buy Price:</u> @book.BuyPrice$</bold></p>
+                        <p class="card-text"><strong class="text-muted"><u>Format:</u> @book.Format</strong></p>
+                        <p class="card-text"><strong class="text-muted"><u>Buy Price:</u> @book.BuyPrice$</strong></p>
                     </div>
-                </div>
+                </a>
             </div>
         }
     </div>
 </div>
+
 
 <!-- The Overlay (always visible) -->
 <div class="modal-overlay"></div>
