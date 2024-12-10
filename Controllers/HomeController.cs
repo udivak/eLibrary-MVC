@@ -10,11 +10,13 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private DB_context _dbContext;
+    private readonly IHttpContextAccessor _context;
 
-    public HomeController(ILogger<HomeController> logger, DB_context dbContext)
+    public HomeController(ILogger<HomeController> logger, DB_context dbContext, IHttpContextAccessor context)
     {
         _logger = logger;
         _dbContext = dbContext;
+        _context = context;
     }
     
     public IActionResult Index()        // Home Page

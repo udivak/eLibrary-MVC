@@ -1,93 +1,12 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@inject IHttpContextAccessor _context;
 <!DOCTYPE html>
-<style>
-    body {
-        background-color: #2d2b2b !important;
-        color: #ffffff !important; /* White font color */
-    }
-    
-    .bg-dark {
-        background-color: #2d2b2b !important;
-    }
-    
-    .custom-navbar {
-        background-color: #2d2b2b; /* Replace with your desired background color */
-        color: white; /* Text color */
-        border-bottom: 1px solid #444444; /* Optional: Add a subtle border */
-    }
-
-    .custom-navbar .navbar-brand {
-        color: #007bff; /* Brand name color */
-        font-weight: bold;
-        font-size: 3rem;
-        margin-right: 25px;
-    }
-
-    .custom-navbar .navbar-brand:hover {
-        color: #ffffff; /* Brand name color */
-        font-weight: bold;
-        font-size: 3rem;
-    }
-
-    .navbar-nav .nav-item .nav-link {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* Apple-style font */
-        font-size: 20px; /* Adjust the font size */
-        color: #ffffff; /* Change text color */
-        border: 1px solid #007bff; /* Optional: Add a border */
-        padding: 10px 15px; /* Space inside the buttons */
-        border-radius: 5px; /* Rounded corners */
-        text-align: center; /* Center-align text */
-        text-decoration: none; /* Remove underline */
-        transition: background-color 0.3s ease; /* Add hover effect transition */
-        margin-right: 15px;
-    }
-
-    .navbar-nav .nav-item .nav-link:hover {
-        background-color: #007bff; /* Change background color on hover */
-        color: #ffffff; /* Maintain text color on hover */
-    }
-
-    .navbar-nav .nav-item .nav-link:active {
-        background-color: #0056b3; /* Active button background */
-        color: #ffffff; /* Active button text */
-    }
-
-    /* Ensure the page takes full height */
-    html, body {
-        height: 100%;
-        margin: 0;
-    }
-
-    /* Flex container for the page layout */
-    .container-general {
-        display: flex;
-        flex-direction: column;
-        min-height: 100%;
-        padding: 0;
-        margin: 0;
-    }
-
-    /* Makes sure the main content area expands to fill available space */
-    main {
-        flex: 1;
-    }
-    
-    .container-fluid {
-        margin-bottom: 3px;
-    }
-    
-    .pb-3 {
-        padding-top: 0;
-        margin-top: 0;
-    }
-</style>
-
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"]</title>
-    <script type="importmap"></script>
+    <link rel="stylesheet" href="/css/_layout.css">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/eLibrary.styles.css" asp-append-version="true"/>
@@ -116,6 +35,17 @@
                         <a class="nav-link" asp-area="" asp-controller="Book" asp-action="SearchBooks">Search Book</a>
                     </li>
                 </ul>
+                <div class="auth-section">
+                    @if (_context.HttpContext.Session.GetString("userName") != null)
+                    {
+                        <span>Welcome, @Html.Raw(_context.HttpContext.Session.GetString("userName"))</span>
+                    }
+                    else
+                    {
+                        <a asp-controller="User" asp-action="LoginPage" class="btn btn-lg btn-primary register-btn">Login</a>
+                        <p class="login-link">Not a member? <a asp-controller="User" asp-action="Registration">Register</a></p>
+                    }
+                </div>
             </div>
         </div>
     </nav>
