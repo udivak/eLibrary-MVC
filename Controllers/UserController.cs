@@ -57,7 +57,7 @@ public class UserController : Controller
         return View("UserAdded", userAdded);
     }
 
-    public IActionResult LoginPage()
+    public IActionResult LoginPage()            //old
     {
         return View("UserLogin");
     }
@@ -126,35 +126,7 @@ public class UserController : Controller
 
         return View("Checkout", cart);
     }*/
-    public IActionResult Checkout()
-    {
-        // Fetch data to populate the cart
-        List<Book> books = _dbContext.GetAllBooks().Take(4).ToList();
-        if (books == null || !books.Any()) // Check if books are not null and not empty
-        {
-            return View("Checkout", new List<CartItem>()); // Return an empty cart view if no books found
-        }
-
-        List<CartItem> cart = new List<CartItem>();
-        Random random = new Random();
-        foreach (var book in books)
-        {
-            CartItem temp = new CartItem(book.isbnNumber, book.Title, "Buy", book.BuyPrice, random.Next(1, 6));
-            cart.Add(temp);
-        }
-
-        // Ensure the session is populated before passing data to the view
-        string serializedCart = JsonSerializer.Serialize(cart);
-        _context.HttpContext.Session.SetString("ShoppingCart", serializedCart);
-
-        // Validate the cart items
-        if (cart == null || !cart.Any())
-        {
-            return View("Checkout", new List<CartItem>());
-        }
-
-        return View("Checkout", cart);
-    }
+    
 
 
 

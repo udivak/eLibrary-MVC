@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using eLibrary.Models;
 using Microsoft.Extensions.Logging;
 using static eLibrary.Controllers.UserController;
+using PaypalServerSdk;
+using PayPal;
 
 namespace eLibrary.Controllers;
 
@@ -24,6 +26,9 @@ public class HomeController : Controller
         var userName = HttpContext.Session.GetString("userName");
 
         List<Book> featuredBooks = _dbContext.GetAllBooks().Take(8).ToList();
+        
+        
+        
         return View("Index", featuredBooks);
     }
     
@@ -37,5 +42,4 @@ public class HomeController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
-    
 }
