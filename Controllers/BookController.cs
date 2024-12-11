@@ -142,7 +142,7 @@ public class BookController : Controller
         {
             price = b.BorrowPrice;
         }
-        CartItem addItem = new CartItem(b.isbnNumber, action, price, quantity);
+        CartItem addItem = new CartItem(b.isbnNumber, b.Title, action, price, quantity);
         ShoppingCart.Add(addItem);
         return RedirectToAction("Index", "Home");
     }
