@@ -81,9 +81,14 @@ public class BookController : Controller
         else if (!string.IsNullOrEmpty(format))
         {
             books = _dbContext.Books.Where(b => b.Format == format).ToList();
+            
+        }
+        else
+        {
+            return View(books);
         }
         // Return an empty list if no filters are applied (first time visiting)
-        return View(books);
+        return View("SearchResults", books);
     }
 
 
@@ -98,6 +103,11 @@ public class BookController : Controller
             return RedirectToAction("Index", "Home");
         }
         return View("BookAdded", addedBook);
+    }
+
+    public IActionResult SearchResults()
+    {
+        return View(_dbContext.Books.ToList());
     }
     
 }

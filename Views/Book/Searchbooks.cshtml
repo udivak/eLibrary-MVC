@@ -4,20 +4,15 @@
     ViewBag.Title = "Search Books";
 
 }
-<link rel="stylesheet" href="../Style/Book/SearchBooks.css">
+<link rel="stylesheet" href="../wwwroot/css/SearchBooks.css">
 
-<!-- Loading Spinner -->
-<div id="loadingSpinner" style="display:none;">
-    <div class="spinner"></div>
-</div>
 <h2>Search Books</h2>
 
 
 
 <!-- Loading Overlay with Spinner -->
-<div id="loadingOverlay">
-    <div class="spinner"></div>
-</div>
+<div class="loader"></div>
+
 
 
 <form asp-action="Searchbooks" method="get" id="searchForm">
@@ -51,10 +46,15 @@
     <button type="submit" class="btn btn-primary">Search</button>
 </form>
 
+@{
+    ViewBag.Title = "Search Results";
+}
+
+<h2>Search Results</h2>
+
 @if (Model != null && Model.Any())
 {
-    <h3>Books Found</h3>
-    <table id="resultsTable" style="display:none;">
+    <table class="table table-striped">
         <thead>
         <tr>
             <th>Title</th>
@@ -62,9 +62,7 @@
             <th>Publisher</th>
             <th>Year</th>
             <th>Genre</th>
-            <th>Format</th>
-            <th>Buy Price</th>
-            <th>Borrow Price</th>
+            <th>Details</th>
         </tr>
         </thead>
         <tbody>
@@ -76,46 +74,56 @@
                 <td>@book.Publisher</td>
                 <td>@book.Year</td>
                 <td>@book.Genre</td>
-                <td>@book.Format</td>
-                <td>@book.BuyPrice</td>
-                <td>@book.BorrowPrice</td>
+                <td>
+                    <a asp-action="BookDetails" asp-route-id="@book.isbnNumber" class="btn btn-link">View Details</a>
+                </td>
             </tr>
         }
         </tbody>
     </table>
 }
+else
+{
+    <p>No books found matching the criteria.</p>
+}
+
+
 
 <script>
+    window.addEventListener("load", () => {
+        console.log("start loading");
+        const loader = document.querySelector(".loader");
+        
+        loader.classList.add("loader-hidden");
+        
+        loader.addEventListener("transition", () => {
+            document.body.removeChild("loader");
+        })
+    })
     document.addEventListener("DOMContentLoaded", function () {
         const searchForm = document.getElementById("searchForm");
         const loadingOverlay = document.getElementById("loadingOverlay");
         const resultsTable = document.getElementById("resultsTable");
 
-        // Initially hide the results table
-        if (resultsTable) {
-            resultsTable.style.display = "none";
-        }
+        // Initially hide the loading overlay
+        loadingOverlay.style.display = "none";
 
         // Show the loading overlay and spinner as soon as the form is submitted
         searchForm.addEventListener("submit", function (event) {
-            loadingOverlay.style.display = "block"; // Show the overlay and spinner
-
-            // Prevent the default form submission to allow the spinner to show before the reload
+            // Prevent the default form submission
             event.preventDefault();
 
-            // Wait 2-3 seconds before submitting the form to simulate delay
+            // Show the loading overlay
+            loadingOverlay.style.display = "flex"; // Use flex to center the spinner
+
+            // Submit the form after 2 seconds
             setTimeout(function () {
-                searchForm.submit(); // Submit the form after the delay
-            }, 2000); // Adjust the delay time (2-3 seconds)
+                searchForm.submit();
+            }, 2000);
         });
-
-        // Delay showing results on the page (if Model is present)
-        setTimeout(function () {
-            loadingOverlay.style.display = "none"; // Hide the overlay and spinner after the delay
-
-            if (resultsTable) {
-                resultsTable.style.display = "block"; // Show the results
-            }
-        }, 0); // Adjust the delay as needed (2-3 seconds)
     });
+    
+    
+    
+
 </script>
