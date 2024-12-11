@@ -9,11 +9,13 @@ namespace eLibrary.Controllers;
 public class BookController : Controller
 {
     private DB_context _dbContext;
-
-    public BookController(DB_context dbContext)
+    private readonly IHttpContextAccessor _context;
+    public BookController(DB_context dbContext, IHttpContextAccessor context)
     {
         _dbContext = dbContext;
+        _context = context;
     }
+    private ISession Session => _context.HttpContext.Session;
     
     public async Task<IActionResult> GetFirstBook()
     {
@@ -64,7 +66,7 @@ public class BookController : Controller
     public IActionResult Searchbooks(string title, string author, string genre, string publisher, int? year, string format)
     {
         // Start with an empty list of books
-        var books = new List<eLibrary.Models.Book>();
+        var books = new List<Book>();
 
         // Apply filters based on the user's input
         if (!string.IsNullOrEmpty(title))
@@ -90,7 +92,6 @@ public class BookController : Controller
         else if (!string.IsNullOrEmpty(format))
         {
             books = _dbContext.Books.Where(b => b.Format == format).ToList();
-            
         }
         else
         {
@@ -112,6 +113,55 @@ public class BookController : Controller
             return RedirectToAction("Index", "Home");
         }
         return View("BookAdded", addedBook);
+    }
+    public async Task<IActionResult> AddToCart(Book book, string action, int quantity = 0)
+    {
+        string isbn = book.isbnNumber;
+        var b = _dbContext.Books.FirstOrDefault(b => b.isbnNumber == isbn);
+        if (b == null)
+            return RedirectToAction("Error", "Home");
+        if (b.Format == "Physical")
+        {
+            if (b.Quantity > quantity)      //Save the current copy in the user's cart
+            {
+                b.Quantity-= quantity;
+                await _dbContext.SaveChangesAsync();
+            }
+            else                        //No more physical copies
+            {
+                ViewBag.Message = $"Sorry, we don't have enough copies of {b.Title} at the moment.";  //simulate message box
+                return RedirectToAction("Index", "Home");
+            }
+        }
+        int price;
+        if (action == "Buy")
+        {
+            price = b.BuyPrice;
+        }
+        else
+        {
+            price = b.BorrowPrice;
+        }
+        CartItem addItem = new CartItem(b.isbnNumber, action, price, quantity);
+        ShoppingCart.Add(addItem);
+        return RedirectToAction("Index", "Home");
+    }
+    public async Task<IActionResult> RemoveFromCart(Book book)
+    {
+        string isbn = book.isbnNumber;
+        var b = _dbContext.Books.FirstOrDefault(b => b.isbnNumber == isbn);
+        if (b == null)
+            return RedirectToAction("Error", "Home");
+        var shoppingCart = ShoppingCart.GetShoppingCart();
+        CartItem removedItem = shoppingCart.Find(item => item.ISBN == isbn);
+        int qty = removedItem.Quantity;
+        if (b.Format == "Physical")
+        {
+            b.Quantity += qty;
+            await _dbContext.SaveChangesAsync();
+        }
+        ShoppingCart.Remove(removedItem);
+        return RedirectToAction("Index", "Home");
     }
 
     public IActionResult SearchResults()
