@@ -1,0 +1,71 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<eLibrary.Models.CartItem>
+@{
+    ViewData["Title"] = "Checkout";
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="/css/_layout.css">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+</head>
+<body>
+@* Header Section *@
+<div class="container-general">
+    <main role="main" class="pb-3">
+        <div class="container">
+            <h1>Checkout</h1>
+            @if (Model == null || !Model.Any()) // Check if the cart is empty
+            {
+                <p>No items in the cart.</p>
+            }
+            else
+            {
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>Book Title</th>
+                        <th>ISBN</th>
+                        <th>Quantity</th>
+                        <th>Price Per Unit</th>
+                        <th>Total Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Title</td>
+                            <td>@item.ISBN</td>
+                            <td>@item.Quantity</td>
+                            <td>@item.Price</td>
+                            <td>@(item.Quantity * item.Price)</td>
+                        </tr>
+                    }
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="4" class="text-end">Order Price</td>
+                        <td>@Model.Sum(item => item.Quantity * item.Price)</td>
+                    </tr>
+                    </tfoot>
+                </table>
+            }
+            <div class="text-center">
+                <a href="#" class="btn btn-lg btn-primary" id="checkout-button">Checkout</a>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>
