@@ -19,6 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <None Include="wwwroot\css\SearchBooks.css" />
       <None Include="wwwroot\images\Harry Potter 1.jpg" />
     </ItemGroup>
 
