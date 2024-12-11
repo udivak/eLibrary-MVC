@@ -12,6 +12,7 @@ public class UserController : Controller
         _dbContext = dbContext;
         _context = context;
     }
+    private ISession Session => _context.HttpContext.Session;
     
     public IActionResult Registration()
     {
@@ -74,7 +75,8 @@ public class UserController : Controller
         
         // If user is found and password is correct, log the user in
         Console.WriteLine("Logged In");
-        _context.HttpContext.Session.SetString("userName", user.UserName); 
+        //init all Session vars for user
+        Session.SetString("userName", user.UserName);
         return RedirectToAction("Index", "Home");
     }
 
