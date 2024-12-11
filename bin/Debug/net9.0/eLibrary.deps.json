@@ -13,10 +13,28 @@
           "Microsoft.EntityFrameworkCore.Sqlite": "9.0.0",
           "Newtonsoft.Json": "13.0.3",
           "Npgsql": "9.0.1",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.1"
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.1",
+          "PayPal": "2.0.0-rc2",
+          "PayPalServerSDK": "0.6.1"
         },
         "runtime": {
           "eLibrary.dll": {}
+        }
+      },
+      "APIMatic.Core/0.4.3": {
+        "dependencies": {
+          "Microsoft.CSharp": "4.7.0",
+          "Microsoft.Extensions.Logging.Abstractions": "9.0.0",
+          "Microsoft.Json.Pointer": "2.3.0",
+          "Newtonsoft.Json": "13.0.3",
+          "Polly": "7.2.3",
+          "System.Collections.Immutable": "7.0.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/APIMatic.Core.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
       "BCrypt.Net-Next/4.0.3": {
@@ -24,6 +42,14 @@
           "lib/net6.0/BCrypt.Net-Next.dll": {
             "assemblyVersion": "4.0.3.0",
             "fileVersion": "4.0.3.0"
+          }
+        }
+      },
+      "BraintreeHttp-Dotnet/0.3.0": {
+        "runtime": {
+          "lib/netstandard2.0/BraintreeHttp-Dotnet.dll": {
+            "assemblyVersion": "0.3.0.0",
+            "fileVersion": "0.3.0.0"
           }
         }
       },
@@ -331,6 +357,7 @@
           }
         }
       },
+      "Microsoft.CSharp/4.7.0": {},
       "Microsoft.Data.Sqlite.Core/9.0.0": {
         "dependencies": {
           "SQLitePCLRaw.core": "2.1.10"
@@ -484,6 +511,18 @@
         }
       },
       "Microsoft.Extensions.Primitives/9.0.0": {},
+      "Microsoft.Json.Pointer/2.3.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.3",
+          "System.Collections.Immutable": "7.0.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Json.Pointer.dll": {
+            "assemblyVersion": "2.3.0.0",
+            "fileVersion": "2.3.0.0"
+          }
+        }
+      },
       "Mono.TextTemplating/3.0.0": {
         "dependencies": {
           "System.CodeDom": "6.0.0"
@@ -524,6 +563,37 @@
           "lib/net8.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll": {
             "assemblyVersion": "9.0.1.0",
             "fileVersion": "9.0.1.0"
+          }
+        }
+      },
+      "PayPal/2.0.0-rc2": {
+        "dependencies": {
+          "BraintreeHttp-Dotnet": "0.3.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Source.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.0.0.0"
+          }
+        }
+      },
+      "PayPalServerSDK/0.6.1": {
+        "dependencies": {
+          "APIMatic.Core": "0.4.3",
+          "Microsoft.CSharp": "4.7.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/PayPalServerSDK.dll": {
+            "assemblyVersion": "0.6.1.0",
+            "fileVersion": "0.6.1.0"
+          }
+        }
+      },
+      "Polly/7.2.3": {
+        "runtime": {
+          "lib/netstandard2.0/Polly.dll": {
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.2.3.0"
           }
         }
       },
@@ -757,12 +827,26 @@
       "serviceable": false,
       "sha512": ""
     },
+    "APIMatic.Core/0.4.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-n941lB8iwYREw8FwaiBBSD37hizstAbK/oxcrgXLs0PIZiAykMY8R0Y1SvcH12wPL9udIFI8I0crjIeoV7VffQ==",
+      "path": "apimatic.core/0.4.3",
+      "hashPath": "apimatic.core.0.4.3.nupkg.sha512"
+    },
     "BCrypt.Net-Next/4.0.3": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-W+U9WvmZQgi5cX6FS5GDtDoPzUCV4LkBLkywq/kRZhuDwcbavOzcDAr3LXJFqHUi952Yj3LEYoWW0jbEUQChsA==",
       "path": "bcrypt.net-next/4.0.3",
       "hashPath": "bcrypt.net-next.4.0.3.nupkg.sha512"
+    },
+    "BraintreeHttp-Dotnet/0.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ARHcstlJ2uRxqJVAxhJ7PJbzsDD9us+docpKHuay6psUVpQJo4cH0negfo8rv/iEakGhx0Rxgp/HUu6ZLa+lsA==",
+      "path": "braintreehttp-dotnet/0.3.0",
+      "hashPath": "braintreehttp-dotnet.0.3.0.nupkg.sha512"
     },
     "Humanizer.Core/2.14.1": {
       "type": "package",
@@ -833,6 +917,13 @@
       "sha512": "sha512-IEYreI82QZKklp54yPHxZNG9EKSK6nHEkeuf+0Asie9llgS1gp0V1hw7ODG+QyoB7MuAnNQHmeV1Per/ECpv6A==",
       "path": "microsoft.codeanalysis.workspaces.msbuild/4.8.0",
       "hashPath": "microsoft.codeanalysis.workspaces.msbuild.4.8.0.nupkg.sha512"
+    },
+    "Microsoft.CSharp/4.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-pTj+D3uJWyN3My70i2Hqo+OXixq3Os2D1nJ2x92FFo6sk8fYS1m1WLNTs0Dc1uPaViH0YvEEwvzddQ7y4rhXmA==",
+      "path": "microsoft.csharp/4.7.0",
+      "hashPath": "microsoft.csharp.4.7.0.nupkg.sha512"
     },
     "Microsoft.Data.Sqlite.Core/9.0.0": {
       "type": "package",
@@ -960,6 +1051,13 @@
       "path": "microsoft.extensions.primitives/9.0.0",
       "hashPath": "microsoft.extensions.primitives.9.0.0.nupkg.sha512"
     },
+    "Microsoft.Json.Pointer/2.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-dP5d8Mo1vcqzWqY8StKoFNJNOdEDLkqg+GGQMAZgM9fNDQqekey9G0edIjEDGboY7yRjAJHGiuhc8/w45O6Ncw==",
+      "path": "microsoft.json.pointer/2.3.0",
+      "hashPath": "microsoft.json.pointer.2.3.0.nupkg.sha512"
+    },
     "Mono.TextTemplating/3.0.0": {
       "type": "package",
       "serviceable": true,
@@ -987,6 +1085,27 @@
       "sha512": "sha512-nN9Tjg73Edr4oBhNkBsfHBduNUlDFty1gIX0Ztp0np82ElSCiEcwRuN11Kv4kx2H9VDQaEeMwWAIym5aVsgVyg==",
       "path": "npgsql.entityframeworkcore.postgresql/9.0.1",
       "hashPath": "npgsql.entityframeworkcore.postgresql.9.0.1.nupkg.sha512"
+    },
+    "PayPal/2.0.0-rc2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-QmsC08dT2Bp4zxsWAXYnnYDL3x870LbC81Hodlmm3Df/WGUOVkcyMSFcTdZ8l0Xw823WW6WgZVl2ZIx7phWuCw==",
+      "path": "paypal/2.0.0-rc2",
+      "hashPath": "paypal.2.0.0-rc2.nupkg.sha512"
+    },
+    "PayPalServerSDK/0.6.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0lh2GNN1t0wDBKaKyPJkj4iH5xaOSEluxQsh4pt7aXb0Aa0n7EuRBP2Ium1/ZU52hs0QliQCVRrQemzgau5W1Q==",
+      "path": "paypalserversdk/0.6.1",
+      "hashPath": "paypalserversdk.0.6.1.nupkg.sha512"
+    },
+    "Polly/7.2.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-DeCY0OFbNdNxsjntr1gTXHJ5pKUwYzp04Er2LLeN3g6pWhffsGuKVfMBLe1lw7x76HrPkLxKEFxBlpRxS2nDEQ==",
+      "path": "polly/7.2.3",
+      "hashPath": "polly.7.2.3.nupkg.sha512"
     },
     "SQLitePCLRaw.bundle_e_sqlite3/2.1.10": {
       "type": "package",

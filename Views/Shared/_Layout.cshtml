@@ -34,6 +34,9 @@
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Book" asp-action="SearchBooks">Search Book</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Checkout" asp-action="Checkout">Checkout</a>
+                    </li>
                 </ul>
                 <div class="auth-section">
                     @if (_context.HttpContext.Session.GetString("userName") != null)
