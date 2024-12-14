@@ -1,0 +1,15 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<eLibrary.Models.Book>
+
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">My List</h5>
+        <ul>
+            @foreach (var book in Model)
+            {
+                <li>@book.Title</li>
+            }
+        </ul>
+    </div>
+</div>

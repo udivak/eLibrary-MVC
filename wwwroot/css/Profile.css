@@ -1,0 +1,51 @@
+.sidebar {
+    width: 250px;
+    background-color: #f4f4f4;
+    height: 100%;
+    transition: all 0.3s ease;
+    padding-top: 20px; /* Add padding at the top */
+}
+
+.tab-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tab-list li {
+    margin: 0;
+    padding: 0;
+}
+
+.tab-button {
+    width: 100%;
+    height: 50px; /* Set the height for uniform size */
+    padding: 0 15px; /* Remove extra padding */
+    text-align: left;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center; /* Vertically center icons and text */
+    font-size: 16px; /* Adjust the font size if needed */
+}
+
+.tab-button i {
+    margin-right: 10px; /* Adjust spacing between icon and text */
+}
+
+.tab-button:hover {
+    background-color: #e0e0e0;
+}
+
+.tab-button.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.content-card {
+    margin-left: 250px;
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+}

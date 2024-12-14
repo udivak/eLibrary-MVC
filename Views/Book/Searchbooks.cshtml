@@ -43,49 +43,10 @@
         <input type="number" class="form-control" id="year" name="year" value="@ViewData["Year"]" />
     </div>
 
-    <button type="submit" class="btn btn-primary">Search</button>
-</form>
-
-@{
-    ViewBag.Title = "Search Results";
-}
-
-<h2>Search Results</h2>
-
-@if (Model != null && Model.Any())
-{
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Publisher</th>
-            <th>Year</th>
-            <th>Genre</th>
-            <th>Details</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var book in Model)
-        {
-            <tr>
-                <td>@book.Title</td>
-                <td>@book.Author</td>
-                <td>@book.Publisher</td>
-                <td>@book.Year</td>
-                <td>@book.Genre</td>
-                <td>
-                    <a asp-action="BookDetails" asp-route-id="@book.isbnNumber" class="btn btn-link">View Details</a>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>No books found matching the criteria.</p>
-}
+    <div class="form-group text-center">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+    </form>
 
 
 

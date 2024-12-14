@@ -108,4 +108,45 @@ public class UserController : Controller
             return RedirectToAction();
         }
     }
+
+    public IActionResult Profile()
+    {
+        List<Book> featuredBooks = _dbContext.GetAllBooks().Take(8).ToList();
+        return View();
+    }
+    public IActionResult MyList()
+    {
+        // Logic to retrieve the user's list of books (this could be from a database)
+        // var userList = _dbContext.GetUserList(); // Replace with actual service call
+        return PartialView("_MyList");
+        
+        return View();
+    }
+
+    // Action to display the user's purchased books
+    public IActionResult MyBooks()
+    {
+        // Logic to retrieve the user's purchased books
+        // var myBooks = _dbContext.GetMyBooks(); // Replace with actual service call
+        return PartialView("_MyBooks");
+        // return View();
+    }
+    public IActionResult PersonalDetails()
+    {
+        // Fetch the user's personal details
+        // var personalDetails = GetUserPersonalDetails();
+        return PartialView("_PersonalDetails");
+    }
+    private IEnumerable<Book> GetUserList()
+    {
+        // Replace with actual logic to fetch user's list
+        return new List<Book> { new Book { Title = "Book 1" }, new Book { Title = "Book 2" } };
+    }
+
+    private IEnumerable<Book> GetUserBooks()
+    {
+        // Replace with actual logic to fetch user's books
+        return new List<Book> { new Book { Title = "My Book 1" }, new Book { Title = "My Book 2" } };
+    }
+
 }

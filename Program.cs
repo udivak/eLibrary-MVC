@@ -12,15 +12,15 @@ builder.Services.AddDbContext<DB_context>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-//added
+
+// Add IHttpContextAccessor and session services
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-builder.Services.AddDistributedMemoryCache();
+builder.Services.AddDistributedMemoryCache();  // For session storage
 builder.Services.AddSession(options =>
 {
-
-options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
 });
-//
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -31,24 +31,23 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-//added
+
+// Static file and session middleware should come before routing
 app.UseStaticFiles();
-app.UseSession();
-//
+app.UseSession(); // Ensure this is placed before UseRouting
+
 app.UseRouting();
 app.UseAuthorization();
-
-app.MapStaticAssets();
 
 app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-app.Run();
-
 // Custom route (not part of default routing)
 app.MapControllerRoute(
     name: "welcome",
     pattern: "welcome",
-    defaults: new {controller = "Home", action = "Index"});
+    defaults: new { controller = "Home", action = "Index" });
+
+app.Run();
