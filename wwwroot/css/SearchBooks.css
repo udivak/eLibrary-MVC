@@ -11,6 +11,11 @@
     transition: opacity 0.75s, visibility 0.75s;
     
 }
+/* Ensure the form-group container is centered */
+.form-group.text-center {
+    text-align: center;
+}
+
 .loader-hidden{
     opacity: 0;
     visibility: hidden;

@@ -72,71 +72,6 @@
         align-items: center;
     }
 
-    /* Modal Styles */
-    .modal {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 350px;
-        background-color: #007bff;  /* Same as page background */
-        color: #000000;  /* Set text color to match page */
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        padding: 30px;
-        box-sizing: border-box;
-        opacity: 0;
-        visibility: hidden;
-        max-height: 0; /* Start with no height (hidden) */
-        overflow: hidden; /* Prevent overflow */
-        transition: all 0.5s ease-in-out; /* Transition for sliding effect */
-    }
-
-    /* Modal Content */
-    .modal-content {
-        display: block;
-        text-align: center;
-    }
-
-    .modal input[type="text"], .modal input[type="password"] {
-        width: 100%;
-        padding: 10px;
-        margin: 10px 0;
-        border: 1px solid #444444;
-        border-radius: 5px;
-        background-color: #333333;
-        color: #fff;
-        font-size: 16px;
-    }
-
-    .modal button {
-        width: 100%;
-        padding: 10px;
-        background-color: #007bff;
-        color: #fff;
-        font-size: 16px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .modal button:hover {
-        background-color: #4cb1ae;
-    }
-
-    /* Modal Overlay */
-    .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 1040;
-        opacity: 1;
-        visibility: visible;
-        display: none;
-    }
 
     /* Optional: Close button styling */
     #closeModal {
@@ -197,7 +132,7 @@
     <!-- Top Links Section -->
     <div class="top-links">
         <a href="@Url.Action("AddBook", "Book")">Add New Book</a>
-        <a href="@Url.Action("SearchBook", "Book")">Search for a Book</a>
+        <a href="@Url.Action("SearchBooks", "Book")">Search for a Book</a>
     </div>
 
     <!-- Main Content Section -->
@@ -208,45 +143,12 @@
         </p>
     </div>
 </div>
-
-<!-- Register and Login Section -->
-<!-- Auth Section -->
-<div class="auth-section">
-    @if (!string.IsNullOrEmpty(userName))
-    {
-        <!-- Welcome message when the user is logged in -->
-        <p class="welcome-message">Welcome, @userName</p>
-    }
-    else
-    {
-        <!-- Login and Register buttons when the user is not logged in -->
-        <a href="javascript:void(0)" class="btn btn-lg btn-primary register-btn animate-btn" id="loginLink">Login</a>
-        <p class="login-link">Not a member? <a asp-controller="User" asp-action="Registration">Register</a></p>
-
-
-        <!-- Modal for Login -->
-        <div class="modal-overlay" style="display: none;"></div>
-        <div class="modal" id="loginModal">
-            <div class="modal-content">
-                <button id="closeModal" class="close-btn">X</button>
-                <h2>Login</h2>
-                <form action="@Url.Action("Login", "User")" method="post">
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="email" name="email" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required />
-                    </div>
-                    <button type="submit" class="btn btn-lg btn-primary">Submit</button>
-                </form>
-            </div>
-        </div>
-    }
-</div>
-
-
+@if (!string.IsNullOrEmpty(userName))
+{
+    <div class="text-center">
+        <a href="@Url.Action("Profile", "User")" class="btn btn-primary">Go to Profile</a>
+    </div>
+}
 
 
 <!-- Featured Books Section -->
@@ -288,69 +190,3 @@
 <!-- The Overlay (always visible) -->
 <div class="modal-overlay"></div>
 
-@* <button onclick="showLoginModal()">Open Login</button> *@
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const loginLink = document.getElementById('loginLink');
-        const loginModal = document.getElementById('loginModal');
-        const closeModal = document.getElementById('closeModal');
-        const modalOverlay = document.querySelector('.modal-overlay');
-
-        // Function to show the modal with a dropdown effect
-        function showModal() {
-            loginModal.style.display = 'block';  // Show modal
-            modalOverlay.style.display = 'block';  // Show overlay
-
-            // Ensure that the modal is not initially visible
-            loginModal.style.visibility = 'visible';
-            loginModal.style.opacity = '1';  // Make modal fully visible
-            loginModal.style.transition = 'none';  // Temporarily remove the transition
-
-            // Trigger a reflow to reset the layout and enable the transition
-            loginModal.offsetHeight; // Accessing offsetHeight forces a reflow
-
-            // Now apply the transition
-            loginModal.style.transition = 'all 0.5s ease-in-out';  // Apply transition for animation
-            loginModal.style.maxHeight = '300px';  // Adjust this value based on the content height
-        }
-
-        // Function to hide the modal
-        function hideModal() {
-            loginModal.style.maxHeight = '0';  // Collapse modal (sliding up effect)
-            loginModal.style.opacity = '0';  // Make modal invisible
-            loginModal.style.visibility = 'hidden';  // Ensure modal is hidden
-            modalOverlay.style.display = 'none';  // Hide overlay
-        }
-
-        // Event listeners
-        loginLink.addEventListener('click', showModal);
-        closeModal.addEventListener('click', hideModal);
-        modalOverlay.addEventListener('click', hideModal);
-
-        // Close the modal when clicking outside of it
-        window.addEventListener('click', function(event) {
-            if (event.target === modalOverlay) {
-                hideModal();
-            }
-        });
-        // Hover effect for animated buttons
-        const animatedButtons = document.querySelectorAll(".animate-btn");
-
-        animatedButtons.forEach(button => {
-            button.addEventListener("mouseover", () => {
-                button.style.transform = "scale(1.1)";
-                button.style.transition = "transform 0.3s";
-            });
-
-            button.addEventListener("mouseout", () => {
-                button.style.transform = "scale(1)";
-            });
-        });
-    });
-
-
-
-
-</script>
