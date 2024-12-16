@@ -11,6 +11,7 @@
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="/css/_layout.css">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <!-- -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/eLibrary.styles.css" asp-append-version="true"/>
 </head>
@@ -32,10 +33,14 @@
                         <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Book" asp-action="AddBook">Add Book</a>
+                        @if (_context.HttpContext.Session.GetInt32("isAdmin") == 1)
+                        {
+                            <a class="nav-link" asp-area="" asp-controller="Book" asp-action="AddBook">Add a Book</a>
+                        }
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Book" asp-action="SearchBooks">Search Book</a>
+                        <a class="nav-link" asp-area="" asp-controller="Book" asp-action="SearchBooks">Search a Book</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Checkout" asp-action="Checkout">Checkout</a>

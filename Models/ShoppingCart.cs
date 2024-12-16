@@ -6,7 +6,9 @@ namespace eLibrary.Models
 {
     public static class ShoppingCart
     {
-        private static ISession Session => new HttpContextAccessor().HttpContext?.Session; // Access the session in a static context
+        //private static ISession Session => new HttpContextAccessor().HttpContext?.Session; // Access the session in a static context
+        private static readonly IHttpContextAccessor _context = new HttpContextAccessor();
+        private static ISession Session => _context.HttpContext.Session;
 
         public static void Add(CartItem addItem)
         {

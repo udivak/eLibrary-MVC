@@ -32,21 +32,22 @@ public class BookController : Controller
     public async Task<IActionResult> BookDetails(string isbn)
     {
         var book = _dbContext.Books.FirstOrDefault(b => b.isbnNumber == isbn);
-
+        //var book = _dbContext.GetAllBooks().First();
         if (book == null)
         {
             return NotFound(); // Return 404 if the book is not found
         }
 
-        return View(book); // Pass the book to the view
+        return View("BookDetails", book); // Pass the book to the view
     }
 
     public IActionResult AddBook()
     {
         return View("AddBook", new Book());
     }
+    
     [HttpPost]
-    public async Task<IActionResult> AddBookSubmit(Book book)
+    public async Task<IActionResult> AddBookToLibrary(Book book)
     {
         if (ModelState.IsValid)
         {
@@ -62,8 +63,7 @@ public class BookController : Controller
         return View("DeleteBook", deletedBook);
     }
     
-    
-    public IActionResult Searchbooks(string title, string author, string genre, string publisher, int? year, string format)
+    public IActionResult SearchBooks(string title, string author, string genre, string publisher, int? year, string format)
     {
         // Start with an empty list of books
         var books = new List<Book>();
@@ -100,9 +100,6 @@ public class BookController : Controller
         // Return an empty list if no filters are applied (first time visiting)
         return View("SearchResults", books);
     }
-
-
-
     
     [HttpGet]
     public IActionResult BookAdded(string isbn)
@@ -146,6 +143,7 @@ public class BookController : Controller
         ShoppingCart.Add(addItem);
         return RedirectToAction("Index", "Home");
     }
+    
     public async Task<IActionResult> RemoveFromCart(Book book)
     {
         string isbn = book.isbnNumber;

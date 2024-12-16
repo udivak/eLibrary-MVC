@@ -146,8 +146,6 @@ public class CheckoutController : Controller
                 }
             }
         }
-        
-        
         return new JsonResult("success");
     }
     

@@ -4,7 +4,7 @@
 
 @{
     ViewData["Title"] = "iReadIt";
-    Layout = "_Layout";
+    //Layout = "_Layout";
     var userName = _context.HttpContext.Session.GetString("userName");
 
 }
@@ -66,7 +66,7 @@
     .auth-section {
         position: absolute;
         top: 10px; /* Adjust the distance from the top */
-        right: 10px; /* Adjust the distance from the right */
+        right: 5px; /* Adjust the distance from the right */
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -86,7 +86,7 @@
     .top-links {
         display: flex;
         justify-content: space-between;
-        margin: 20px 0;
+        margin: 10px;
     }
 
     .top-links a {
@@ -125,6 +125,10 @@
         color: #0056b3;
         background-color: #e0f7fa;
     }
+    
+    .featured_books_title {
+        margin-left: 30px;
+    }
 </style>
 
 
@@ -153,13 +157,13 @@
 
 <!-- Featured Books Section -->
 <div class="featured-books">
-    <h2>Featured Books</h2>
+    <h2 class ="featured_books_title">Featured Books</h2>
     <br>
     <div class="row">
         @foreach (var book in Model.Take(4)) // First row of 4 books
         {
             <div class="col-md-3">
-                <a href="@Url.Action("BookDetails", "Book", new { id = book.isbnNumber })" class="card book-card mb-4">
+                <a href="@Url.Action("BookDetails", "Book", new { isbn = book.isbnNumber })" class="card book-card mb-4">
                     <img src="~/images/Harry Potter 1.jpg" class="card-img-top book-img" alt="@book.Title">
                     <div class="card-body">
                         <h5 class="card-title">@book.Title</h5>

@@ -65,19 +65,14 @@ public class UserController : Controller
     public IActionResult Login(string email, string password)
     {
         var user = _dbContext.Users.FirstOrDefault(u => u.Email == email);
-    
-        // If user not found or password is incorrect
         if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
         {
-            // Handle invalid login attempt (e.g., show an error message)
             ModelState.AddModelError("", "Invalid login attempt.");
             return RedirectToAction("Index", "Home");
         }
-        
-        // If user is found and password is correct, log the user in
-        Console.WriteLine("Logged In");
-        //init all Session vars for user
+        // init all Session vars for user
         Session.SetString("userName", user.UserName);
+        Session.SetInt32("isAdmin", user.IsAdmin);
         return RedirectToAction("Index", "Home");
     }
 

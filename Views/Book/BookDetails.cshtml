@@ -2,69 +2,34 @@
 @{
     Layout = "_Layout";
 }
-<style>
-    .mt-5 {
-        margin-top: 0;
-        padding-top: 0;
-        background-color: #2d2b2b;
-    }
-    
-    .card-body {
-        background-color: #2d2b2b;
-        color : #ffffff;
-        display: flex;
-        align-items: center;
-    }
-
-    .book-details-text {
-        flex: 1;
-    }
-
-    .book-image {
-        margin-left: 20px;
-        max-width: 150px;
-        height: auto;
-        border-radius: 8px;
-    }
-    
-    .card-footer {
-        background-color: #0d6efd;
-        color : #ffffff;
-    }
-
-    .btn-back {
-        margin-right: 10px;
-    }
-</style>
-
+<link rel="stylesheet" href="~/css/BookDetails.css" asp-append-version="true"/>
 <div class="container mt-5">
     <div class="card shadow">
         <div class="card-header bg-primary text-white">
             <h4>Book Details</h4>
         </div>
         <div class="card-body">
-            <p><strong>Title:</strong> @Model.Title</p>
-            <p><strong>Author:</strong> @Model.Author</p>
-            <p><strong>ISBN:</strong> @Model.isbnNumber</p>
-            <p><strong>Publisher:</strong> @Model.Publisher</p>
-            <p><strong>Year:</strong> @Model.Year</p>
-            <p><strong>Buy Price:</strong> @Model.BuyPrice$</p>
-            <p><strong>Borrow Price:</strong> @Model.BorrowPrice$</p>
-            <p><strong>Age Limit:</strong> @Model.AgeLimit+</p>
-            <p><strong>Genre:</strong> @Model.Genre</p>
-            <p><strong>Format:</strong> @Model.Format</p>
+            <p class="data"><strong>Title: </strong> @Model.Title</p>
+            <p class="data"><strong>Author:</strong> @Model.Author</p>
+            <p class="data"><strong>ISBN:</strong> @Model.isbnNumber</p>
+            <p class="data"><strong>Publisher:</strong> @Model.Publisher</p>
+            <p class="data"><strong>Year:</strong> @Model.Year</p>
+            <p class="data"><strong>Buy Price:</strong> @Model.BuyPrice$</p>
+            <p class="data"><strong>Borrow Price:</strong> @Model.BorrowPrice$</p>
+            <p class="data"><strong>Age Limit:</strong> @Model.AgeLimit+</p>
+            <p class="data"><strong>Genre:</strong> @Model.Genre</p>
+            <p class="data"><strong>Format:</strong> @Model.Format</p>
             @if (Model.Format == "Physical")
             {
                 <p><strong>Quantity:</strong> @Model.Quantity</p>
             }
-            
         </div>
         <div class="card-footer text-end">
             <button type="button" class="btn btn-secondary btn-back" onclick="window.history.back()">Back</button>
             <a href="/Book/AddBook/" class="btn btn-warning">Edit</a>
             <!--a href="/Book/AddBookSubmit/" class="btn btn-success">Add to Library</--a-->
-            <form asp-action="AddBookSubmit" asp-controller="Book" method="post" style="display:inline;">
-                <input type="hidden" name="Title" value="@Model.Title" />
+            <form asp-action="AddBookToLibrary" asp-controller="Book" method="post" style="display:inline;">
+               <input type="hidden" name="Title" value="@Model.Title" />
                 <input type="hidden" name="Author" value="@Model.Author" />
                 <input type="hidden" name="isbnNumber" value="@Model.isbnNumber" />
                 <input type="hidden" name="Publisher" value="@Model.Publisher" />
@@ -73,10 +38,11 @@
                 <input type="hidden" name="BorrowPrice" value="@Model.BorrowPrice" />
                 <input type="hidden" name="AgeLimit" value="@Model.AgeLimit" />
                 <input type="hidden" name="Genre" value="@Model.Genre" />
-                <input type="hidden" name="Format" value="@Model.Format" />
-                <input type="hidden" name="Quantity" value="@Model.Quantity" />
+                <input type="hidden" name="Format" value="@Model.Format" /> 
+                <input type="hidden" name="Quantity" value="@Model.Quantity" /> 
                 <button type="submit" class="btn btn-success">Add to Library</button>
             </form>
+            <a href="/Book/AddToCart/" class="btn btn-success">Add to Cart</a>
             <a href="/Book/DeleteBook/" class="btn btn-danger">Delete</a>
         </div>
     </div>

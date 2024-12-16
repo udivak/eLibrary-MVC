@@ -1,0 +1,40 @@
+.mt-5 {
+    margin-top: 0;
+    padding-top: 0;
+    background-color: #2d2b2b;
+}
+
+.card-body {
+    background-color: #2d2b2b;
+    color : #ffffff;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+}
+
+.book-details-text {
+    flex: 1;
+}
+
+.book-image {
+    margin-left: 20px;
+    max-width: 150px;
+    height: auto;
+    border-radius: 8px;
+}
+
+.card-footer {
+    background-color: #0d6efd;
+    color : #ffffff;
+}
+
+.btn-back {
+    margin-right: 10px;
+}
+
+.data {
+    margin: 15px;
+    font-size: medium;
+} 

@@ -3,6 +3,8 @@ body {
     color: #ffffff !important; /* White font color */
 }
 
+
+
 .bg-dark {
     background-color: #2d2b2b !important;
 }
@@ -11,19 +13,42 @@ body {
     background-color: #2d2b2b; /* Replace with your desired background color */
     color: white; /* Text color */
     border-bottom: 1px solid #444444; /* Optional: Add a subtle border */
+    margin: 0;
+    padding: 0;
+    height: auto; /* Allow automatic height adjustment */
+    
+}
+/*
+added
+ */
+.navbar-nav .nav-item .nav-link {
+    font-size: 16px; /* Reduce font size for links */
+    padding: 5px 10px; /* Decrease padding for links */
+    margin-right: 10px; /* Adjust spacing between links */
+    border: none; /* Optional: Remove border if it feels cluttered */
+    border-radius: 3px; /* Slightly reduce border radius */
 }
 
+.navbar-toggler {
+    padding: 2px 5px; /* Reduce padding for toggler */
+    font-size: 12px; /* Adjust font size for toggler */
+}
+
+.navbar-collapse {
+    margin: 0; /* Remove extra margins */
+}
+/**/
 .custom-navbar .navbar-brand {
     color: #007bff; /* Brand name color */
     font-weight: bold;
-    font-size: 3rem;
-    margin-right: 25px;
+    font-size: 2rem;
+
 }
 
 .custom-navbar .navbar-brand:hover {
     color: #ffffff; /* Brand name color */
     font-weight: bold;
-    font-size: 3rem;
+    font-size: 2rem;
 }
 
 .navbar-nav .nav-item .nav-link {

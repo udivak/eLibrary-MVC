@@ -3,7 +3,6 @@ body {
   font-family: 'Roboto', sans-serif;
   background-color: #f7f9fc;
   margin: 0;
-  padding-top: 56px; /* Adjust based on navbar height, typically 56px */
 }
 /*.modal-overlay {*/
 /*  position: fixed;*/
