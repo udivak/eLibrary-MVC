@@ -30,24 +30,7 @@
         </div>
         <div class="card-footer text-end">
             <button type="button" class="btn btn-secondary btn-back" onclick="window.history.back()">Back</button>
-            <a href="/Book/AddBook/" class="btn btn-warning">Edit</a>
-            <!--a href="/Book/AddBookSubmit/" class="btn btn-success">Add to Library</--a-->
-            <form asp-action="AddBookToLibrary" asp-controller="Book" method="post" style="display:inline;">
-               <input type="hidden" name="Title" value="@Model.Title" />
-                <input type="hidden" name="Author" value="@Model.Author" />
-                <input type="hidden" name="isbnNumber" value="@Model.isbnNumber" />
-                <input type="hidden" name="Publisher" value="@Model.Publisher" />
-                <input type="hidden" name="Year" value="@Model.Year" />
-                <input type="hidden" name="BuyPrice" value="@Model.BuyPrice" />
-                <input type="hidden" name="BorrowPrice" value="@Model.BorrowPrice" />
-                <input type="hidden" name="AgeLimit" value="@Model.AgeLimit" />
-                <input type="hidden" name="Genre" value="@Model.Genre" />
-                <input type="hidden" name="Format" value="@Model.Format" /> 
-                <input type="hidden" name="Quantity" value="@Model.Quantity" /> 
-                <button type="submit" class="btn btn-success">Add to Library</button>
-            </form>
             <a href="/Book/AddToCart/" class="btn btn-success">Add to Cart</a>
-            <a href="/Book/DeleteBook/" class="btn btn-danger">Delete</a>
         </div>
     </div>
 </div>

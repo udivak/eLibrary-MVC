@@ -17,18 +17,6 @@ public class BookController : Controller
     }
     private ISession Session => _context.HttpContext.Session;
     
-    public async Task<IActionResult> GetFirstBook()
-    {
-        var books = await _dbContext.GetAllBooksAsync();
-        Book temp = books.FirstOrDefault(); //get first book from db 
-        
-        return View("BookDetails",temp);
-    }
-    public IActionResult BookDetailsTest()
-    {
-        Book test = new Book("title", "author", "ISBN", "publisher", 2024, 200, 100, 6, "pdf", "novel");
-        return View("BookDetails", test);
-    }
     public async Task<IActionResult> BookDetails(string isbn)
     {
         var book = _dbContext.Books.FirstOrDefault(b => b.isbnNumber == isbn);
@@ -41,6 +29,16 @@ public class BookController : Controller
         return View("BookDetails", book); // Pass the book to the view
     }
 
+    public IActionResult EditBook(Book editBook)
+    {
+        return View("AddBook", editBook);
+    }
+    
+    public IActionResult ConfirmAddBook(Book book)
+    {
+        return View("ConfirmAddBook", book);
+    }
+    
     public IActionResult AddBook()
     {
         return View("AddBook", new Book());
