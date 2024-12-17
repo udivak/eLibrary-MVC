@@ -1,4 +1,5 @@
 @model eLibrary.Models.Book
+@inject IHttpContextAccessor _context;
 @{
     Layout = "_Layout";
     ViewData["Title"] = $"{Model.Title} Details";
@@ -29,11 +30,67 @@
             }
         </div>
         <div class="card-footer text-end">
+            <select class="" id="cartAction" name="Action" required>
+                <option value="" disabled selected>Select an Action</option>
+                <option value="Buy">Buy</option>
+                <option value="Borrow">Borrow</option>
+            </select>
+
+            <div id="quantityContainer" style="display: none; margin-top: 10px;">
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" name="quantity" class="form-control" placeholder= "Input Number of Copies" min="1" max="@Model.Quantity"/>
+            </div>
+            
             <button type="button" class="btn btn-secondary btn-back" onclick="window.history.back()">Back</button>
-            <a href="/Book/AddToCart/" class="btn btn-success">Add to Cart</a>
+            <button type="button" class="btn btn-success" id="addToCartButton">Add to Cart</button>
         </div>
     </div>
 </div>
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<script>
+    $(document).ready(function() {
+        $('#addToCartButton').on('click', function() {
+            var cartAction = document.getElementById('cartAction').value;
+            var qty = document.getElementById('quantity').value;
+            var isLoggedIn = @(string.IsNullOrEmpty(_context.HttpContext.Session.GetString("userName")) ? "false" : "true");
+
+            if (!cartAction) {
+                alert("Please select an action (Buy or Borrow) before proceeding.");
+                return;
+            }
+            
+            if (isLoggedIn) {
+                // User is logged in, redirect to AddToCart action
+                window.location.href = '@Url.Action("AddToCart", "Book", new { isbn = Model.isbnNumber })' + '&cartAction=' +
+                    encodeURIComponent(cartAction) + '&qty=' + encodeURIComponent(qty);
+            } else {
+                // User is not logged in, show alert
+                alert("Please Log in before adding to cart.");
+            }
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const actionSelect = document.getElementById("cartAction");
+        const quantityContainer = document.getElementById("quantityContainer");
+
+        actionSelect.addEventListener("change", function () {
+            // Check the selected value
+            if (actionSelect.value === "Buy") {
+                // Show the quantity input field
+                quantityContainer.style.display = "block";
+            } else {
+                // Hide the quantity input field
+                quantityContainer.style.display = "none";
+            }
+        });
+    });
+</script>
+
 

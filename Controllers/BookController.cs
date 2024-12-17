@@ -109,35 +109,45 @@ public class BookController : Controller
         }
         return View("BookAdded", addedBook);
     }
-    public async Task<IActionResult> AddToCart(Book book, string action, int quantity = 0)
+    public async Task<IActionResult> AddToCart(string isbn, string cartAction, string qty)
     {
-        string isbn = book.isbnNumber;
-        var b = _dbContext.Books.FirstOrDefault(b => b.isbnNumber == isbn);
-        if (b == null)
-            return RedirectToAction("Error", "Home");
-        if (b.Format == "Physical")
+        isbn = "1111111111111";     //test physical book isbn
+        int quantity;
+        try
         {
-            if (b.Quantity > quantity)      //Save the current copy in the user's cart
+            quantity = int.Parse(qty);
+        }
+        catch (ArgumentNullException)
+        {
+            quantity = 0;
+        }
+        
+        var book = _dbContext.Books.FirstOrDefault(b => b.isbnNumber == isbn);
+        if (book == null)
+            return RedirectToAction("Error", "Home");
+        if (book.Format == "Physical")
+        {
+            if (book.Quantity > quantity)      //Save the current copy in the user's cart
             {
-                b.Quantity-= quantity;
+                book.Quantity -= quantity;
                 await _dbContext.SaveChangesAsync();
             }
             else                        //No more physical copies
             {
-                ViewBag.Message = $"Sorry, we don't have enough copies of {b.Title} at the moment.";  //simulate message box
+                ViewBag.Message = $"Sorry, we don't have enough copies of {book.Title} at the moment.";  //simulate message box
                 return RedirectToAction("Index", "Home");
             }
         }
         int price;
-        if (action == "Buy")
+        if (cartAction == "Buy")
         {
-            price = b.BuyPrice;
+            price = book.BuyPrice;
         }
         else
         {
-            price = b.BorrowPrice;
+            price = book.BorrowPrice;
         }
-        CartItem addItem = new CartItem(b.isbnNumber, b.Title, action, price, quantity);
+        CartItem addItem = new CartItem(book.isbnNumber, book.Title, cartAction, price, quantity);
         ShoppingCart.Add(addItem);
         return RedirectToAction("Index", "Home");
     }
