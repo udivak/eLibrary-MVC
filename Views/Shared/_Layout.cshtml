@@ -6,18 +6,20 @@
     @{    
         var userName = _context.HttpContext.Session.GetString("userName");
     }
+    
+    
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="/css/_layout.css">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-    <!-- -->
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/eLibrary.styles.css" asp-append-version="true"/>
+    <!-- 
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/> 
+    <link rel="stylesheet" href="~/eLibrary.styles.css" asp-append-version="true"/> -->
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm custom-navbar border-bottom box-shadow mb-3">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3">
         <div class="container-fluid">
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">iReadIt</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -46,13 +48,13 @@
                         <a class="nav-link" asp-area="" asp-controller="Checkout" asp-action="Checkout">Checkout</a>
                     </li>
                 </ul>
-
                 
                 <div class="auth-section">
                     @if (!string.IsNullOrEmpty(_context.HttpContext.Session.GetString("userName")))
                     {
                         <!-- Welcome message when user is logged in -->
                         <p class="welcome-message">Welcome, @_context.HttpContext.Session.GetString("userName")</p>
+                        <a href="@Url.Action("Logout", "User")" class="btn logout-btn">Logout</a>
                     }
                     else
                     {
@@ -67,14 +69,14 @@
                                 <h2>Login</h2>
                                 <form action="@Url.Action("Login", "User")" method="post">
                                     <div class="form-group">
-                                        <label for="username">Username</label>
+                                        <label for="username">Email</label>
                                         <input type="text" id="email" name="email" required/>
                                     </div>
                                     <div class="form-group">
                                         <label for="password">Password</label>
                                         <input type="password" id="password" name="password" required/>
                                     </div>
-                                    <button type="submit" class="btn btn-lg btn-primary">Submit</button>
+                                    <button type="submit" class="loginSubmitBTN">Submit</button>
                                 </form>
                             </div>
                         </div>

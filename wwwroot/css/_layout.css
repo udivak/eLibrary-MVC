@@ -3,7 +3,65 @@ body {
     color: #ffffff !important; /* White font color */
 }
 
+.auth-section {
+    position: absolute !important;
+    top: 10px !important;
+    right: 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+}
 
+.auth-section .register-btn {
+    margin-bottom: 8px !important;
+    font-size: 20px !important;
+    background-color: #007bff !important;
+    color: #ffffff !important;
+    border: none !important;
+    padding: 10px 20px !important;
+    border-radius: 5px !important;
+    text-decoration: none !important;
+    transition: transform 0.3s ease !important;
+}
+
+.auth-section .login-link {
+    font-size: 18px !important;
+    text-align: center !important;
+    color: #ffffff !important;
+}
+
+.auth-section .login-link a {
+    text-decoration: none !important;
+    color: #007bff !important;
+    transition: color 0.3s ease, background-color 0.3s ease !important;
+    padding: 5px 10px !important;
+    border-radius: 5px !important;
+}
+
+.auth-section .login-link a:hover {
+    text-decoration: underline !important;
+    color: #0056b3 !important;
+    background-color: rgba(224, 247, 250, 0.1) !important;
+}
+
+.auth-section .welcome-message {
+    color: #ffffff !important;
+    font-size: 20px !important;
+    margin-top: 10px !important;
+    margin-right: 10px;
+}
+
+.auth-section .logout-btn {
+    font-size: 16px !important;
+    padding: 5px 15px !important;
+    margin-top: -5px !important;
+    background-color: #007bff !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 5px !important;
+    text-decoration: none !important;
+    transition: transform 0.3s ease !important;
+}
 
 .bg-dark {
     background-color: #2d2b2b !important;
@@ -13,20 +71,34 @@ body {
     background-color: #2d2b2b; /* Replace with your desired background color */
     color: white; /* Text color */
     border-bottom: 1px solid #444444; /* Optional: Add a subtle border */
-    margin: 0;
-    padding: 0;
+    margin: 20px;
+    padding: 20px;
     height: auto; /* Allow automatic height adjustment */
-    
 }
 /*
 added
  */
 .navbar-nav .nav-item .nav-link {
-    font-size: 16px; /* Reduce font size for links */
-    padding: 5px 10px; /* Decrease padding for links */
-    margin-right: 10px; /* Adjust spacing between links */
-    border: none; /* Optional: Remove border if it feels cluttered */
-    border-radius: 3px; /* Slightly reduce border radius */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 20px !important;
+    color: #ffffff !important;
+    border: 1px solid #007bff !important;
+    padding: 10px 15px !important;
+    border-radius: 5px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    transition: background-color 0.3s ease !important;
+    margin-right: 15px !important;
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+    background-color: #007bff !important;
+    color: #ffffff !important;
+}
+
+.navbar-nav .nav-item .nav-link:active {
+    background-color: #0056b3 !important;
+    color: #ffffff !important;
 }
 
 .navbar-toggler {
@@ -37,36 +109,15 @@ added
 .navbar-collapse {
     margin: 0; /* Remove extra margins */
 }
-/**/
-.custom-navbar .navbar-brand {
-    color: #007bff; /* Brand name color */
-    font-weight: bold;
-    font-size: 2rem;
 
+.navbar-brand {
+    color: #007bff !important;
+    font-weight: bold !important;
+    font-size: 2.5rem !important;
 }
 
-.custom-navbar .navbar-brand:hover {
-    color: #ffffff; /* Brand name color */
-    font-weight: bold;
-    font-size: 2rem;
-}
-
-.navbar-nav .nav-item .nav-link {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* Apple-style font */
-    font-size: 20px; /* Adjust the font size */
-    color: #ffffff; /* Change text color */
-    border: 1px solid #007bff; /* Optional: Add a border */
-    padding: 10px 15px; /* Space inside the buttons */
-    border-radius: 5px; /* Rounded corners */
-    text-align: center; /* Center-align text */
-    text-decoration: none; /* Remove underline */
-    transition: background-color 0.3s ease; /* Add hover effect transition */
-    margin-right: 15px;
-}
-
-.navbar-nav .nav-item .nav-link:hover {
-    background-color: #007bff; /* Change background color on hover */
-    color: #ffffff; /* Maintain text color on hover */
+.navbar-brand:hover {
+    color: #ffffff !important;
 }
 
 .navbar-nav .nav-item .nav-link:active {
@@ -95,10 +146,79 @@ main {
 }
 
 .container-fluid {
-    margin-bottom: 3px;
+    margin-bottom: 15px;
 }
 
-.pb-3 {
-    padding-top: 0;
-    margin-top: 0;
+/* Modal Styles */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 350px;
+    background-color: #abcdf3;  /* Same as page background */
+    color: #000000;  /* Set text color to match page */
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    box-sizing: border-box;
+    opacity: 0;
+    visibility: hidden;
+    max-height: 0; /* Start with no height (hidden) */
+    overflow: hidden; /* Prevent overflow */
+    transition: all 0.5s ease-in-out; /* Transition for sliding effect */
+}
+
+/* Modal Content */
+.modal-content {
+    display: block;
+    text-align: center;
+}
+
+.modal input[type="text"], .modal input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #444444;
+    border-radius: 5px;
+    background-color: #333333;
+    color: #fff;
+    font-size: 16px;
+}
+
+.modal button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modal button:hover {
+    background-color: #4cb1ae;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1040;
+    opacity: 1;
+    visibility: visible;
+    display: none;
+}
+/* Optional: Close button styling */
+#closeModal {
+    display: block;
+    margin-top: 15px;
+    color: #007bff;
+    text-decoration: none;
+    cursor: pointer;
 }

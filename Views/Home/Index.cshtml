@@ -1,150 +1,30 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model IEnumerable<eLibrary.Models.Book>
 @inject IHttpContextAccessor _context;
-
 @{
     ViewData["Title"] = "iReadIt";
-    //Layout = "_Layout";
+    Layout = "_Layout";
     var userName = _context.HttpContext.Session.GetString("userName");
-
 }
-
-<style>
-    body {
-        background-color: #2d2b2b;
-        color: #fff;
-    }
-    .welcome-message {
-        font-size: 1.2rem;
-        font-weight: bold;
-        color: #007bff;
-        margin-top: 8px;
-    }
-
-
-    .main-content h1 {
-        text-transform: none;
-        font-weight: bold;
-        color: #007bff;
-    }
-
-    /* The Card Styles */
-    .card {
-        height: 350px; /* Fixed height for all cards */
-        background-color: #4cb1ae; /* Dark gray background */
-        color: #000000; /* White text color */
-        border: 1px solid #444444; /* Subtle border for design */
-    }
-    .book-img {
-        height: 200px; /* Fixed height */
-        width: 100%; /* Optional: Make the image span the card's width */
-        object-fit: cover; /* Ensure the entire image is visible */
-        background-color: #f0f0f0; /* Optional: Add a background color to handle empty spaces */
-    }
-
-    .card-title {
-        font-size: 1rem; /* Ensure title font is uniform */
-        font-weight: bold;
-        white-space: wrap; /* Prevent text wrapping */
-        overflow: hidden; /* Hide overflowing text */
-        text-overflow: ellipsis; /* Add ellipsis (...) for long titles */
-    }
-
-    .card-body {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between; /* Spread content evenly */
-        height: 100%;
-    }
-
-    .card-text {
-        font-size: 0.9rem;
-    }
-
-    /*Authentications buttons styling*/
-    /* Ensure the container is positioned in the top-right corner */
-    .auth-section {
-        position: absolute;
-        top: 10px; /* Adjust the distance from the top */
-        right: 5px; /* Adjust the distance from the right */
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-
-    /* Optional: Close button styling */
-    #closeModal {
-        display: block;
-        margin-top: 15px;
-        color: #007bff;
-        text-decoration: none;
-        cursor: pointer;
-    }
-
-    /* New style for the top links */
-    .top-links {
-        display: flex;
-        justify-content: space-between;
-        margin: 10px;
-    }
-
-    .top-links a {
-        color: #007bff;
-        font-weight: bold;
-        font-size: 1.1rem;
-        text-decoration: none;
-    }
-
-    .top-links a:hover {
-        text-decoration: underline;
-        color: #0056b3;
-    }
-
-    /* Styling for Register and Login Links */
-    .register-btn {
-        margin-bottom: 8px;
-        font-size: 20px;
-    }
-
-    .login-link {
-        font-size: 18px;
-        text-align: center;
-    }
-
-    .login-link a {
-        text-decoration: none;
-        color: #007bff;
-        transition: color 0.3s ease, background-color 0.3s ease;
-        padding: 5px 10px;
-        border-radius: 5px;
-    }
-
-    .login-link a:hover {
-        text-decoration: underline;
-        color: #0056b3;
-        background-color: #e0f7fa;
-    }
-    
-    .featured_books_title {
-        margin-left: 30px;
-    }
-</style>
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/css/index.css" asp-append-version="true"/>
 
 
 <div class="container">
-    <!-- Top Links Section -->
+    <!-- Top Links Section 
     <div class="top-links">
         <a href="@Url.Action("AddBook", "Book")">Add New Book</a>
         <a href="@Url.Action("SearchBooks", "Book")">Search for a Book</a>
-    </div>
+    </div>-->
 
     <!-- Main Content Section -->
     <div class="text-center main-content">
-        <h1 class="display-4">Welcome to iReadIt</h1>
+        <h1 class="page-title">Welcome to iReadIt</h1>
         <p class="lead">
             Borrow and read eBooks easily, anywhere and anytime.
         </p>
+        <br />
     </div>
 </div>
 @if (!string.IsNullOrEmpty(userName))

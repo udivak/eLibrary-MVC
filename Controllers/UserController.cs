@@ -15,6 +15,12 @@ public class UserController : Controller
     }
     private ISession Session => _context.HttpContext.Session;
     
+    public IActionResult Logout()
+    {
+        Session.Clear(); // This clears all session data
+        return RedirectToAction("Index", "Home"); // Redirects to home page after logout
+    }
+    
     public IActionResult Registration()
     {
         User user = new User();

@@ -1,14 +1,15 @@
 @model IEnumerable<eLibrary.Models.Book>
 
 @{
-    ViewBag.Title = "Search Books";
-
+    ViewBag.Title = "Find a Book";
+    Layout = "_Layout";
 }
-<link rel="stylesheet" href="../wwwroot/css/SearchBooks.css">
 
-<h2>Search Books</h2>
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/css/SearchBooks.css" asp-append-version="true"/>
 
-
+<h2>Find a Book</h2>
 
 <!-- Loading Overlay with Spinner -->
 <div class="loader"></div>

@@ -1,27 +1,18 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model IEnumerable<eLibrary.Models.CartItem>
 @{
-    //ViewData["Title"] = "Checkout";
-    //Layout = "_Layout";
+    ViewData["Title"] = "Checkout";
+    Layout = "_Layout";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"]</title>
-    <link rel="stylesheet" href="/css/_layout.css">
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-</head>
-<body>
-@* Header Section *@
+<link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/css/checkout.css" asp-append-version="true"/>
+
 <div class="container-general">
     <main role="main" class="pb-3">
         <div class="container">
             <h1>Checkout</h1>
-            @if (Model == null || !Model.Any()) // Check if the cart is empty
+            @if (Model == null || !Model.Any())
             {
                 <p>No items in the cart.</p>
             }
@@ -64,11 +55,6 @@
     </main>
 </div>
 
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
-<script src="https://www.paypal.com/sdk/js?client-id=@(ViewBag.PaypalClientID)&currency=USD"></script>
-
 <div class="mx-auto p4 rounded border shadow" style="width: 420px;">
     <h2 class="text-center mb-5">Complete your order with PayPal</h2>
     <br />
@@ -76,7 +62,7 @@
     <div id="paypal-button-container"></div>
 </div>
 
-
+<script src="https://www.paypal.com/sdk/js?client-id=@(ViewBag.PaypalClientID)&currency=USD"></script>
 <script>
     paypal.Buttons({
         async createOrder() {
@@ -91,9 +77,8 @@
             });
             const order = await response.json();
             return order.id;
-        },   //add here Cancel / Error Handling
+        },
         async onApprove(data) {
-            // Capture the funds from the transaction.
             const response = await fetch("@Url.Action("CompleteOrder", "Checkout")", {
                 method: "POST",
                 headers: {
@@ -123,12 +108,6 @@
                     </div>
                 `;
             }
-            // Show success message to buyer
-            //alert(`Transaction completed by ${details.payer.name.given_name}`); -----deleted in video
         },
     }).render('#paypal-button-container');
 </script>
-
-
-</body>
-</html>

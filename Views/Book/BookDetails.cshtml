@@ -1,8 +1,12 @@
 @model eLibrary.Models.Book
 @{
     Layout = "_Layout";
+    ViewData["Title"] = $"{Model.Title} Details";
 }
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true"/>
 <link rel="stylesheet" href="~/css/BookDetails.css" asp-append-version="true"/>
+
 <div class="container mt-5">
     <div class="card shadow">
         <div class="card-header bg-primary text-white">
