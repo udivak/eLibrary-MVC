@@ -79,6 +79,7 @@ public class UserController : Controller
         }
         // init all Session vars for user
         Session.SetString("userName", user.UserName);
+        Session.SetString("userEmail", user.Email);
         Session.SetInt32("isAdmin", user.IsAdmin);
         return RedirectToAction("Index", "Home");
     }
@@ -129,13 +130,10 @@ public class UserController : Controller
         return View("Checkout", cart);
     }*/
     
-
-
-
     public IActionResult Profile()
     {
         List<Book> featuredBooks = _dbContext.GetAllBooks().Take(8).ToList();
-        return View();
+        return View("Profile");
     }
     public IActionResult MyList()
     {
@@ -154,12 +152,13 @@ public class UserController : Controller
         return PartialView("_MyBooks");
         // return View();
     }
+    
     public IActionResult PersonalDetails()
     {
-        // Fetch the user's personal details
-        // var personalDetails = GetUserPersonalDetails();
-        return PartialView("_PersonalDetails");
+        var user = _dbContext.Users.FirstOrDefault(user => user.Email == Session.GetString("userEmail"));
+        return PartialView("_PersonalDetails", user);
     }
+    
     private IEnumerable<Book> GetUserList()
     {
         // Replace with actual logic to fetch user's list
@@ -171,5 +170,24 @@ public class UserController : Controller
         // Replace with actual logic to fetch user's books
         return new List<Book> { new Book { Title = "My Book 1" }, new Book { Title = "My Book 2" } };
     }
+
+    public async Task<IActionResult> ManageUsers()
+    {
+        List<User> allUsers = await _dbContext.GetAllUsersAsync();
+        return View("ManageUsers", allUsers);
+    }
+
+    public async Task<IActionResult> RemoveUser(string email)
+    {
+        var deleteUser = await _dbContext.GetUserByEmailAsync(email);
+        if (deleteUser == null)
+        {
+            return View("Error");
+        }
+        _dbContext.Users.Remove(deleteUser);
+        _dbContext.SaveChangesAsync();
+        return RedirectToAction("ManageUsers");
+    }
+    
 
 }

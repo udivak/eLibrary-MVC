@@ -11,8 +11,9 @@
 
 
 <div class="featured-books">
-    <h2 class="books_gallery_title">Books Gallery</h2>
-    <br>
+    <h1 class="books_gallery_title">Books Gallery</h1>
+    <br />
+    <br />
     @{
         int totalBooks = Model.Count();
         int booksPerRow = 4;
@@ -30,6 +31,7 @@
                             <h5 class="card-title">@book.Title</h5>
                             <p class="card-text"><strong class="text-muted"><u>Format:</u> @book.Format</strong></p>
                             <p class="card-text"><strong class="text-muted"><u>Buy Price:</u> @book.BuyPrice$</strong></p>
+                            <p class="card-text"><strong class="text-muted"><u>Borrow Price:</u> @book.BorrowPrice$</strong></p>
                         </div>
                     </a>
                 </div>

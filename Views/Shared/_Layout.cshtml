@@ -35,12 +35,12 @@
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
+                    <!--<li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                    </li>
-                    <li class="nav-item">
+                    </li> -->
+                    <!-- <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
+                    </li> -->
                     <li class="nav-item">
                         @if (_context.HttpContext.Session.GetInt32("isAdmin") == 1)
                         {
@@ -48,7 +48,13 @@
                         }
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Book" asp-action="SearchBooks">Search a Book</a>
+                        @if (_context.HttpContext.Session.GetInt32("isAdmin") == 1)
+                        {
+                            <a class="nav-link" asp-area="" asp-controller="User" asp-action="ManageUsers">Manage Users</a>
+                        }
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Book" asp-action="FindABook">Find a Book</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Book" asp-action="AllBooks">All Books</a>
@@ -65,13 +71,14 @@
                     {
                         <!-- Welcome message when user is logged in -->
                         <p class="welcome-message">Welcome, @_context.HttpContext.Session.GetString("userName")</p>
+                        <br />
                         <a href="@Url.Action("Logout", "User")" class="btn logout-btn">Logout</a>
                     }
                     else
                     {
                         <!-- Login and Register buttons -->
                         <a href="javascript:void(0)" class="btn btn-lg btn-primary register-btn animate-btn" id="loginLink">Login</a>
-                        <p class="login-link">Not a member? <a asp-controller="User" asp-action="Registration">Register</a></p>
+                        <p class="login-link ">Not a member? <a class="register-link" asp-controller="User" asp-action="Registration">Register</a></p>
 
                         <!-- Modal for Login -->
                         <div class="modal-overlay" style="display: none;"></div>

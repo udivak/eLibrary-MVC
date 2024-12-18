@@ -68,7 +68,7 @@ public class BookController : Controller
         return View("DeleteBook", deletedBook);
     }
     
-    public IActionResult SearchBooks(string title, string author, string genre, string publisher, int? year, string format)
+    public IActionResult FindABook(string title, string author, string genre, string publisher, int? year, string format)
     {
         // Start with an empty list of books
         var books = new List<Book>();

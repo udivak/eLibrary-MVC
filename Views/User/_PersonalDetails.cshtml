@@ -1,10 +1,22 @@
-@Model eLibrary.Models.User
+@model eLibrary.Models.User
+
+<style>
+    .card{
+        max-width: 500px; /* Set maximum width */
+        /*margin: 0 auto; /* Center the card */
+        margin-left: 20px;
+    }
+</style>
 
 
 <div class="card">
     <div class="card-body">
         <h5 class="card-title">Personal Details</h5>
-        <p>Name: @Model.FirstName</p>
-        <p>Email: @Model.Email</p>
+        <p><strong>First Name:</strong> @Model.FirstName</p>
+        <p><strong>Last Name:</strong> @Model.LastName</p>
+        <p><strong>Username:</strong> @Model.UserName</p>
+        <p><strong>Email:</strong> @Model.Email</p>
+        <p><strong>Created At:</strong> @Model.CreatedAt</p>
+        <p><strong>Address:</strong> @Model.Address</p>
     </div>
 </div>

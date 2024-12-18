@@ -70,7 +70,8 @@ namespace eLibrary.Models
         {
             return await Users.ToListAsync();
         }
-        public async Task<User> GetUserByEmailAsync(string userEmail)       // Retrieve a user by ID
+        
+        public async Task<User> GetUserByEmailAsync(string userEmail)       // Retrieve a user by Email
         {
             return await Users.FirstOrDefaultAsync(u => u.Email == userEmail);
         }
@@ -90,7 +91,7 @@ namespace eLibrary.Models
         }
 
         // Delete a user by ID
-        public async Task DeleteUserByIdAsync(string userEmail)
+        public async void DeleteUserByEmailAsync(string userEmail)
         {
             var user = await GetUserByEmailAsync(userEmail);
             if (user != null)

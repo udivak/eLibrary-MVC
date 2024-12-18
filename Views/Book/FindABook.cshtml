@@ -1,0 +1,78 @@
+@model IEnumerable<eLibrary.Models.Book>
+
+@{
+    ViewBag.Title = "Find a Book";
+    Layout = "_Layout";
+}
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/css/SearchBooks.css" asp-append-version="true"/>
+
+<div class="container">
+    <h1 class="text-center">Find a Book</h1>
+    <!-- Loading Overlay with Spinner -->
+    <div class="loader"></div>
+
+    <form asp-action="FindABook" method="get" id="searchForm" class="form-full-width border rounded p-3 shadow-sm mx-auto" style="width: 50%;">
+        <div class="row mb-3"> <!-- Full-width column with Bootstrap spacing -->
+            <div class="col-md-12">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" class="form-control" id="title" name="title"/>
+            </div>
+            <div class="col-md-12">
+                <label for="author" class="form-label">Author</label>
+                <input type="text" class="form-control" id="author" name="author"/>
+            </div>
+            <div class="col-md-12">
+                <label for="genre" class="form-label">Genre</label>
+                <input type="text" class="form-control" id="genre" name="genre"/>
+            </div>
+            <div class="col-md-12">
+                <label for="publisher" class="form-label">Publisher</label>
+                <input type="text" class="form-control" id="publisher" name="publisher"/>
+            </div>
+            <div class="col-md-12">
+                <label for="year" class="form-label">Year</label>
+                <input type="number" class="form-control" id="year" name="year"/>
+            </div>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-lg btn-primary">Search</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    window.addEventListener("load", () => {
+        console.log("start loading");
+        const loader = document.querySelector(".loader");
+
+        loader.classList.add("loader-hidden");
+
+        loader.addEventListener("transition", () => {
+            document.body.removeChild("loader");
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchForm = document.getElementById("searchForm");
+        const loadingOverlay = document.getElementById("loadingOverlay");
+        const resultsTable = document.getElementById("resultsTable");
+
+        // Initially hide the loading overlay
+        loadingOverlay.style.display = "none";
+
+        // Show the loading overlay and spinner as soon as the form is submitted
+        searchForm.addEventListener("submit", function (event) {
+            // Prevent the default form submission
+            event.preventDefault();
+
+            // Show the loading overlay
+            loadingOverlay.style.display = "flex"; // Use flex to center the spinner
+
+            // Submit the form after 2 seconds
+            setTimeout(function () {
+                searchForm.submit();
+            }, 2000);
+        });
+    });
+</script>

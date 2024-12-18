@@ -24,6 +24,10 @@ body {
     transition: transform 0.3s ease !important;
 }
 
+.register-link:hover {
+    background-color: #23f0f0 !important;
+}
+
 .auth-section .login-link {
     font-size: 18px !important;
     text-align: center !important;
@@ -154,7 +158,8 @@ main {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 350px;
-    background-color: #abcdf3;  /* Same as page background */
+    /*background-color: #abcdf3;  /* Same as page background */
+    background-color: #2d2b2b;
     color: #000000;  /* Set text color to match page */
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -169,9 +174,15 @@ main {
 
 /* Modal Content */
 .modal-content {
+    background-color: #abcdf3;
     display: block;
     text-align: center;
 }
+
+.modal-content h2 {
+    color: #000000;
+}
+
 
 .modal input[type="text"], .modal input[type="password"] {
     width: 100%;
@@ -219,4 +230,8 @@ main {
     color: #007bff;
     text-decoration: none;
     cursor: pointer;
+}
+
+.footer {
+    padding: 20px;
 }

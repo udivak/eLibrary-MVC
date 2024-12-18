@@ -1,12 +1,12 @@
+@model eLibrary.Models.User
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @inject IHttpContextAccessor _context;
 
 @{
-    ViewData["Title"] = "iReadIt";
+    ViewData["Title"] = "Profile";
     Layout = "_Layout";
     var userName = _context.HttpContext.Session.GetString("userName");
 }
-
 
 <div class="container">
     <!-- Notifications Section -->
@@ -60,7 +60,7 @@
             $(this).addClass('active');
 
             // Load content for the selected tab
-            var target = $(this).data('target');
+            let target = $(this).data('target');
             loadContent(target);
         });
 
