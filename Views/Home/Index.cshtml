@@ -1,14 +1,33 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using System.Text.Json
 @model IEnumerable<eLibrary.Models.Book>
 @inject IHttpContextAccessor _context;
 @{
     ViewData["Title"] = "iReadIt";
     Layout = "_Layout";
     var userName = _context.HttpContext.Session.GetString("userName");
+    if (TempData["AlertMessage"] != null)
+    {
+        string msg = "";
+        if (TempData["AlertMessage"].ToString().Equals("SUCCESS"))
+        {
+            msg = "'" + TempData["BookTitle"] + "' has been added to cart successfully.";
+        }
+        if (TempData["AlertMessage"].ToString().Equals("FAIL"))
+        {
+            msg = "Sorry, we don't have enough copies of '" + TempData["BookTitle"] + "' at the moment.";
+        }
+        var jsonMsg = JsonSerializer.Serialize(msg);
+        <script>
+        alert('@Html.Raw(jsonMsg)');
+        </script>
+    }
 }
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
 <link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true"/>
 <link rel="stylesheet" href="~/css/index.css" asp-append-version="true"/>
+
+
 
 <div class="container">
     <!-- Main Content Section -->

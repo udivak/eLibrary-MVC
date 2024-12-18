@@ -27,16 +27,24 @@ public class CheckoutController : Controller
     public IActionResult CheckoutPage()
     {
         string serializedCart = Session.GetString("ShoppingCart");
-        List<CartItem> cartItems = string.IsNullOrEmpty(serializedCart) ? new List<CartItem>() 
-            : JsonSerializer.Deserialize<List<CartItem>>(serializedCart) ?? new List<CartItem>();
+        List<CartItem> cartItems;
+       if (string.IsNullOrEmpty(serializedCart))
+       {
+           cartItems = new List<CartItem>();
+       }
+       else
+       {
+           cartItems = JsonSerializer.Deserialize<List<CartItem>>(serializedCart);
+           if (cartItems == null)                                                   //Deserialize failed
+           {
+               cartItems = new List<CartItem>();
+           }
+       }
         ViewBag.PaypalClientID = PaypalClientID;
         return View("Checkout", cartItems);
     }
-    public async Task<string> Token()                 //Test Func to see the PayPal Access Token
-    {
-        return await GetPayPalAccessToken();
-    }                                
-    public IActionResult Checkout()
+    
+    /*public IActionResult Checkout()
     {
         // Fetch data to populate the cart
         List<Book> books = _dbContext.GetAllBooks().Take(4).ToList();
@@ -60,8 +68,13 @@ public class CheckoutController : Controller
             return View("Checkout", new List<CartItem>());
         }
         return RedirectToAction("CheckoutPage", "Checkout");
-    }
-
+    }*/
+    
+    public async Task<string> Token()                 //Test Func to see the PayPal Access Token
+    {
+        return await GetPayPalAccessToken();
+    } 
+    
     [HttpPost]
     public async Task<JsonResult> CreateOrder([FromBody] JsonObject data)
     {
@@ -111,6 +124,7 @@ public class CheckoutController : Controller
         }
         return new JsonResult(new { Id = "" });
     }
+    
     [HttpPost]
     public async Task<JsonResult> CompleteOrder([FromBody] JsonObject data)
     {

@@ -23,7 +23,7 @@
             <p class="data"><strong>Borrow Price:</strong> @Model.BorrowPrice$</p>
             <p class="data"><strong>Age Limit:</strong> @Model.AgeLimit+</p>
             <p class="data"><strong>Genre:</strong> @Model.Genre</p>
-            <p class="data"><strong>Format:</strong> @Model.Format</p>
+            <p class="data" id="bookFormat"><strong>Format:</strong> @Model.Format</p>
             @if (Model.Format == "Physical")
             {
                 <p><strong>Quantity:</strong> @Model.Quantity</p>
@@ -54,9 +54,13 @@
 <script>
     $(document).ready(function() {
         $('#addToCartButton').on('click', function() {
-            var cartAction = document.getElementById('cartAction').value;
-            var qty = document.getElementById('quantity').value;
-            var isLoggedIn = @(string.IsNullOrEmpty(_context.HttpContext.Session.GetString("userName")) ? "false" : "true");
+            const cartAction = document.getElementById('cartAction').value;
+            let qty = document.getElementById('quantity').value;
+            qty = parseInt(qty);
+            if (qty === 0 || isNaN(qty)) {
+                qty = 1;
+            }
+            const isLoggedIn = @(string.IsNullOrEmpty(_context.HttpContext.Session.GetString("userName")) ? "false" : "true");
 
             if (!cartAction) {
                 alert("Please select an action (Buy or Borrow) before proceeding.");
@@ -79,10 +83,11 @@
     document.addEventListener("DOMContentLoaded", function () {
         const actionSelect = document.getElementById("cartAction");
         const quantityContainer = document.getElementById("quantityContainer");
-
+        const bookFormat = '@Model.Format';
+        
         actionSelect.addEventListener("change", function () {
             // Check the selected value
-            if (actionSelect.value === "Buy") {
+            if (actionSelect.value === "Buy" && bookFormat === "Physical") {
                 // Show the quantity input field
                 quantityContainer.style.display = "block";
             } else {

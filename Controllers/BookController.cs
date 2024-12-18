@@ -111,7 +111,6 @@ public class BookController : Controller
     }
     public async Task<IActionResult> AddToCart(string isbn, string cartAction, string qty)
     {
-        isbn = "1111111111111";     //test physical book isbn
         int quantity;
         try
         {
@@ -121,20 +120,20 @@ public class BookController : Controller
         {
             quantity = 0;
         }
-        
         var book = _dbContext.Books.FirstOrDefault(b => b.isbnNumber == isbn);
         if (book == null)
             return RedirectToAction("Error", "Home");
-        if (book.Format == "Physical")
+        TempData["BookTitle"] = $"{book.Title}";
+        if (book.Format == "Physical" && cartAction == "Buy")
         {
             if (book.Quantity > quantity)      //Save the current copy in the user's cart
             {
                 book.Quantity -= quantity;
                 await _dbContext.SaveChangesAsync();
             }
-            else                        //No more physical copies
+            else                                //No more physical copies
             {
-                ViewBag.Message = $"Sorry, we don't have enough copies of {book.Title} at the moment.";  //simulate message box
+                TempData["AlertMessage"] = "FAIL";
                 return RedirectToAction("Index", "Home");
             }
         }
@@ -149,6 +148,8 @@ public class BookController : Controller
         }
         CartItem addItem = new CartItem(book.isbnNumber, book.Title, cartAction, price, quantity);
         ShoppingCart.Add(addItem);
+        
+        TempData["AlertMessage"] = "SUCCESS";
         return RedirectToAction("Index", "Home");
     }
     

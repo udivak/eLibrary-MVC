@@ -1,13 +1,11 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
 @inject IHttpContextAccessor _context;
+@{
+    var userName = _context.HttpContext.Session.GetString("userName");
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    @{    
-        var userName = _context.HttpContext.Session.GetString("userName");
-    }
-    
-    
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"]</title>
@@ -40,15 +38,16 @@
                             <a class="nav-link" asp-area="" asp-controller="Book" asp-action="AddBook">Add a Book</a>
                         }
                     </li>
-
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Book" asp-action="SearchBooks">Search a Book</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Checkout" asp-action="Checkout">Checkout</a>
-                    </li>
+                    @if (!string.IsNullOrEmpty(userName))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Checkout" asp-action="CheckoutPage">Checkout</a>
+                        </li>
+                    }
                 </ul>
-                
                 <div class="auth-section">
                     @if (!string.IsNullOrEmpty(_context.HttpContext.Session.GetString("userName")))
                     {
