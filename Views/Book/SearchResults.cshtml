@@ -41,7 +41,8 @@
                     <td>@book.Year</td>
                     <td>@book.Genre</td>
                     <td>
-                        <a asp-action="BookDetails" asp-route-id="@book.isbnNumber" class="btn btn-link">View Details</a>
+                       <!-- <a asp-action="BookDetails" asp-route-id="@book.isbnNumber" class="btn btn-link">View Details</a> -->
+                        <a href="@Url.Action("BookDetails", "Book", new { isbn = book.isbnNumber})" class="btn btn-link">View Details</a>
                     </td>
                 </tr>
             }

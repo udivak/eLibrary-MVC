@@ -71,9 +71,10 @@ public class UserController : Controller
     public IActionResult Login(string email, string password)
     {
         var user = _dbContext.Users.FirstOrDefault(u => u.Email == email);
-        if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
+        if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))     //Login failed
         {
             ModelState.AddModelError("", "Invalid login attempt.");
+            TempData["LoginMessage"] = "The Password is incorrect. Please try again.";
             return RedirectToAction("Index", "Home");
         }
         // init all Session vars for user

@@ -1,7 +1,16 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using System.Text.Json
 @inject IHttpContextAccessor _context;
 @{
     var userName = _context.HttpContext.Session.GetString("userName");
+    if (TempData["LoginMessage"] != null)
+    {
+        var msg = TempData["LoginMessage"];
+        var jsonMsg = JsonSerializer.Serialize(msg);
+        <script>
+        alert('@Html.Raw(jsonMsg)');
+        </script>
+    }
 }
 <!DOCTYPE html>
 <html lang="en">
