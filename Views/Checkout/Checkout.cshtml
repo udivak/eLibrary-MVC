@@ -1,8 +1,18 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using System.Text.Json
 @model IEnumerable<eLibrary.Models.CartItem>
 @{
     ViewData["Title"] = "Checkout";
     Layout = "_Layout";
+    
+    if (TempData["RemoveFromCartMessage"] != null)
+    {
+        string msg = TempData["BookTitle"].ToString() + TempData["RemoveFromCartMessage"].ToString();
+        var jsonMsg = JsonSerializer.Serialize(msg);
+        <script>
+        alert('@Html.Raw(jsonMsg)');
+        </script>
+    }
 }
 
 <link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true"/>
@@ -21,29 +31,33 @@
                 <table class="table table-bordered table-striped">
                     <thead>
                     <tr>
-                        <th>Book Title</th>
-                        <th>ISBN</th>
-                        <th>Quantity</th>
-                        <th>Price Per Unit</th>
-                        <th>Total Price</th>
+                        <th class="text-truncate">Book Title</th>
+                        <th class="text-truncate">ISBN</th>
+                        <th class="text-truncate">Quantity</th>
+                        <th class="text-truncate">Price Per Unit</th>
+                        <th class="text-truncate">Total Price</th>
+                        <th class="text-truncate w-auto">Remove From Cart</th>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td>@item.Title</td>
-                            <td>@item.ISBN</td>
+                            <td class="text-truncate">@item.Title</td>
+                            <td class="text-truncate">@item.ISBN</td>
                             <td>@item.Quantity</td>
-                            <td>@item.Price</td>
-                            <td>@(item.Quantity * item.Price)</td>
+                            <td>@item.Price$""</td>
+                            <td>@(item.Quantity * item.Price)$</td>
+                            <td class="text-center remove-from-cart-col">
+                                <a href="@Url.Action("RemoveFromCart", "Book", new { isbn = item.ISBN })" class="btn btn-danger btn-sm">X</a>
+                            </td>
                         </tr>
                     }
                     </tbody>
                     <tfoot>
                     <tr>
-                        <td colspan="4" class="text-end">Order Price</td>
-                        <td>@Model.Sum(item => item.Quantity * item.Price)</td>
+                        <td colspan="5" class="text-end">Total Order Price</td>
+                        <td class="font-weight-bold">@Model.Sum(item => item.Quantity * item.Price)$</td>
                     </tr>
                     </tfoot>
                 </table>
@@ -66,50 +80,61 @@
 
 <script src="https://www.paypal.com/sdk/js?client-id=@(ViewBag.PaypalClientID)&currency=USD"></script>
 <script>
-        paypal.Buttons({
-            async createOrder() {
-                const response = await fetch("@Url.Action("CreateOrder", "Checkout")", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        amount : @Model.Sum(item => item.Quantity)
-                    })
-                });
-                const order = await response.json();
-                return order.id;
-            },
-            async onApprove(data) {
-                const response = await fetch("@Url.Action("CompleteOrder", "Checkout")", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        orderID: data.orderID
-                    })
+    paypal.Buttons({
+        async createOrder() {
+            const response = await fetch("@Url.Action("CreateOrder", "Checkout")", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    amount : @Model.Sum(item => item.Quantity)
                 })
-    
-                const details = await response.json();
-                if (details == "success") {
-                    document.getElementById("notification-container").innerHTML =
-                        `
+            });
+            const order = await response.json();
+            return order.id;
+        },
+        async onApprove(data) {
+            const response = await fetch("@Url.Action("CompleteOrder", "Checkout")", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    orderID: data.orderID
+                })
+            })
+
+            const details = await response.json();
+            if (details == "success") {
+                document.getElementById("notification-container").innerHTML =
+                    `
                         <div class="alert alert-success alert-dismissible shadow" role="alert">
                             <strong>The Order is created Successfully!</strong>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     `;
-                }
-                else {
-                    document.getElementById("notification-container").innerHTML =
-                        `
+            }
+            else {
+                document.getElementById("notification-container").innerHTML =
+                    `
                         <div class="alert alert-success alert-dismissible shadow" role="alert">
                             <strong>Failed to create the order.</strong>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     `;
-                }
-            },
-        }).render('#paypal-button-container');
+            }
+        },
+    }).render('#paypal-button-container');
 </script>
+
+<style>
+    .text-truncate {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .w-auto {
+        width: auto !important;
+    }
+</style>

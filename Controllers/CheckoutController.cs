@@ -43,6 +43,24 @@ public class CheckoutController : Controller
         ViewBag.PaypalClientID = PaypalClientID;
         return View("Checkout", cartItems);
     }
+
+    public void RemoveFromCart(string isbn, string qty)
+    {
+        var book = _dbContext.Books.FirstOrDefault(b => b.isbnNumber == isbn);
+        int quantity;
+        try
+        {
+            quantity = int.Parse(qty);
+        }
+        catch (Exception)
+        {
+            quantity = 0;
+        }
+        book.Quantity += quantity;
+        _dbContext.SaveChangesAsync();
+        List <CartItem> shoppingCart = ShoppingCart.GetShoppingCart();
+        
+    }
     
     /*public IActionResult Checkout()
     {

@@ -22,6 +22,7 @@ namespace eLibrary.Models
         public static void Remove(CartItem removeItem)
         {
             var shoppingCart = GetShoppingCart();
+            removeItem = shoppingCart.Find(item => item.ISBN == removeItem.ISBN);
             shoppingCart.Remove(removeItem);
             
             var serializedCart = JsonSerializer.Serialize(shoppingCart);

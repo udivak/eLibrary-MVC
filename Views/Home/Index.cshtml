@@ -6,14 +6,14 @@
     ViewData["Title"] = "iReadIt";
     Layout = "_Layout";
     var userName = _context.HttpContext.Session.GetString("userName");
-    if (TempData["AlertMessage"] != null)
+    if (TempData["AddToCartMessage"] != null)
     {
         string msg = "";
-        if (TempData["AlertMessage"].ToString().Equals("SUCCESS"))
+        if (TempData["AddToCartMessage"].ToString().Equals("SUCCESS"))
         {
             msg = "'" + TempData["BookTitle"] + "' has been added to cart successfully.";
         }
-        if (TempData["AlertMessage"].ToString().Equals("FAIL"))
+        if (TempData["AddToCartMessage"].ToString().Equals("FAIL"))
         {
             msg = "Sorry, we don't have enough copies of '" + TempData["BookTitle"] + "' at the moment.";
         }

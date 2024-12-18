@@ -133,7 +133,7 @@ public class BookController : Controller
             }
             else                                //No more physical copies
             {
-                TempData["AlertMessage"] = "FAIL";
+                TempData["AddToCartMessage"] = "FAIL";
                 return RedirectToAction("Index", "Home");
             }
         }
@@ -149,26 +149,27 @@ public class BookController : Controller
         CartItem addItem = new CartItem(book.isbnNumber, book.Title, cartAction, price, quantity);
         ShoppingCart.Add(addItem);
         
-        TempData["AlertMessage"] = "SUCCESS";
+        TempData["AddToCartMessage"] = "SUCCESS";
         return RedirectToAction("Index", "Home");
     }
     
-    public async Task<IActionResult> RemoveFromCart(Book book)
+    public async Task<IActionResult> RemoveFromCart(string isbn)
     {
-        string isbn = book.isbnNumber;
-        var b = _dbContext.Books.FirstOrDefault(b => b.isbnNumber == isbn);
-        if (b == null)
+        var book = _dbContext.Books.FirstOrDefault(b => b.isbnNumber == isbn);
+        if (book == null)
             return RedirectToAction("Error", "Home");
+        TempData["BookTitle"] = $"'{book.Title}'";
         var shoppingCart = ShoppingCart.GetShoppingCart();
         CartItem removedItem = shoppingCart.Find(item => item.ISBN == isbn);
         int qty = removedItem.Quantity;
-        if (b.Format == "Physical")
+        if (book.Format == "Physical")
         {
-            b.Quantity += qty;
+            book.Quantity += qty;
             await _dbContext.SaveChangesAsync();
         }
         ShoppingCart.Remove(removedItem);
-        return RedirectToAction("Index", "Home");
+        TempData["RemoveFromCartMessage"] = " has been removed from cart.";
+        return RedirectToAction("CheckoutPage", "Checkout");
     }
 
     public IActionResult SearchResults()

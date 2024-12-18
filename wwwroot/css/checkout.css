@@ -16,3 +16,7 @@
 .table-bordered {
     border-color: #444444 !important;
 }
+
+.remove-from-cart-col {
+    width: 40px;
+}
