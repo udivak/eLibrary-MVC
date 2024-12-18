@@ -43,6 +43,13 @@ public class BookController : Controller
     {
         return View("AddBook", new Book());
     }
+
+    public IActionResult AllBooks()
+    {
+        var allBooks = _dbContext.GetAllBooks();
+        return View("AllBooks", allBooks);
+    }
+    
     
     [HttpPost]
     public async Task<IActionResult> AddBookToLibrary(Book book)
