@@ -71,7 +71,6 @@
                     {
                         <!-- Welcome message when user is logged in -->
                         <p class="welcome-message">Welcome, @_context.HttpContext.Session.GetString("userName")</p>
-                        <br />
                         <a href="@Url.Action("Logout", "User")" class="btn logout-btn">Logout</a>
                     }
                     else
