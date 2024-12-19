@@ -5,6 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
+using System.IO;
+using System.Reflection.Metadata;
+
 namespace eLibrary.Controllers;
 public class BookController : Controller
 {
@@ -133,7 +139,7 @@ public class BookController : Controller
         TempData["BookTitle"] = $"{book.Title}";
         if (book.Format == "Physical" && cartAction == "Buy")
         {
-            if (book.Quantity > quantity)      //Save the current copy in the user's cart
+            if (book.Quantity >= quantity)      //Save the current copy in the user's cart
             {
                 book.Quantity -= quantity;
                 await _dbContext.SaveChangesAsync();
@@ -141,6 +147,9 @@ public class BookController : Controller
             else                                //No more physical copies
             {
                 TempData["AddToCartMessage"] = "FAIL";
+                var waitingList = new WaitingList(isbn, _dbContext.Users.FirstOrDefault(u => u.Email == User.Identity.Name).Email, quantity);
+                _dbContext.WaitingLists.Add(waitingList);
+                await _dbContext.SaveChangesAsync();
                 return RedirectToAction("Index", "Home");
             }
         }
@@ -182,6 +191,45 @@ public class BookController : Controller
     public IActionResult SearchResults()
     {
         return View(_dbContext.Books.ToList());
+    }
+    public IActionResult DownloadPdf(string isbn)
+    {
+        var book = _dbContext.Books.FirstOrDefault(b => b.isbnNumber == isbn);
+        if (book == null)
+        {
+            return NotFound();
+        }
+
+        // Create a memory stream to hold the PDF data
+        using (var memoryStream = new MemoryStream())
+        {
+            // Create a PdfWriter instance
+            using (var writer = new PdfWriter(memoryStream))
+            {
+                using (var pdfDocument = new PdfDocument(writer))
+                {
+                    var document = new iText.Layout.Document(pdfDocument);
+
+                    // Add content to the PDF document
+                    document.Add(new Paragraph($"Book Title: {book.Title}"));
+                    document.Add(new Paragraph($"Author: {book.Author}"));
+                    document.Add(new Paragraph($"ISBN: {book.isbnNumber}"));
+                    document.Add(new Paragraph($"Publisher: {book.Publisher}"));
+                    document.Add(new Paragraph($"Year: {book.Year}"));
+                    document.Add(new Paragraph($"Genre: {book.Genre}"));
+                    document.Add(new Paragraph($"Pre: You Need To Buy The Book First!!!"));
+
+                    // Close the document to finalize the PDF
+                    document.Close();
+                }
+            }
+
+            // Convert to byte array before the stream is disposed
+            byte[] pdfBytes = memoryStream.ToArray();
+        
+            // Return the PDF bytes as a file
+            return File(pdfBytes, "application/pdf", $"{book.Title}.pdf");
+        }
     }
     
 }

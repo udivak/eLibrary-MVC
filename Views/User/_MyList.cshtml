@@ -8,7 +8,10 @@
         <ul>
             @foreach (var book in Model)
             {
-                <li>@book.Title</li>
+                <li>
+                    <a href="@Url.Action("BookDetails", "Book", new { isbn = book.isbnNumber })">@book.Title</a>
+
+                </li>
             }
         </ul>
     </div>
