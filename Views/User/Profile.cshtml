@@ -1,82 +1,129 @@
-@model eLibrary.Models.User
-@using Microsoft.AspNetCore.Mvc.TagHelpers
-@inject IHttpContextAccessor _context;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
 
-@{
-    ViewData["Title"] = "Profile";
-    Layout = "_Layout";
-    var userName = _context.HttpContext.Session.GetString("userName");
-}
+    <link rel="stylesheet" href="/css/Profile.css" asp-append-version="true">
 
-<div class="container">
-    <!-- Notifications Section -->
-    <div class="notifications">
-        You have new notifications!
+
+</head>
+<body>
+<!-- Notifications Section -->
+<div class="notifications">
+    You have new notifications!
+</div>
+
+<div class="layout-container">
+    <!-- Sidebar with tabs -->
+    <div class="sidebar">
+        <ul class="tab-list nav nav-pills flex-column" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="pill" href="#MyList" role="tab" data-url="/User/MyList">
+                    <i class="bi bi-list-task me-2"></i>My List
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="pill" href="#MyBooks" role="tab" data-url="/User/MyBooks">
+                    <i class="bi bi-book me-2"></i>My Books
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="pill" href="#PersonalDetails" role="tab" data-url="/User/PersonalDetails">
+                    <i class="bi bi-person me-2"></i>Personal Details
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Content Wrapper -->
+    <div class="content-wrapper">
+        <!-- Content Card Container -->
+        <div id="content-card" class="tab-content active">
+            <div class="tab-pane fade show active" id="MyList" role="tabpanel"></div>
+            <div class="tab-pane fade" id="MyBooks" role="tabpanel"></div>
+            <div class="tab-pane fade" id="PersonalDetails" role="tabpanel"></div>
+        </div>
     </div>
 </div>
 
-<!-- Sidebar with My List and My Books -->
-<div class="sidebar">
-    <h3 class="px-3 pt-3">Personal Area</h3>
-    <ul class="tab-list">
-        <li>
-            <button class="tab-button" data-target="MyList">
-                <i class="bi bi-list-task me-2"></i>My List
-            </button>
-        </li>
-        <li>
-            <button class="tab-button" data-target="MyBooks">
-                <i class="bi bi-book me-2"></i>My Books
-            </button>
-        </li>
-        <li>
-            <button class="tab-button" data-target="PersonalDetails">
-                <i class="bi bi-person me-2"></i>Personal Details
-            </button>
-        </li>
-    </ul>
-</div>
-
-<!-- Content Card Container -->
-<div id="content-card" class="content-card">
-    <!-- Dynamically Loaded Content Will Appear Here -->
-</div>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-    $(document).ready(function() {
-        // Set the first tab as active by default
-        $('.tab-button').first().addClass('active');
-        loadContent($('.tab-button').first().data('target'));
+    $(document).ready(function () {
+        const activeTab = $(".nav-link.active");
+        loadTabContent(activeTab);
 
-        // Click event for tab buttons
-        $('.tab-button').click(function() {
-            // Remove active class from all buttons
-            $('.tab-button').removeClass('active');
-
-            // Add active class to the clicked button
-            $(this).addClass('active');
-
-            // Load content for the selected tab
-            let target = $(this).data('target');
-            loadContent(target);
+        $(".nav-link").on("click", function () {
+            loadTabContent($(this));
+            $("#content-card").addClass("active");
         });
 
-        // Function to load content dynamically
-        function loadContent(target) {
-            $.ajax({
-                url: '/User/' + target,
-                type: 'GET',
-                success: function(data) {
-                    $('#content-card').html(data);
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error loading content:', error);
-                    $('#content-card').html('<p>Error loading content.</p>');
-                }
-            });
+        function loadTabContent(tab) {
+            const url = tab.data("url");
+            const target = tab.attr("href");
+
+            if (url && $(target).is(":empty")) {
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    success: function (data) {
+                        $(target).html(data);
+                    },
+                    error: function () {
+                        $(target).html("<div class='text-danger'>No Books Found</div>");
+                    }
+                });
+            }
         }
     });
+
+        $(document).ready(function () {
+        const notificationDiv = $(".notifications");
+
+        function checkBookStock() {
+    $.ajax({
+        url: "/User/CheckBookStock", // Replace with your server endpoint
+        type: "GET",
+        success: function (data) {
+            if (data && data.booksInStock && data.booksInStock.length > 0) {
+                // Create notification message
+                const bookTitles = data.booksInStock.join(", ");
+                showNotification(`The following books are back in stock: ${bookTitles}`);
+            } else {
+                console.log("No books are back in stock.");
+            }
+        },
+        error: function () {
+            console.error("Error checking book stock.");
+        }
+    });
+}
+    
+
+        function showNotification(message) {
+        // Update notification content
+        notificationDiv.text(message);
+        // Show notification with fade-in effect
+        notificationDiv.fadeIn().delay(5000).fadeOut();
+    }
+
+        // Check stock every 5 minutes (300,000 ms)
+        setInterval(checkBookStock, 300000);
+        setInterval(showNotification("hello"), 10000);
+
+        // Trigger an initial check when the page loads
+        checkBookStock();
+    });
 </script>
+
+</body>
+</html>

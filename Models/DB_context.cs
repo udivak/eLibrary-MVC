@@ -12,6 +12,8 @@ namespace eLibrary.Models
         public DbSet<Book> Books { get; set; }
         public DbSet<User> Users { get; set; }
         
+        public DbSet<WaitingList> WaitingLists { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -22,6 +24,10 @@ namespace eLibrary.Models
             
             modelBuilder.Entity<Book>()
                 .HasKey(b => b.isbnNumber);
+            
+            modelBuilder.Entity<WaitingList>()
+                .HasKey(w => new { w.BookISBN, w.UserEmail });
+
         }
 
         // Retrieve all books async
@@ -29,6 +35,8 @@ namespace eLibrary.Models
         {
             return await Books.ToListAsync();
         }
+        
+        
         
         // Retrieve all books sync
         public List<Book> GetAllBooks()

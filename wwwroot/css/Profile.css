@@ -1,51 +1,73 @@
+/* Add these new styles while keeping your existing CSS */
 .sidebar {
     width: 250px;
-    background-color: #f4f4f4;
-    height: 100%;
-    transition: all 0.3s ease;
-    padding-top: 20px; /* Add padding at the top */
+    background-color: #2d2b2b;
+    z-index: 1000;
 }
 
-.tab-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
+.nav-link {
+    /* Maintain your existing nav-link styles */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 20px !important;
+    color: #ffffff !important;
+    border: 1px solid #007bff !important;
+    padding: 10px 15px !important;
+    border-radius: 5px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    transition: background-color 0.3s ease !important;
+    margin-right: 15px !important;
+
+    /* Add these new properties for tab effect */
+    display: flex !important;
+    align-items: center !important;
+    border-right: none !important;
+    border-radius: 5px 0 0 5px !important;
+    margin-bottom: 10px !important;
 }
 
-.tab-list li {
-    margin: 0;
-    padding: 0;
+.nav-link.active {
+    background-color: #007bff !important;
+    color: #ffffff !important;
+    position: relative !important;
+    z-index: 2 !important;
 }
 
-.tab-button {
-    width: 100%;
-    height: 50px; /* Set the height for uniform size */
-    padding: 0 15px; /* Remove extra padding */
-    text-align: left;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center; /* Vertically center icons and text */
-    font-size: 16px; /* Adjust the font size if needed */
+/* Content panel sliding effect */
+#content-card {
+    position: absolute !important;
+    left: -1px !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    width: 0 !important;
+    background-color: #2d2b2b !important;
+    border-left: 1px solid #007bff !important;
+    overflow: hidden !important;
+    transition: width 0.3s ease !important;
+    min-height: 600px !important; /* Added minimum height */
 }
 
-.tab-button i {
-    margin-right: 10px; /* Adjust spacing between icon and text */
+#content-card.active {
+    width: calc(100% - 20px) !important;
+    padding: 20px !important;
 }
 
-.tab-button:hover {
-    background-color: #e0e0e0;
+.layout-container {
+    display: flex !important;
+    min-height: 100vh !important;
+    background-color: #2d2b2b !important;
+    min-width: 1200px !important; /* Added minimum width */
 }
 
-.tab-button.active {
-    background-color: #007bff;
-    color: white;
+.content-wrapper {
+    flex-grow: 1 !important;
+    position: relative !important;
+    min-width: 800px !important; /* Added minimum width */
 }
 
-.content-card {
-    margin-left: 250px;
-    padding: 20px;
-    transition: margin-left 0.3s ease;
+.tab-pane {
+    min-width: 800px !important; /* Increased from 300px */
+    color: #ffffff !important;
+    min-height: 600px !important; /* Added minimum height */
+    padding: 20px !important; /* Added padding */
 }

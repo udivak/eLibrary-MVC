@@ -2,6 +2,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using eLibrary.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
 
 namespace eLibrary.Controllers;
 public class UserController : Controller
@@ -52,6 +53,83 @@ public class UserController : Controller
         // If model state is invalid, return the registration view
         return View("UserRegistration", newUser);
     }
+    
+    [HttpPost]
+    public IActionResult ChangePassword(string currentPassword, string newPassword, string confirmNewPassword)
+    {
+        // Validate the passwords
+        if (newPassword != confirmNewPassword)
+        {
+            ModelState.AddModelError("", "New passwords do not match.");
+            return View(); // Return the same view with the error
+        }
+
+        // Get the user from the database by the username or user ID
+        var username = User.Identity.Name; // Assuming you use the username to identify the user
+        var user = _dbContext.Users.FirstOrDefault(u => u.UserName == username); 
+
+        if (user == null)
+        {
+            return NotFound(); // If user not found
+        }
+
+        // Verify the current password with the stored hashed password
+        if (!BCrypt.Net.BCrypt.Verify(currentPassword, user.Password)) // Assuming password is hashed
+        {
+            ModelState.AddModelError("", "Current password is incorrect.");
+            return View(); // Return the same view with the error
+        }
+
+        // Hash the new password
+        var hashedNewPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
+
+        // Update the password in the database
+        user.Password = hashedNewPassword;
+        _dbContext.SaveChanges(); // Save changes to the database
+
+        TempData["SuccessMessage"] = "Password changed successfully.";
+        return RedirectToAction("Profile"); // Redirect to the profile or success page
+    }
+    
+   
+    [HttpGet]
+    public IActionResult CheckBookStock()
+    {
+        var email = HttpContext.Session.GetString("userEmail");
+        if (string.IsNullOrEmpty(email))
+        {
+            return BadRequest(new { Message = "Email is required." });
+        }
+
+        var booksInStock = _dbContext.WaitingLists
+            .Join(
+                _dbContext.Books,
+                wl => wl.BookISBN,
+                b => b.isbnNumber,
+                (wl, b) => new { WaitingList = wl, Book = b }
+            )
+            .Where(joined => joined.WaitingList.UserEmail == email && 
+                             joined.Book.Quantity >= joined.WaitingList.QuantityRequested)
+            .Select(joined => new
+            {
+                Title = joined.Book.Title,
+                Isbn = joined.Book.isbnNumber,
+                QuantityRequested = joined.WaitingList.QuantityRequested,
+                QuantityAvailable = joined.Book.Quantity
+            })
+            .ToList();
+
+        // Return the result
+        if (booksInStock.Count == 0)
+        {
+            return NotFound(new { Message = "No books are in stock for this user." });
+        }
+
+        return Ok(booksInStock);
+    }
+
+
+
 
     public IActionResult RegistrationSuccessful(string email)
     {
@@ -135,20 +213,46 @@ public class UserController : Controller
         List<Book> featuredBooks = _dbContext.GetAllBooks().Take(8).ToList();
         return View("Profile");
     }
-    public IActionResult MyList()
+    public async Task<IActionResult> MyList()
     {
-        // Logic to retrieve the user's list of books (this could be from a database)
-        // var userList = _dbContext.GetUserList(); // Replace with actual service call
-        return PartialView("_MyList");
-        
-        return View();
+    // Get the user's email from the session
+    string userEmail = HttpContext.Session.GetString("userEmail");
+
+    if (string.IsNullOrEmpty(userEmail))
+    {
+        return Unauthorized("User is not logged in.");
     }
+
+    // Retrieve all ISBNs from the WaitingList for the current user
+    var waitingList = await _dbContext.WaitingLists
+        .Where(w => w.UserEmail == userEmail && !string.IsNullOrEmpty(w.BookISBN))
+        .ToListAsync();
+
+    // Check if the waiting list is empty
+    if (!waitingList.Any())
+    {
+        // Log or debug to check if the waiting list is empty
+        Console.WriteLine("Waiting list is empty for user: " + userEmail);
+        return PartialView("_MyList", new List<Book>());
+    }
+
+    // Get the ISBN numbers of the books in the waiting list
+    var isbnNumbers = waitingList.Select(w => w.BookISBN).ToList();
+
+    // Retrieve the books from the Books table using the ISBN numbers
+    var booksInWaitingList = await _dbContext.Books
+        .Where(b => isbnNumbers.Contains(b.isbnNumber))
+        .ToListAsync();
+
+    // Return the books as a partial view
+    return PartialView("_MyList", booksInWaitingList);
+}
+
 
     // Action to display the user's purchased books
     public IActionResult MyBooks()
     {
         // Logic to retrieve the user's purchased books
-        // var myBooks = _dbContext.GetMyBooks(); // Replace with actual service call
         return PartialView("_MyBooks");
         // return View();
     }

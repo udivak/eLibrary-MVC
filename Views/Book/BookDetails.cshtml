@@ -24,6 +24,8 @@
             <p class="data"><strong>Age Limit:</strong> @Model.AgeLimit+</p>
             <p class="data"><strong>Genre:</strong> @Model.Genre</p>
             <p class="data" id="bookFormat"><strong>Format:</strong> @Model.Format</p>
+            <a href="@Url.Action("DownloadPdf", "Book", new { isbn = @Model.isbnNumber })" class="btn btn-primary">Download PDF</a>
+
             @if (Model.Format == "Physical")
             {
                 <p><strong>Quantity:</strong> @Model.Quantity</p>
@@ -34,6 +36,8 @@
                 <option value="" disabled selected>Select an Action</option>
                 <option value="Buy">Buy</option>
                 <option value="Borrow">Borrow</option>
+                @* <option value="Waitlist">Add to Waitlist</option> <!-- New option for Waitlist --> *@
+
             </select>
 
             <div id="quantityContainer" style="display: none; margin-top: 10px;">
