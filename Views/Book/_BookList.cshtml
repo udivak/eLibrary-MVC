@@ -1,0 +1,72 @@
+@model IEnumerable<eLibrary.Models.Book>
+<link rel="stylesheet" href="/css/_BookList.css" asp-append-version="true">
+
+<h1>test</h1>
+<div class="container">
+    <h1 class="text-center"></h1>
+
+
+    <div class="book-list-container" id="bookListContainer">
+        <!-- Loader inside the Book List container -->
+        <div class="spinner-container" id="spinner">
+            <div class="spinner">
+                Loading
+                <div class="spinner-sector spinner-sector-hard_blue"></div>
+                <div class="spinner-sector spinner-sector-blue"></div>
+                <div class="spinner-sector spinner-sector-soft-blue"></div>
+            </div>
+        </div>
+
+        <div id="bookListContent" style="display: none;">
+            @if (Model != null && Model.Any())
+            {
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Publisher</th>
+                        <th>Year</th>
+                        <th>Genre</th>
+                        <th>Details</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var book in Model)
+                    {
+                        <tr>
+                            <td>@book.Title</td>
+                            <td>@book.Author</td>
+                            <td>@book.Publisher</td>
+                            <td>@book.Year</td>
+                            <td>@book.Genre</td>
+                            <td><a href="@Url.Action("BookDetails", "Book", new { isbn = book.isbnNumber })" class="btn btn-link">View Details</a></td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>No books found matching the criteria.</p>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const spinner = document.getElementById('spinner');
+        const bookListContent = document.getElementById('bookListContent');
+
+        // Initially show spinner
+        spinner.style.display = 'flex';
+        bookListContent.style.display = 'none';
+
+        // After 2 seconds, hide spinner and show content
+        setTimeout(function () {
+            spinner.style.display = 'none';
+            bookListContent.style.display = 'block';
+        }, 2000);
+    });
+</script>

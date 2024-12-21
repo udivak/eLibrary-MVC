@@ -1,41 +1,216 @@
-.loader{
-    position: fixed;
-    top: 0;
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    margin-top: 50px;
+}
+
+/* Category Buttons Style */
+.category-button {
+    margin: 5px;
+    width: 120px;
+}
+
+/* Adjust spacing for the search filters in one row */
+.container.mb-4 .row .col-md-2 {
+    margin-right: 10px;
+}
+
+/* Ensure the book list container has space below the search bar */
+#bookListContainer {
+    position: absolute;
+    top: 100%; /* Start right after the search bar */
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    max-width: none; /* Remove max-width restriction */
+    text-align: center;
+    padding: 20px 0; /* Optional: add padding if needed */
+}
+
+/* Style for the category buttons to keep them aligned horizontally */
+.category-button {
+    margin: 5px;
+}
+
+/* Ensure the search filters in one row have equal spacing and are centered */
+.container .row {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Space between each filter input */
+}
+
+/* Ensure the buttons (Apply Filters) are aligned properly */
+#applyFilters {
+    margin-top: 10px;
+}
+
+
+.spinner-container {
+    position: fixed; /* Fixed positioning for full viewport coverage */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center it precisely */
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.6);
-    transition: opacity 0.75s, visibility 0.75s;
-    
-}
-/* Ensure the form-group container is centered */
-.form-group.text-center {
-    text-align: center;
+    background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent background */
+    z-index: 9999; /* Make sure it's above all content */
+    padding: 20px; /* Add some padding for a neat appearance */
+    border-radius: 8px; /* Optional: smooth the corners */
+    width: auto; /* Let the width adjust to content */
+    height: auto; /* Let the height adjust to content */
 }
 
-.loader-hidden{
-    opacity: 0;
-    visibility: hidden;
+.spinner{
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 100%;
+    overflow: hidden;
+    position: relative;
+    animation: text-color 2s ease-in-out infinite;
 }
-.loader:after{
-    content: "";
-    width: 75px;
-    height: 75px;
-    border: 15px solid white;
-    border-top-color: rgba(0, 0, 0, 0.5);
+.spinner-sector{
+    position: absolute;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
-    animation: loading 0.75s ease infinite;
-    
+    border: 15px solid transparent;
+    mix-blend-mode: overlay;
+    animation: rotate var(--duration) var(--timing) infinite;
+    pointer-events: none;
+
 }
-@keyframes loading{
-    from{
-        transform: rotate(0turn);
-        
+.spinner-sector-hard_blue{
+    border-left-color: #052c65;
+    --duration: 1.5s;
+    --timing: ease-in-out;
+}
+.spinner-sector-blue{
+    border-top-color: #0b5ed7;
+    --duration: 2s;
+    --timing: ease-in;
+
+}
+.spinner-sector-soft-blue{
+    border-right-color: #0dcaf0;
+    --duration: 2.5s;
+    --timing: ease-out;
+
+}
+@keyframes rotate {
+    0%{
+        transform: rotate(0deg);
     }
-    to{
-        transform: rotate(1turn);
+    100%{
+        transform: rotate(360deg);
+    }
+}
+@keyframes text-color{
+    0%, 100%{
+        color: rgba(0,0,0,1);
+    }
+    25%, 75%{
+        color: rgba(0,0,0,0.3);
+    }
+    50%{
+        color: rgba(0,0,0,0.1);
+    }
+}
+#content {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+#content.show {
+    opacity: 1;
+}
+
+/* Loader */
+.loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 1000;
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.loader-hidden {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.loader::before {
+    content: "";
+    width: 50px;
+    height: 50px;
+    border: 5px solid #3498db;
+    border-top: 5px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Form Styles */
+form {
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Category Buttons */
+.category-button {
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-size: 16px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.category-button:hover {
+    background-color: #0056b3;
+    color: white;
+}
+
+.category-button.active {
+    background-color: #007bff;
+    color: white;
+    pointer-events: none;
+}
+
+/* Sort Dropdown */
+#sortOptions {
+    font-size: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    form {
+        width: 90%;
+    }
+
+    #sortOptions {
+        width: 100%;
     }
 }

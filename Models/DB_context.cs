@@ -12,6 +12,8 @@ namespace eLibrary.Models
         public DbSet<Book> Books { get; set; }
         public DbSet<User> Users { get; set; }
         
+        public DbSet<UserBook> UserBooks { get; set; }
+        
         public DbSet<WaitingList> WaitingLists { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -27,6 +29,9 @@ namespace eLibrary.Models
             
             modelBuilder.Entity<WaitingList>()
                 .HasKey(w => new { w.BookISBN, w.UserEmail });
+            
+            modelBuilder.Entity<UserBook>()
+                .HasKey(ub => new { ub.Id });
 
         }
 
