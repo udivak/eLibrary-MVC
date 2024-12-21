@@ -1,9 +1,9 @@
-namespace eLibrary.Models;
-
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+namespace eLibrary.Models;
+[Table("UserBook")]
 public class UserBook
 {
     [Key]
@@ -13,7 +13,7 @@ public class UserBook
     public string UserEmail { get; set; }
 
     [Required]
-    public int BookId { get; set; }
+    public string BookISBN { get; set; }
 
     public DateTime? PurchaseDate { get; set; }
 
@@ -23,4 +23,22 @@ public class UserBook
 
     [Required]
     public bool IsPurchased { get; set; }
+    
+    public UserBook() { }
+
+    public UserBook(string userEmail, string isbn, bool isPurchased)
+    {
+        UserEmail = userEmail;
+        BookISBN = isbn;
+        IsPurchased = isPurchased;
+        if (!isPurchased) // false = borrowed
+        {
+            BorrowDate = DateTime.Now;
+            BorrowExpiryDate = DateTime.Now.AddDays(30);
+        }
+        else
+        {
+            PurchaseDate = DateTime.Now;
+        }
+    }
 }

@@ -24,11 +24,7 @@ public class HomeController : Controller
     public IActionResult Index()        // Home Page
     {
         var userName = HttpContext.Session.GetString("userName");
-
         List<Book> featuredBooks = _dbContext.GetAllBooks().Take(8).ToList();
-        
-        
-        
         return View("Index", featuredBooks);
     }
     

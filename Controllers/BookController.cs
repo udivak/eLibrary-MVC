@@ -174,7 +174,8 @@ public class BookController : Controller
             else                                //No more physical copies
             {
                 TempData["AddToCartMessage"] = "FAIL";
-                var waitingList = new WaitingList(isbn, _dbContext.Users.FirstOrDefault(u => u.Email == User.Identity.Name).Email, quantity);
+                string currentUser = Session.GetString("userEmail");
+                var waitingList = new WaitingList(isbn, currentUser, quantity);
                 _dbContext.WaitingLists.Add(waitingList);
                 await _dbContext.SaveChangesAsync();
                 return RedirectToAction("Index", "Home");
