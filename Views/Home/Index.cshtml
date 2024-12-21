@@ -15,7 +15,8 @@
         }
         if (TempData["AddToCartMessage"].ToString().Equals("FAIL"))
         {
-            msg = "Sorry, we don't have enough copies of '" + TempData["BookTitle"] + "' at the moment.";
+            msg = "Sorry, we don't have enough copies of '" + TempData["BookTitle"] + "' at the moment." +
+                  "Your request has been added to our Waiting List.";
         }
         var jsonMsg = JsonSerializer.Serialize(msg);
         <script>

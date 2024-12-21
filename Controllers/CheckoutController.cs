@@ -173,6 +173,18 @@ public class CheckoutController : Controller
                     if (paypalOrderStatus == "COMPLETED")
                     {
                         //save the order to db
+                        var shoppingCart = ShoppingCart.GetShoppingCart();
+                        string userEmail = Session.GetString("userEmail");
+                        foreach (CartItem item in shoppingCart)
+                        {
+                            if (item == null)
+                                continue;
+                            bool isPurchased = item.Action == "Buy";
+                            UserBook newUserBook = new UserBook(userEmail, item.ISBN, isPurchased);
+                            _dbContext.UserBook.Add(newUserBook);
+                            await _dbContext.SaveChangesAsync();
+                        }
+                        //
                         return new JsonResult("success");
                     }
                 }

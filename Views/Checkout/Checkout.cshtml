@@ -34,6 +34,7 @@
                         <th class="text-truncate">Book Title</th>
                         <th class="text-truncate">ISBN</th>
                         <th class="text-truncate">Quantity</th>
+                        <th class="text-truncate">Action</th>
                         <th class="text-truncate">Price Per Unit</th>
                         <th class="text-truncate">Total Price</th>
                         <th class="text-truncate w-auto">Remove From Cart</th>
@@ -46,7 +47,8 @@
                             <td class="text-truncate">@item.Title</td>
                             <td class="text-truncate">@item.ISBN</td>
                             <td>@item.Quantity</td>
-                            <td>@item.Price$""</td>
+                            <td>@item.Action</td>
+                            <td>@item.Price$</td>
                             <td>@(item.Quantity * item.Price)$</td>
                             <td class="text-center remove-from-cart-col">
                                 <a href="@Url.Action("RemoveFromCart", "Book", new { isbn = item.ISBN })" class="btn btn-danger btn-sm">X</a>
@@ -56,7 +58,7 @@
                     </tbody>
                     <tfoot>
                     <tr>
-                        <td colspan="5" class="text-end">Total Order Price</td>
+                        <td colspan="6" class="text-end">Total Order Price</td>
                         <td class="font-weight-bold">@Model.Sum(item => item.Quantity * item.Price)$</td>
                     </tr>
                     </tfoot>

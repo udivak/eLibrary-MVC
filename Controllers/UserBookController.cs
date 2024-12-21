@@ -5,17 +5,17 @@ using eLibrary.Models;
 
 using System.Linq;
 
-public class UserBooksController : Controller
+public class UserBookController : Controller
 {
     private DB_context _dbContext;
     private readonly IHttpContextAccessor _context;
 
-    public UserBooksController(IHttpContextAccessor context, DB_context dbContext)
+    public UserBookController(IHttpContextAccessor context, DB_context dbContext)
     {
         _dbContext = dbContext;
         _context = context;
     }
-
+    /*
     // Borrow a book
     [HttpPost]
     public IActionResult BorrowBook(int bookId, int days = 14)
@@ -55,17 +55,17 @@ public class UserBooksController : Controller
         _dbContext.SaveChanges();
 
         return Ok("Book purchased successfully.");
-    }
+    }*/
 
     // Clean up expired borrowed books
     [HttpPost]
     public IActionResult CleanupExpiredBorrowedBooks()
     {
-        var expiredBooks = _dbContext.UserBooks
+        var expiredBooks = _dbContext.UserBook
             .Where(ub => !ub.IsPurchased && ub.BorrowExpiryDate < DateTime.Now)
             .ToList();
 
-        _dbContext.UserBooks.RemoveRange(expiredBooks);
+        _dbContext.UserBook.RemoveRange(expiredBooks);
         _dbContext.SaveChanges();
 
         return Ok($"{expiredBooks.Count} expired borrowed books removed.");

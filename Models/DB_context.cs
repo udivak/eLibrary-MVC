@@ -12,7 +12,7 @@ namespace eLibrary.Models
         public DbSet<Book> Books { get; set; }
         public DbSet<User> Users { get; set; }
         
-        public DbSet<UserBook> UserBooks { get; set; }
+        public DbSet<UserBook> UserBook { get; set; }
         
         public DbSet<WaitingList> WaitingLists { get; set; }
         
@@ -40,8 +40,6 @@ namespace eLibrary.Models
         {
             return await Books.ToListAsync();
         }
-        
-        
         
         // Retrieve all books sync
         public List<Book> GetAllBooks()
