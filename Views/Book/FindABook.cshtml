@@ -1,78 +1,201 @@
+// FindABook.cshtml
 @model IEnumerable<eLibrary.Models.Book>
-
 @{
-    ViewBag.Title = "Find a Book";
+    ViewBag.Title = "Find and Search for a Book";
     Layout = "_Layout";
 }
-<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-<link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true"/>
-<link rel="stylesheet" href="~/css/SearchBooks.css" asp-append-version="true"/>
 
-<div class="container">
-    <h1 class="text-center">Find a Book</h1>
-    <!-- Loading Overlay with Spinner -->
-    <div class="loader"></div>
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true" />
+<link rel="stylesheet" href="/css/FindABook.css" asp-append-version="true" />
 
-    <form asp-action="FindABook" method="get" id="searchForm" class="form-full-width border rounded p-3 shadow-sm mx-auto" style="width: 50%;">
-        <div class="row mb-3"> <!-- Full-width column with Bootstrap spacing -->
-            <div class="col-md-12">
-                <label for="title" class="form-label">Title</label>
-                <input type="text" class="form-control" id="title" name="title"/>
-            </div>
-            <div class="col-md-12">
-                <label for="author" class="form-label">Author</label>
-                <input type="text" class="form-control" id="author" name="author"/>
-            </div>
-            <div class="col-md-12">
-                <label for="genre" class="form-label">Genre</label>
-                <input type="text" class="form-control" id="genre" name="genre"/>
-            </div>
-            <div class="col-md-12">
-                <label for="publisher" class="form-label">Publisher</label>
-                <input type="text" class="form-control" id="publisher" name="publisher"/>
-            </div>
-            <div class="col-md-12">
-                <label for="year" class="form-label">Year</label>
-                <input type="number" class="form-control" id="year" name="year"/>
+<!-- Hero Section -->
+<div class="hero-section mb-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <h1 class="display-4">Find Your Next Great Read</h1>
+                <p class="lead">Search through our extensive collection of books</p>
             </div>
         </div>
-        <div class="text-center">
-            <button type="submit" class="btn btn-lg btn-primary">Search</button>
-        </div>
-    </form>
+    </div>
 </div>
 
+<!-- Category Buttons Section -->
+<div class="container mb-4">
+    <div class="category-section">
+        <h2 class="text-center mb-4">Browse by Category</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-auto">
+                <button class="btn btn-outline-primary category-button" data-category="Fiction">
+                    <i class="fas fa-book"></i>
+                    Fiction
+                </button>
+            </div>
+            <div class="col-md-auto">
+                <button class="btn btn-outline-primary category-button" data-category="Science">
+                    <i class="fas fa-flask"></i>
+                    Science
+                </button>
+            </div>
+            <div class="col-md-auto">
+                <button class="btn btn-outline-primary category-button" data-category="History">
+                    <i class="fas fa-landmark"></i>
+                    History
+                </button>
+            </div>
+            <div class="col-md-auto">
+                <button class="btn btn-outline-primary category-button" data-category="Technology">
+                    <i class="fas fa-laptop-code"></i>
+                    Technology
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Advanced Search Section -->
+<div class="container mb-4">
+    <div class="search-section">
+        <h2 class="text-center mb-4">Advanced Search</h2>
+        <div class="row g-3">
+            <div class="col-md-6 col-lg-3">
+                <div class="form-floating">
+                    <input type="text" id="titleFilter" class="form-control" placeholder="Title" />
+                    <label for="titleFilter">Title</label>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="form-floating">
+                    <input type="text" id="authorFilter" class="form-control" placeholder="Author" />
+                    <label for="authorFilter">Author</label>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="form-floating">
+                    <input type="text" id="genreFilter" class="form-control" placeholder="Genre" />
+                    <label for="genreFilter">Genre</label>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="form-floating">
+                    <input type="text" id="publisherFilter" class="form-control" placeholder="Publisher" />
+                    <label for="publisherFilter">Publisher</label>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="form-floating">
+                    <input type="number" id="yearFilter" class="form-control" placeholder="Year" />
+                    <label for="yearFilter">Year</label>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <button id="applyFilters" class="btn btn-primary w-100 h-100">
+                    <i class="fas fa-search"></i>
+                    Search
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Results Section -->
+<div id="bookListContainer" class="container">
+    @await Html.PartialAsync("_BookList", Model.Take(8))
+</div>
+
+
+<script src="https://kit.fontawesome.com/your-font-awesome-kit.js"></script>
 <script>
-    window.addEventListener("load", () => {
-        console.log("start loading");
-        const loader = document.querySelector(".loader");
+        // Handle filter button click
+        document.getElementById("applyFilters").addEventListener("click", function () {
+            const bookListContainer = document.getElementById("bookListContainer");
+            const spinner = bookListContainer.querySelector("#spinner");
+            const bookListContent = bookListContainer.querySelector("#bookListContent");
 
-        loader.classList.add("loader-hidden");
+            // Show spinner and hide content
+            if (spinner && bookListContent) {
+                spinner.style.display = 'flex';
+                bookListContent.style.display = 'none';
+            }
 
-        loader.addEventListener("transition", () => {
-            document.body.removeChild("loader");
+            // Get filter values
+            const title = document.getElementById("titleFilter").value;
+            const author = document.getElementById("authorFilter").value;
+            const genre = document.getElementById("genreFilter").value;
+            const publisher = document.getElementById("publisherFilter").value;
+            const year = document.getElementById("yearFilter").value;
+
+            // Construct query string
+            const queryString = new URLSearchParams({
+                title: title,
+                author: author,
+                genre: genre,
+                publisher: publisher,
+                year: year
+            }).toString();
+
+            // Make AJAX request
+            fetch(`/Book/FilterBooks?title=${title}&author=${author}&genre=${genre}&publisher=${publisher}&year=${year}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    bookListContainer.innerHTML = data;
+                })
+                .catch(error => {
+                    console.error("Error filtering books:", error);
+                    bookListContainer.innerHTML = '<div class="alert alert-danger">Error loading books. Please try again.</div>';
+                });
         });
-    });
-    document.addEventListener("DOMContentLoaded", function () {
-        const searchForm = document.getElementById("searchForm");
-        const loadingOverlay = document.getElementById("loadingOverlay");
-        const resultsTable = document.getElementById("resultsTable");
 
-        // Initially hide the loading overlay
-        loadingOverlay.style.display = "none";
+        // Handle category button clicks
+        document.querySelectorAll('.category-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const category = this.getAttribute('data-category');
+                const bookListContainer = document.getElementById("bookListContainer");
+                const spinner = bookListContainer.querySelector("#spinner");
+                const bookListContent = bookListContainer.querySelector("#bookListContent");
 
-        // Show the loading overlay and spinner as soon as the form is submitted
-        searchForm.addEventListener("submit", function (event) {
-            // Prevent the default form submission
-            event.preventDefault();
+                // Update active state of buttons
+                document.querySelectorAll('.category-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
 
-            // Show the loading overlay
-            loadingOverlay.style.display = "flex"; // Use flex to center the spinner
+                // Show spinner and hide content
+                if (spinner && bookListContent) {
+                    spinner.style.display = 'flex';
+                    bookListContent.style.display = 'none';
+                }
 
-            // Submit the form after 2 seconds
-            setTimeout(function () {
-                searchForm.submit();
-            }, 2000);
+                // Make AJAX request
+                fetch(`/Book/FilterBooksByCategory?category=${category}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.text();
+                    })
+                    .then(data => {
+                        bookListContainer.innerHTML = data;
+                    })
+                    .catch(error => {
+                        console.error("Error filtering books by category:", error);
+                        bookListContainer.innerHTML = '<div class="alert alert-danger">Error loading books. Please try again.</div>';
+                    });
+            });
         });
-    });
+
+        // Handle form submission on enter key
+        document.querySelectorAll('.form-floating input').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('applyFilters').click();
+                }
+            });
+        });
 </script>

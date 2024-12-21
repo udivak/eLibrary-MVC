@@ -106,11 +106,38 @@ public class BookController : Controller
         }
         else
         {
-            return View(books);
+            List<Book> featuredBooks = _dbContext.GetAllBooks().Take(8).ToList();
+            return View(featuredBooks);
         }
         // Return an empty list if no filters are applied (first time visiting)
         return View("SearchResults", books);
     }
+    
+    [HttpGet]
+    public IActionResult FilterBooks(string title, string author, string genre, string publisher, int? year)
+    {
+        var books = _dbContext.Books.AsQueryable();
+
+        if (!string.IsNullOrEmpty(title))
+            books = books.Where(b => b.Title.Contains(title));
+        if (!string.IsNullOrEmpty(author))
+            books = books.Where(b => b.Author.Contains(author));
+        if (!string.IsNullOrEmpty(genre))
+            books = books.Where(b => b.Genre.Contains(genre));
+        if (!string.IsNullOrEmpty(publisher))
+            books = books.Where(b => b.Publisher.Contains(publisher));
+        if (year.HasValue)
+            books = books.Where(b => b.Year == year.Value);
+
+        return PartialView("_BookList", books.ToList());
+    }
+
+    public IActionResult FilterBooksByCategory(string category)
+    {
+        var books = _dbContext.Books.Where(b => b.Genre == category);
+        return PartialView("_BookList", books.ToList());
+    }
+
     
     [HttpGet]
     public IActionResult BookAdded(string isbn)
