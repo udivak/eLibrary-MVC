@@ -27,6 +27,19 @@ body {
 .register-link:hover {
     background-color: #23f0f0 !important;
 }
+#loginModal input {
+    width: 70%;
+    
+}
+#loginModal label {
+    width: 100%;
+}
+#loginModal {
+    padding: 0px;
+}
+#loginModal button{
+    width: 50%;
+}
 
 .auth-section .login-link {
     font-size: 18px !important;
@@ -178,6 +191,7 @@ main {
     background-color: #abcdf3;
     display: block;
     text-align: center;
+    height: 100%;
 }
 
 .modal-content h2 {

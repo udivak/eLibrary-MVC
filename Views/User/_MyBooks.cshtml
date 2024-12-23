@@ -1,12 +1,29 @@
-@model IEnumerable<eLibrary.Models.Book>
+@model IEnumerable<eLibrary.Models.UserBookView>
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">My Books</h5>
+        <h5 class="card-title">My List</h5>
         <ul>
-            @foreach (var book in Model)
+            @foreach (var item in Model)
             {
-                <li>@book.Title</li>
+                <li>
+                    <a href="@Url.Action("BookDetails", "Book", new { isbn = item.BookISBN })">
+                        @item.BookTitle <!-- Display the book title -->
+                    </a>
+                    <div>
+                        @if (item.IsPurchased)
+                        {
+                            <p>Purchased on: @item.PurchaseDate?.ToString("g")</p>
+                        }
+                        else if (item.BorrowDate != null && item.BorrowExpiryDate != null)
+                        {
+                            <p>
+                                Borrowed on: @item.BorrowDate?.ToString("g")<br />
+                                Expires on: @item.BorrowExpiryDate?.ToString("g")
+                            </p>
+                        }
+                    </div>
+                </li>
             }
         </ul>
     </div>
