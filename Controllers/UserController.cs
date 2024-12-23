@@ -250,12 +250,46 @@ public class UserController : Controller
 
 
     // Action to display the user's purchased books
-    public IActionResult MyBooks()
+    public async Task<IActionResult> MyBooks()
     {
-        // Logic to retrieve the user's purchased books
-        return PartialView("_MyBooks");
-        // return View();
+        // Get the user's email from the session
+        string userEmail = HttpContext.Session.GetString("userEmail");
+
+        if (string.IsNullOrEmpty(userEmail))
+        {
+            return Unauthorized("User is not logged in.");
+        }
+
+        // Join UserBook with Books to include the title
+        var userBooks = await _dbContext.UserBook
+            .Where(ub => ub.UserEmail == userEmail)
+            .Join(
+                _dbContext.Books,
+                ub => ub.BookISBN,
+                b => b.isbnNumber,
+                (ub, b) => new UserBookView
+                {
+                    UserBookId = ub.Id,
+                    UserEmail = ub.UserEmail,
+                    BookISBN = ub.BookISBN,
+                    BookTitle = b.Title,
+                    PurchaseDate = ub.PurchaseDate,
+                    BorrowDate = ub.BorrowDate,
+                    BorrowExpiryDate = ub.BorrowExpiryDate,
+                    IsPurchased = ub.IsPurchased
+                })
+            .ToListAsync();
+
+        // Check if the user has any books
+        if (!userBooks.Any())
+        {
+            Console.WriteLine("No books found for user: " + userEmail);
+        }
+
+        // Return the user books with titles as a partial view
+        return PartialView("_MyBooks", userBooks);
     }
+
     
     public IActionResult PersonalDetails()
     {
