@@ -188,7 +188,6 @@ public class CheckoutController : Controller
                             _dbContext.UserBook.Add(newUserBook);
                             await _dbContext.SaveChangesAsync();
                         }
-                        //
                         return new JsonResult("success");
                     }
                 }

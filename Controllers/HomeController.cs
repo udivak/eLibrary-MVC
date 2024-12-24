@@ -21,10 +21,16 @@ public class HomeController : Controller
         _context = context;
     }
     
-    public IActionResult Index()        // Home Page
+    public async Task<IActionResult> Index()        // Home Page
     {
         var userName = HttpContext.Session.GetString("userName");
-        List<Book> featuredBooks = _dbContext.GetAllBooks().Take(8).ToList();
+        List<Book> featuredBooks = await _dbContext.GetAllBooksAsync();
+        if (featuredBooks == null)
+        {
+            featuredBooks = new List<Book>();
+            return View("Index", featuredBooks);
+        }
+        featuredBooks = featuredBooks.Take(8).ToList();
         return View("Index", featuredBooks);
     }
     

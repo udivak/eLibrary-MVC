@@ -137,7 +137,6 @@ public class BookController : Controller
         var books = _dbContext.Books.Where(b => b.Genre == category);
         return PartialView("_BookList", books.ToList());
     }
-
     
     [HttpGet]
     public IActionResult BookAdded(string isbn)

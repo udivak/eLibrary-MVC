@@ -9,16 +9,21 @@
     color : #ffffff;
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     padding: 15px;
 }
 
 .book-details-text {
     flex: 1;
+    margin-left: 20px;
 }
 
-.book-image {
+.book-image-container {
+    max-width: 300px;
+}
+
+.book-image {       /* Book image */
     margin-left: 20px;
     max-width: 150px;
     height: auto;
@@ -38,4 +43,28 @@
 .data {
     margin: 15px;
     font-size: medium;
+}
+
+.book-img {
+    max-height: 400px; /* Fixed height */
+    width: 100%; /* Optional: Make the image span the card's width */
+    object-fit: contain; /* Ensure the entire image is visible */
+    /*background-color: #f0f0f0;  Optional: Add a background color to handle empty spaces */
+    background-color: transparent; /* Optional: Remove the background color */
+    padding: 10px; /* Add padding for better spacing around the image */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-left: 10px;
+}
+
+.form-label {
+    margin-bottom: 5px;
+}
+
+.qty_desired-label {
+    margin-left: 15px;
 }
