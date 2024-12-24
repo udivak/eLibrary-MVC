@@ -85,7 +85,7 @@ public class Book
         set => _ageLimit = value;
     }
 
-    private string _format; //eBook formats - PDF, epub, f2b, mobi, Hard Cover, Soft Cover
+    private string _format; //eBook formats - PDF, epub, f2b, mobi, Physical
     [Column("Format")]
     [Required]
     [RegularExpression("^(PDF|ePub|fb2|mobi|Physical)$")]
@@ -95,11 +95,11 @@ public class Book
         set => _format = value;
     }
 
-    private string _genre;
+    private Genre _genre;
     [Column("Genre")]
     [Required]
     [StringLength(50, MinimumLength = 1, ErrorMessage = "Genre must be be 1-50 characters.")]
-    public string Genre
+    public Genre Genre
     {
         get => _genre;
         set => _genre = value;
@@ -131,7 +131,8 @@ public class Book
         BorrowPrice = borrowPrice;
         AgeLimit = ageLimit;
         Format = format;
-        Genre = genre;
+        Genre bookGenre = (Genre)Enum.Parse(typeof(Genre), genre);
+        Genre = bookGenre;
     }
 
 }

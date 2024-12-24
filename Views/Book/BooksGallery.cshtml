@@ -1,0 +1,116 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using System.Text.Json
+@model IEnumerable<eLibrary.Models.Book>
+@inject IHttpContextAccessor _context;
+@{
+    ViewBag.Title = "Books Gallery";
+    Layout = "_Layout";
+}
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="~/css/BooksGallery.css" asp-append-version="true"/>
+
+<div class="featured-books">
+    <h1 class="books_gallery_title">Books Gallery</h1>
+    <br />
+    <div class="sorting-section">
+        <label for="sortBy" style="font-size: 18px;" class="sort-label">Sort By:</label>
+        <br />
+        <select id="sortBy" class="form-control-sm" placeholder="Sort By">
+            <option value="priceAsc">Price: Low to High</option>
+            <option value="priceDesc">Price: High to Low</option>
+            <option value="mostPopular">Most Popular</option>
+            <option value="genre">Genre</option>
+            <option value="year">Year of Publishing</option>
+        </select>
+
+        <!-- Genre Selection (Hidden by default) -->
+        <div id="genreDiv" style="display: none;">
+            <label for="genre" style="font-size: 16px;" class="genre-select">Select Genre: </label>
+            <select id="genre" class="form-control-sm">
+                <option value="Fiction">Fiction</option>
+                <option value="NonFiction">Non-Fiction</option>
+                <option value="Mystery">Mystery</option>
+                <option value="Fantasy">Fantasy</option>
+                <option value="Biography">Biography</option>
+                <option value="ScienceFiction">Science Fiction</option>
+                <option value="Romance">Romance</option>
+                <option value="Thriller">Thriller</option>
+                <option value="Horror">Horror</option>
+                <option value="Historical">Historical</option>
+            </select>
+        </div>
+
+        <!-- Year Selection (Hidden by default) -->
+        <div id="yearDiv" style="display: none;">
+            <label for="year" style="font-size: 16px;" class="year-input">Select Year: </label>
+            <input type="number" id="year" class="form-control-sm" placeholder="Enter Year"/>
+        </div>
+
+        <!-- Sort Button -->
+        <button class="btn btn-primary sort-button" onclick="applySorting()">Sort</button>
+    </div>
+    <br />
+
+    @{
+        int totalBooks = Model.Count();
+        int booksPerRow = 4;
+        int totalRows = (int)Math.Ceiling(totalBooks / (double)booksPerRow); // Calculate the total number of rows
+    }
+    @for (int rowIndex = 0; rowIndex < totalRows; rowIndex++)
+    {
+        <div class="row">
+            @foreach (var book in Model.Skip(rowIndex * booksPerRow).Take(booksPerRow))
+            {
+                <div class="col-md-3">
+                    <a href="@Url.Action("BookDetails", "Book", new { isbn = book.isbnNumber })" class="card book-card mb-4">
+                        <img src="~/images/Harry Potter 1.jpg" class="card-img-top book-img" alt="@book.Title">
+                        <div class="card-body">
+                            <h5 class="card-title">@book.Title</h5>
+                            <p class="card-text"><strong class="text-muted"><u>Format:</u> @book.Format</strong></p>
+                            <p class="card-text"><strong class="text-muted"><u>Buy Price:</u> @book.BuyPrice$</strong></p>
+                            <p class="card-text"><strong class="text-muted"><u>Borrow Price:</u> @book.BorrowPrice$</strong></p>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<script>
+    // Function to toggle visibility of the genre and year sections based on the selected sort option
+    document.getElementById("sortBy").addEventListener("change", function() {
+        var sortBy = this.value;
+        var genreDiv = document.getElementById("genreDiv");
+        var yearDiv = document.getElementById("yearDiv");
+
+        // Hide both genre and year inputs initially
+        genreDiv.style.display = "none";
+        yearDiv.style.display = "none";
+
+        // Show the appropriate field based on the sort selection
+        if (sortBy === 'genre') {
+            genreDiv.style.display = "block";  // Show genre select
+        } else if (sortBy === 'year') {
+            yearDiv.style.display = "block";  // Show year input
+        }
+    });
+
+    // Function to apply the sorting and refresh the page with the selected parameters
+    function applySorting() {
+        var sortBy = document.getElementById("sortBy").value;
+        var genre = document.getElementById("genre").value;
+        var year = document.getElementById("year").value;
+
+        // Redirect to the same page with query parameters for sorting
+        var url = '@Url.Action("BooksGallery", "Book")' + '?sortBy=' + sortBy;
+        if (sortBy === 'genre') {
+            url += '&genre=' + genre;
+        } else if (sortBy === 'year') {
+            url += '&year=' + year;
+        }
+        window.location.href = url;  // Redirect with query parameters
+    }
+</script>
+
+

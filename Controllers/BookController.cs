@@ -50,12 +50,47 @@ public class BookController : Controller
         return View("AddBook", new Book());
     }
 
-    public IActionResult AllBooks()
+    public async Task<IActionResult> BooksGallery(string sortBy, string genre, int? year)
     {
-        var allBooks = _dbContext.GetAllBooks();
-        return View("AllBooks", allBooks);
+        var books = await _dbContext.GetAllBooksAsync();
+        // Apply sorting based on the chosen option
+        if (string.IsNullOrEmpty(sortBy))
+        {
+            // No sorting selected, return books as is (default order)
+            return View("BooksGallery", books);
+        }
+        // Sorting logic
+        switch (sortBy)
+        {
+            case "priceAsc":
+                books = books.OrderBy(b => b.BuyPrice).ToList();
+                break;
+            case "priceDesc":
+                books = books.OrderByDescending(b => b.BuyPrice).ToList();
+                break;
+            /*case "mostPopular":
+                books = books.OrderByDescending(b => b.Popularity).ToList(); // Assuming Popularity is a property
+                break;*/
+            case "genre":
+                if (!string.IsNullOrEmpty(genre))
+                {
+                    Genre bookGenre = (Genre)Enum.Parse(typeof(Genre), genre, true);
+                    books = books.Where(b => b.Genre == bookGenre).ToList();
+                }
+                break;
+            case "year":
+                if (year.HasValue)
+                {
+                    books = books.Where(b => b.Year == year.Value).ToList();
+                }
+                break;
+            default:
+                books = books.OrderBy(b => b.Title).ToList(); // Default sorting by title
+                break;
+        }
+
+        return View("BooksGallery", books);
     }
-    
     
     [HttpPost]
     public async Task<IActionResult> AddBookToLibrary(Book book)
@@ -88,9 +123,9 @@ public class BookController : Controller
         {
             books = _dbContext.Books.Where(b => b.Author.Contains(author)).ToList();
         }
-        else if (!string.IsNullOrEmpty(genre))
+        else if (!string.IsNullOrEmpty(genre) && Enum.TryParse<Genre>(genre, true, out var genreEnum))
         {
-            books = _dbContext.Books.Where(b => b.Genre.Contains(genre)).ToList();
+            books = _dbContext.Books.Where(b => b.Genre == genreEnum).ToList();
         }
         else if (!string.IsNullOrEmpty(publisher))
         {
@@ -117,13 +152,16 @@ public class BookController : Controller
     public IActionResult FilterBooks(string title, string author, string genre, string publisher, int? year)
     {
         var books = _dbContext.Books.AsQueryable();
-
+        
         if (!string.IsNullOrEmpty(title))
             books = books.Where(b => b.Title.Contains(title));
         if (!string.IsNullOrEmpty(author))
             books = books.Where(b => b.Author.Contains(author));
         if (!string.IsNullOrEmpty(genre))
-            books = books.Where(b => b.Genre.Contains(genre));
+        {
+            Genre bookGenre = (Genre)Enum.Parse(typeof(Genre), genre, true);
+            books = books.Where(b => b.Genre == bookGenre);
+        }
         if (!string.IsNullOrEmpty(publisher))
             books = books.Where(b => b.Publisher.Contains(publisher));
         if (year.HasValue)
@@ -132,9 +170,10 @@ public class BookController : Controller
         return PartialView("_BookList", books.ToList());
     }
 
-    public IActionResult FilterBooksByCategory(string category)
+    public IActionResult FilterBooksByCategory(string genre)
     {
-        var books = _dbContext.Books.Where(b => b.Genre == category);
+        Genre bookGenre = (Genre)Enum.Parse(typeof(Genre), genre, true);
+        var books = _dbContext.Books.Where(b => b.Genre == bookGenre);
         return PartialView("_BookList", books.ToList());
     }
     
