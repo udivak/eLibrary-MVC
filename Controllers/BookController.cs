@@ -164,22 +164,14 @@ public class BookController : Controller
         if (book == null)
             return RedirectToAction("Error", "Home");
         TempData["BookTitle"] = $"{book.Title}";
-        if (book.Format == "Physical" && cartAction == "Buy")
-        {
-            if (book.Quantity >= quantity)      //Save the current copy in the user's cart
-            {
-                book.Quantity -= quantity;
-                await _dbContext.SaveChangesAsync();
-            }
-            else                                //No more physical copies
-            {
-                TempData["AddToCartMessage"] = "FAIL";
-                string currentUser = Session.GetString("userEmail");
-                var waitingList = new WaitingList(isbn, currentUser, quantity);
-                _dbContext.WaitingLists.Add(waitingList);
-                await _dbContext.SaveChangesAsync();
-                return RedirectToAction("Index", "Home");
-            }
+        if (book.Format == "Physical" && book.Quantity < quantity)                  //No more physical copies
+        { 
+            TempData["AddToCartMessage"] = "FAIL";
+            string currentUser = Session.GetString("userEmail");
+            var waitingList = new WaitingList(isbn, currentUser, quantity);
+            _dbContext.WaitingLists.Add(waitingList);
+            await _dbContext.SaveChangesAsync();
+            return RedirectToAction("Index", "Home");
         }
         int price;
         if (cartAction == "Buy")
@@ -192,7 +184,6 @@ public class BookController : Controller
         }
         CartItem addItem = new CartItem(book.isbnNumber, book.Title, cartAction, price, quantity);
         ShoppingCart.Add(addItem);
-        
         TempData["AddToCartMessage"] = "SUCCESS";
         return RedirectToAction("Index", "Home");
     }

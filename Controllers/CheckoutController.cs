@@ -179,6 +179,10 @@ public class CheckoutController : Controller
                         {
                             if (item == null)
                                 continue;
+                            //update book's quantity in db
+                            var book = _dbContext.Books.FirstOrDefault(b => b.isbnNumber == item.ISBN);
+                            book.Quantity -= item.Quantity;
+                            
                             bool isPurchased = item.Action == "Buy";
                             UserBook newUserBook = new UserBook(userEmail, item.ISBN, isPurchased);
                             _dbContext.UserBook.Add(newUserBook);
