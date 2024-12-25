@@ -1,6 +1,6 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using System.Text.Json
-@model IEnumerable<eLibrary.Models.Book>
+@model eLibrary.Models.IndexViewModel;
 @inject IHttpContextAccessor _context;
 @{
     ViewData["Title"] = "iReadIt";
@@ -41,11 +41,14 @@
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
 <link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true"/>
 <link rel="stylesheet" href="~/css/Index.css" asp-append-version="true"/>
+<!-- Include Font Awesome for stars -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
 
 <div class="container">
     <!-- Main Content Section -->
     <div class="text-center main-content">
-        <h1 class="page-title" style="font-size: 60px;">Welcome to iReadIt</h1>
+        <h1 class="page-title" style="font-size: 60px;">Welcome to iReadit</h1>
         <p class="lead">
             Borrow and read eBooks easily, anywhere and anytime.
         </p>
@@ -67,7 +70,7 @@
     <div id="featuredBooksCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
         <!-- Indicators/Dots -->
         <div class="carousel-indicators">
-            @for (int i = 0; i < (Model.Count() + 4) / 5; i++)
+            @for (int i = 0; i < (Model.FeaturedBooks.Count() + 4) / 5; i++)
             {
                 <button type="button" data-bs-target="#featuredBooksCarousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="true" aria-label="Slide @(i + 1)"></button>
             }
@@ -75,11 +78,11 @@
 
         <!-- Carousel Items -->
         <div class="carousel-inner">
-            @for (int i = 0; i < Model.Count(); i += 5)
+            @for (int i = 0; i < Model.FeaturedBooks.Count(); i += 5)
             {
                 <div class="carousel-item @(i == 0 ? "active" : "")">
                     <div class="row justify-content-center">
-                        @foreach (var book in Model.Skip(i).Take(5))
+                        @foreach (var book in Model.FeaturedBooks.Skip(i).Take(5))
                         {
                             <div class="col-md-2 col-sm-4 mb-4">
                                 <a href="@Url.Action("BookDetails", "Book", new { isbn = book.isbnNumber })" class="card book-card">
@@ -110,12 +113,60 @@
     </div>
 </div>
 
+<br />
+<br />
+<br />
+<br />
+
 <!-- eLibraryFeedbacks Section -->
-
-
-
-
-
+<div class="feedback-section">
+    <h2 class="feedback-title">iReadit Feedback</h2>
+    <br>
+    <div class="row">
+        @foreach (var feedback in Model.Feedbacks.Take(4)) // First row of 4 feedbacks
+        {
+            <div class="col-md-3">
+                <div class="card feedback-card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">@feedback.Email</h5>
+                        <p class="card-text"><strong class="text-muted"><u>Email:</u> @feedback.Email</strong></p>
+                        <div class="stars">
+                            @for (int i = 0; i < 5; i++)
+                            {
+                                <i class="fa @(i < feedback.Stars ? "fa-star" : "fa-star-o")" style="color: @(i < feedback.Stars ? "gold" : "gray");"></i>
+                            }
+                        </div>
+                        <p class="card-text">
+                            <strong class="text-muted"><u>Feedback:</u> @feedback.Content</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="row">
+        @foreach (var feedback in Model.Feedbacks.Skip(4).Take(4)) // Second row of 4 feedbacks
+        {
+            <div class="col-md-3">
+                <div class="card feedback-card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">@feedback.Email</h5>
+                        <p class="card-text"><strong class="text-muted"><u>Email:</u> @feedback.Email</strong></p>
+                        <div class="stars">
+                            @for (int i = 0; i < 5; i++)
+                            {
+                                <i class="fa @(i < feedback.Stars ? "fa-star" : "fa-star-o")" style="color: @(i < feedback.Stars ? "gold" : "gray");"></i>
+                            }
+                        </div>
+                        <p class="card-text">
+                            <strong class="text-muted"><u>Feedback:</u> @feedback.Content</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
 
 
 <!-- The Overlay -->

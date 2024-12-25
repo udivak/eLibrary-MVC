@@ -86,6 +86,10 @@ body {
     margin-left: 20px;
 }
 
+.feedback-title {
+    margin-left: 20px;
+}
+
 /* Carousel Styles */
 .featured-books {
     padding: 2rem 0;

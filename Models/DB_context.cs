@@ -35,6 +35,11 @@ namespace eLibrary.Models
                 .HasKey(f => new { f.Email, f.Stars, f.Content });
         }
 
+        public async Task<List<eLibraryFeedback>> GetAlleLibraryFeedbacksAsync()
+        {
+            return await eLibraryFeedbacks.ToListAsync();
+        }
+        
         // Retrieve all books async
         public async Task<List<Book>> GetAllBooksAsync()
         {
