@@ -40,7 +40,7 @@
                             <td>@book.Publisher</td>
                             <td>@book.Year</td>
                             <td>@book.Genre</td>
-                            <td><a href="@Url.Action("BookDetails", "Book", new { isbn = book.isbnNumber })" class="btn btn-link">View Details</a></td>
+                            <td><a href="@Url.Action("BookDetails", "Book", new { isbn = book.ISBN })" class="btn btn-link">View Details</a></td>
                         </tr>
                     }
                     </tbody>

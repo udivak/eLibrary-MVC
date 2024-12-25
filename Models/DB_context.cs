@@ -14,6 +14,7 @@ namespace eLibrary.Models
         public DbSet<UserBook> UserBook { get; set; }
         public DbSet<WaitingList> WaitingLists { get; set; }
         public DbSet<eLibraryFeedback> eLibraryFeedbacks { get; set; }
+        public DbSet<BookReview> BookReviews { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -23,7 +24,7 @@ namespace eLibrary.Models
                 .HasKey(u => u.Email);
             
             modelBuilder.Entity<Book>()
-                .HasKey(b => b.isbnNumber);
+                .HasKey(b => b.ISBN);
             
             modelBuilder.Entity<WaitingList>()
                 .HasKey(w => new { w.BookISBN, w.UserEmail });
@@ -32,9 +33,22 @@ namespace eLibrary.Models
                 .HasKey(ub => new { ub.Id });
             
             modelBuilder.Entity<eLibraryFeedback>()
-                .HasKey(f => new { f.Email, f.Stars, f.Content });
+                .HasKey(f => new { f.Email, f.CreatedAt });
+            
+            modelBuilder.Entity<BookReview>()
+                .HasKey(br => new { br.Email, br.ISBN });
         }
 
+        public async Task<List<BookReview>> GetBookReviewsAsync(string isbn)
+        {
+            return await BookReviews.Where(br => br.ISBN == isbn).ToListAsync();
+        }
+        
+        public async Task<List<BookReview>> GetAllBookReviewsAsync()
+        {
+            return await BookReviews.ToListAsync();
+        }
+        
         public async Task<List<eLibraryFeedback>> GetAlleLibraryFeedbacksAsync()
         {
             return await eLibraryFeedbacks.ToListAsync();
@@ -55,7 +69,7 @@ namespace eLibrary.Models
         // Retrieve a book by ISBN
         public async Task<Book> GetBookByIsbnAsync(string isbn)
         {
-            return await Books.FirstOrDefaultAsync(b => b.isbnNumber == isbn);
+            return await Books.FirstOrDefaultAsync(b => b.ISBN == isbn);
         }
 
         // Add a new book

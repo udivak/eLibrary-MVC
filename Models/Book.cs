@@ -30,7 +30,7 @@ public class Book
     [Column("ISBN")]
     [Required]
     [RegularExpression("^[0-9]{13}$", ErrorMessage = "ISBN Number must be 13 digits.")] //a number between 1-13 digits
-    public string isbnNumber
+    public string ISBN
     {
         get => _isbn;
         set => _isbn = value;
@@ -98,7 +98,6 @@ public class Book
     private Genre _genre;
     [Column("Genre")]
     [Required]
-    [StringLength(50, MinimumLength = 1, ErrorMessage = "Genre must be be 1-50 characters.")]
     public Genre Genre
     {
         get => _genre;
@@ -108,6 +107,7 @@ public class Book
     private int _quantity = 0;
     [Column("Quantity")]
     [Required]
+    [Range(0, Int32.MaxValue, ErrorMessage = "Quantity cannot be below 0.")]
     public int Quantity
     {
         get => _quantity;
@@ -124,7 +124,7 @@ public class Book
     {
         Title = title;
         Author = author;
-        isbnNumber = ISBN;
+        this.ISBN = ISBN;
         Publisher = publisher;
         Year = year;
         BuyPrice = buyPrice;

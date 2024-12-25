@@ -62,7 +62,7 @@
             @foreach (var book in Model.Skip(rowIndex * booksPerRow).Take(booksPerRow))
             {
                 <div class="col-md-3">
-                    <a href="@Url.Action("BookDetails", "Book", new { isbn = book.isbnNumber })" class="card book-card mb-4">
+                    <a href="@Url.Action("BookDetails", "Book", new { isbn = book.ISBN })" class="card book-card mb-4">
                         <img src="~/images/Harry Potter 1.jpg" class="card-img-top book-img" alt="@book.Title">
                         <div class="card-body">
                             <h5 class="card-title">@book.Title</h5>

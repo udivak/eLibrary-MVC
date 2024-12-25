@@ -10,6 +10,7 @@ using iText.Layout;
 using iText.Layout.Element;
 using System.IO;
 using System.Reflection.Metadata;
+using Microsoft.Data.Sqlite;
 
 namespace eLibrary.Controllers;
 public class BookController : Controller
@@ -25,14 +26,48 @@ public class BookController : Controller
     
     public async Task<IActionResult> BookDetails(string isbn)
     {
-        var book = _dbContext.Books.FirstOrDefault(b => b.isbnNumber == isbn);
-        //var book = _dbContext.GetAllBooks().First();
+        var book = _dbContext.Books.FirstOrDefault(b => b.ISBN == isbn);
         if (book == null)
         {
             return NotFound(); // Return 404 if the book is not found
         }
 
-        return View("BookDetails", book); // Pass the book to the view
+        string currentUser = Session.GetString("userEmail");
+        if (!string.IsNullOrEmpty(currentUser))
+        {
+            var user_book =
+                _dbContext.UserBook.FirstOrDefault(ub => ub.UserEmail == currentUser && ub.BookISBN == book.ISBN);
+            if (user_book != null)
+            {
+                ViewBag.RatingFlag = true;
+            }
+        }
+
+        var reviews = await _dbContext.GetBookReviewsAsync(book.ISBN);
+        BookDetailsViewModel bookDetailsViewModel= new BookDetailsViewModel(book, reviews);
+        
+        return View("BookDetails", bookDetailsViewModel); // Pass the book to the view
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> BookReviewSubmit(BookReview bookReview)
+    {
+        bookReview.CreatedAt = DateTime.Today.ToString("d");
+        bookReview.UserName = Session.GetString("userName");
+        try
+        {
+            _dbContext.BookReviews.Add(bookReview);
+            await _dbContext.SaveChangesAsync();
+            TempData["BookReviewMSG"] = "SUCCESS";
+        }
+        catch (DbUpdateException ex)                      // current user already posted review for specific book
+        {
+            TempData["BookReviewMSG"] = "FAIL";
+            var currentBook = _dbContext.Books.FirstOrDefault(b => b.ISBN == bookReview.ISBN);
+            if (currentBook != null)
+                TempData["CurrentBookTitle"] = currentBook.Title;
+        }
+        return RedirectToAction("Index", "Home");
     }
 
     public IActionResult EditBook(Book editBook)
@@ -99,7 +134,7 @@ public class BookController : Controller
         {
             _dbContext.Books.Add(book);     // Add the new book to the database
             await _dbContext.SaveChangesAsync(); 
-            return RedirectToAction("BookAdded", new { isbn = book.isbnNumber });   //Success Message
+            return RedirectToAction("BookAdded", new { isbn = book.ISBN });   //Success Message
         }
         return View("AddBook", book);
     }
@@ -180,7 +215,7 @@ public class BookController : Controller
     [HttpGet]
     public IActionResult BookAdded(string isbn)
     {
-        var addedBook = _dbContext.Books.FirstOrDefault(b => b.isbnNumber == isbn);
+        var addedBook = _dbContext.Books.FirstOrDefault(b => b.ISBN == isbn);
         if (addedBook == null)             // If the book is not found in DB
         {
             return RedirectToAction("Index", "Home");
@@ -198,7 +233,7 @@ public class BookController : Controller
         {
             quantity = 0;
         }
-        var book = _dbContext.Books.FirstOrDefault(b => b.isbnNumber == isbn);
+        var book = _dbContext.Books.FirstOrDefault(b => b.ISBN == isbn);
         if (book == null)
             return RedirectToAction("Error", "Home");
         TempData["BookTitle"] = $"{book.Title}";
@@ -220,7 +255,7 @@ public class BookController : Controller
         {
             price = book.BorrowPrice;
         }
-        CartItem addItem = new CartItem(book.isbnNumber, book.Title, cartAction, price, quantity);
+        CartItem addItem = new CartItem(book.ISBN, book.Title, cartAction, price, quantity);
         ShoppingCart.Add(addItem);
         TempData["AddToCartMessage"] = "SUCCESS";
         return RedirectToAction("Index", "Home");
@@ -228,7 +263,7 @@ public class BookController : Controller
     
     public async Task<IActionResult> RemoveFromCart(string isbn)
     {
-        var book = _dbContext.Books.FirstOrDefault(b => b.isbnNumber == isbn);
+        var book = _dbContext.Books.FirstOrDefault(b => b.ISBN == isbn);
         if (book == null)
             return RedirectToAction("Error", "Home");
         TempData["BookTitle"] = $"'{book.Title}'";
@@ -251,7 +286,7 @@ public class BookController : Controller
     }
     public IActionResult DownloadPdf(string isbn)
     {
-        var book = _dbContext.Books.FirstOrDefault(b => b.isbnNumber == isbn);
+        var book = _dbContext.Books.FirstOrDefault(b => b.ISBN == isbn);
         if (book == null)
         {
             return NotFound();
@@ -270,7 +305,7 @@ public class BookController : Controller
                     // Add content to the PDF document
                     document.Add(new Paragraph($"Book Title: {book.Title}"));
                     document.Add(new Paragraph($"Author: {book.Author}"));
-                    document.Add(new Paragraph($"ISBN: {book.isbnNumber}"));
+                    document.Add(new Paragraph($"ISBN: {book.ISBN}"));
                     document.Add(new Paragraph($"Publisher: {book.Publisher}"));
                     document.Add(new Paragraph($"Year: {book.Year}"));
                     document.Add(new Paragraph($"Genre: {book.Genre}"));

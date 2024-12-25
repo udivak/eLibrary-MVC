@@ -46,7 +46,7 @@ public class CheckoutController : Controller
 
     public void RemoveFromCart(string isbn, string qty)
     {
-        var book = _dbContext.Books.FirstOrDefault(b => b.isbnNumber == isbn);
+        var book = _dbContext.Books.FirstOrDefault(b => b.ISBN == isbn);
         int quantity;
         try
         {
@@ -180,7 +180,7 @@ public class CheckoutController : Controller
                             if (item == null)
                                 continue;
                             //update book's quantity in db
-                            var book = _dbContext.Books.FirstOrDefault(b => b.isbnNumber == item.ISBN);
+                            var book = _dbContext.Books.FirstOrDefault(b => b.ISBN == item.ISBN);
                             book.Quantity -= item.Quantity;
                             
                             bool isPurchased = item.Action == "Buy";

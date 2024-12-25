@@ -15,7 +15,7 @@
         <div class="card-body">
             <p class="data"><strong>Title: </strong> @Model.Title</p>
             <p class="data"><strong>Author:</strong> @Model.Author</p>
-            <p class="data"><strong>ISBN:</strong> @Model.isbnNumber</p>
+            <p class="data"><strong>ISBN:</strong> @Model.ISBN</p>
             <p class="data"><strong>Publisher:</strong> @Model.Publisher</p>
             <p class="data"><strong>Year:</strong> @Model.Year</p>
             <p class="data"><strong>Buy Price:</strong> @Model.BuyPrice$</p>
@@ -32,7 +32,7 @@
             <button type="button" class="btn btn-secondary btn-back" onclick="window.history.back()">Back</button>
             
             <a asp-action="EditBook" asp-controller="Book" asp-route-Title="@Model.Title"
-               asp-route-Author="@Model.Author" asp-route-isbnNumber="@Model.isbnNumber"
+               asp-route-Author="@Model.Author" asp-route-isbnNumber="@Model.ISBN"
                asp-route-Publisher="@Model.Publisher" asp-route-Year="@Model.Year"
                asp-route-BuyPrice="@Model.BuyPrice" asp-route-BorrowPrice="@Model.BorrowPrice"
                asp-route-AgeLimit="@Model.AgeLimit" asp-route-Genre="@Model.Genre"
@@ -42,7 +42,7 @@
             <form asp-action="AddBookToLibrary" asp-controller="Book" method="post" style="display:inline;">
                <input type="hidden" name="Title" value="@Model.Title" />
                 <input type="hidden" name="Author" value="@Model.Author" />
-                <input type="hidden" name="isbnNumber" value="@Model.isbnNumber" />
+                <input type="hidden" name="isbnNumber" value="@Model.ISBN" />
                 <input type="hidden" name="Publisher" value="@Model.Publisher" />
                 <input type="hidden" name="Year" value="@Model.Year" />
                 <input type="hidden" name="BuyPrice" value="@Model.BuyPrice" />

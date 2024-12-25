@@ -26,9 +26,28 @@
         {
             msg = "Thank you! Your feedback has been submitted.";
         }
+        else
+        {
+            msg = "You have already submitted review today.";
+        }
         TempData["eLibraryFeedbackMSG"] = null;
     }
-
+    if (TempData["BookReviewMSG"] != null)
+    {
+        if (TempData["BookReviewMSG"].ToString().Equals("SUCCESS"))
+        {
+            msg = "Thank you! Your rating has been submitted.";
+        }
+        else
+        {
+            if (!string.IsNullOrEmpty(TempData["CurrentBookTitle"].ToString()))
+                msg = $"You already posted a review for '{TempData["CurrentBookTitle"]}'.";
+            else
+                msg = "You already posted a review for this book.";
+        }
+        TempData["BookRatingMSG"] = null;
+    }
+    
     if (!string.IsNullOrEmpty(msg))
     {
         var jsonMsg = JsonSerializer.Serialize(msg);
@@ -85,7 +104,7 @@
                         @foreach (var book in Model.FeaturedBooks.Skip(i).Take(5))
                         {
                             <div class="col-md-2 col-sm-4 mb-4">
-                                <a href="@Url.Action("BookDetails", "Book", new { isbn = book.isbnNumber })" class="card book-card">
+                                <a href="@Url.Action("BookDetails", "Book", new { isbn = book.ISBN })" class="card book-card">
                                     <img src="~/images/Harry Potter 1.jpg" class="card-img-top book-img" alt="@book.Title">
                                     <div class="card-body">
                                         <h5 class="card-title">@book.Title</h5>
@@ -129,7 +148,6 @@
                 <div class="card feedback-card mb-4">
                     <div class="card-body">
                         <h5 class="card-title">@feedback.Email</h5>
-                        <p class="card-text"><strong class="text-muted"><u>Email:</u> @feedback.Email</strong></p>
                         <div class="stars">
                             @for (int i = 0; i < 5; i++)
                             {
@@ -151,7 +169,6 @@
                 <div class="card feedback-card mb-4">
                     <div class="card-body">
                         <h5 class="card-title">@feedback.Email</h5>
-                        <p class="card-text"><strong class="text-muted"><u>Email:</u> @feedback.Email</strong></p>
                         <div class="stars">
                             @for (int i = 0; i < 5; i++)
                             {

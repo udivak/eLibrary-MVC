@@ -1,5 +1,6 @@
 using eLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace eLibrary.Controllers;
 
@@ -22,9 +23,17 @@ public class eLibraryFeedbackController : Controller
     
     public async Task<IActionResult> eLibraryFeedbackSubmit(eLibraryFeedback feedback)
     {
-        _dbContext.eLibraryFeedbacks.Add(feedback);
-        await _dbContext.SaveChangesAsync();
-        TempData["eLibraryFeedbackMSG"] = "SUCCESS";
+        feedback.UserName = Session.GetString("userName");
+        try
+        {
+            _dbContext.eLibraryFeedbacks.Add(feedback);
+            await _dbContext.SaveChangesAsync();
+            TempData["eLibraryFeedbackMSG"] = "SUCCESS";
+        }
+        catch (DbUpdateException ex)
+        {
+            TempData["eLibraryFeedbackMSG"] = "FAIL";
+        }
         return RedirectToAction("Index", "Home");
     }
 }

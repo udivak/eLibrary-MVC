@@ -91,7 +91,6 @@ public class UserController : Controller
         return RedirectToAction("Profile"); // Redirect to the profile or success page
     }
     
-   
     [HttpGet]
     public IActionResult CheckBookStock()
     {
@@ -105,7 +104,7 @@ public class UserController : Controller
             .Join(
                 _dbContext.Books,
                 wl => wl.BookISBN,
-                b => b.isbnNumber,
+                b => b.ISBN,
                 (wl, b) => new { WaitingList = wl, Book = b }
             )
             .Where(joined => joined.WaitingList.UserEmail == email && 
@@ -113,7 +112,7 @@ public class UserController : Controller
             .Select(joined => new
             {
                 Title = joined.Book.Title,
-                Isbn = joined.Book.isbnNumber,
+                Isbn = joined.Book.ISBN,
                 QuantityRequested = joined.WaitingList.QuantityRequested,
                 QuantityAvailable = joined.Book.Quantity
             })
@@ -238,7 +237,7 @@ public class UserController : Controller
 
     // Retrieve the books from the Books table using the ISBN numbers
     var booksInWaitingList = await _dbContext.Books
-        .Where(b => isbnNumbers.Contains(b.isbnNumber))
+        .Where(b => isbnNumbers.Contains(b.ISBN))
         .ToListAsync();
 
     // Return the books as a partial view
@@ -263,7 +262,7 @@ public class UserController : Controller
             .Join(
                 _dbContext.Books,
                 ub => ub.BookISBN,
-                b => b.isbnNumber,
+                b => b.ISBN,
                 (ub, b) => new UserBookView
                 {
                     UserBookId = ub.Id,

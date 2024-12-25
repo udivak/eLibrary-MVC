@@ -1,16 +1,22 @@
-.mt-5 {
-    margin-top: 0;
-    padding-top: 0;
+.container-fluid {
+    padding: 0;
+    margin: 0;
     background-color: #2d2b2b;
+}
+
+.card {
+    background-color: #2d2b2b !important;
+    border: none !important;
+    margin: 0 !important;
 }
 
 .card-body {
     background-color: #2d2b2b;
-    color : #ffffff;
+    color: #ffffff;
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding: 15px;
 }
 
@@ -23,19 +29,25 @@
     max-width: 300px;
 }
 
-.book-image {       /* Book image */
-    margin-left: 20px;
-    max-width: 150px;
-    height: auto;
-    border-radius: 8px;
+.book-img {
+    max-height: 400px;
+    width: 100%;
+    object-fit: contain;
+    background-color: transparent;
+    padding: 10px;
 }
 
 .card-footer {
     background-color: #0d6efd;
-    color : #ffffff;
+    color: #ffffff;
 }
 
 .btn-back {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.write-a-review-btn {
     margin-right: 10px;
     margin-left: 10px;
 }
@@ -45,26 +57,95 @@
     font-size: medium;
 }
 
-.book-img {
-    max-height: 400px; /* Fixed height */
-    width: 100%; /* Optional: Make the image span the card's width */
-    object-fit: contain; /* Ensure the entire image is visible */
-    /*background-color: #f0f0f0;  Optional: Add a background color to handle empty spaces */
-    background-color: transparent; /* Optional: Remove the background color */
-    padding: 10px; /* Add padding for better spacing around the image */
-}
-
 .form-group {
     display: flex;
     flex-direction: column;
     gap: 5px;
     margin-left: 10px;
-}
-
-.form-label {
-    margin-bottom: 5px;
+    margin-bottom: 15px;
 }
 
 .qty_desired-label {
     margin-left: 15px;
+}
+
+.star {
+    font-size: 30px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.feedback-form {
+    background-color: #2d2b2b;
+    padding: 20px;
+    margin: 0;
+    /*border: 1px solid white !important; /* Ensure border is visible */
+}
+
+.feedback-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border-color: white !important;
+}
+
+.form-control {
+    background-color: #3d3d3d !important;
+    border-color: #4d4d4d !important;
+    color: white !important;
+}
+
+.form-control:focus {
+    background-color: #3d3d3d !important;
+    border-color: #6d6d6d !important;
+    color: white !important;
+    box-shadow: none;
+}
+
+.review-form {
+    background-color: #2d2b2b;
+    padding: 20px;
+    border-radius: 8px;
+    border-color: white !important;
+}
+
+.review-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid white !important; /* Apply white border */
+    border-radius: 8px; /* Optional for rounded corners */
+}
+
+.review-card {
+    /* Extend or customize styles here */
+    background-color: #f9f9f9;
+    color: #333;
+}
+.reviews-title {
+    margin-left: 20px;
+    color: #007bff;
+}
+
+.card {
+    height: 100%;
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #444444;
+    transition: transform 0.3s ease;
+    margin: 0 10px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+card-title {
+    font-size: 1rem;
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }

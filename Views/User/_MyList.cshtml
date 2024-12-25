@@ -9,7 +9,7 @@
             @foreach (var book in Model)
             {
                 <li>
-                    <a href="@Url.Action("BookDetails", "Book", new { isbn = book.isbnNumber })">@book.Title</a>
+                    <a href="@Url.Action("BookDetails", "Book", new { isbn = book.ISBN })">@book.Title</a>
 
                 </li>
             }

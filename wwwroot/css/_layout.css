@@ -118,12 +118,12 @@ body {
 }
 
 .navbar-toggler {
-    padding: 2px 5px; /* Reduce padding for toggler */
-    font-size: 12px; /* Adjust font size for toggler */
+    padding: 2px 5px !important; /* Reduce padding for toggler */
+    font-size: 12px !important; /* Adjust font size for toggler */
 }
 
 .navbar-collapse {
-    margin: 0; /* Remove extra margins */
+    margin: 0; !important /* Remove extra margins */
 }
 
 .navbar-brand {

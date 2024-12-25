@@ -1,8 +1,9 @@
-@model eLibrary.Models.Book
+@model eLibrary.Models.BookDetailsViewModel
 @inject IHttpContextAccessor _context;
 @{
     Layout = "_Layout";
-    ViewData["Title"] = $"{Model.Title} Details";
+    ViewData["Title"] = $"{Model.Book.Title} Details";
+    var userEmail = _context.HttpContext.Session.GetString("userEmail");
 }
 
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
@@ -14,33 +15,31 @@
         <div class="card-header bg-primary text-white">
             <h4>Book Details</h4>
         </div>
-        <div class="card-body d-flex flex-wrap align-items-start">
+        <div class="card-body d-flex align-items-start">
             <div class="book-image-container">
-                <img src="~/images/Harry Potter 1.jpg" class="card-img-top book-img" alt="@Model.Title">
+                <img src="~/images/Harry Potter 1.jpg" class="card-img-top book-img" alt="@Model.Book.Title">
             </div>
             <div class="book-details-text">
                 <div class="row">
                     <div class="col-6">
-                        <p class="data"><strong>Title: </strong> @Model.Title</p>
-                        <p class="data"><strong>Author:</strong> @Model.Author</p>
-                        <p class="data"><strong>ISBN:</strong> @Model.isbnNumber</p>
-                        <p class="data"><strong>Publisher:</strong> @Model.Publisher</p>
-                        <p class="data"><strong>Year:</strong> @Model.Year</p>
-                        <p class="data"><strong>Age Limit:</strong> @Model.AgeLimit+</p>
+                        <p class="data"><strong>Title: </strong> @Model.Book.Title</p>
+                        <p class="data"><strong>Author:</strong> @Model.Book.Author</p>
+                        <p class="data"><strong>ISBN:</strong> @Model.Book.ISBN</p>
+                        <p class="data"><strong>Publisher:</strong> @Model.Book.Publisher</p>
+                        <p class="data"><strong>Year:</strong> @Model.Book.Year</p>
+                        <p class="data"><strong>Age Limit:</strong> @Model.Book.AgeLimit+</p>
                     </div>
                     <div class="col-6">
-                        <p class="data"><strong>Buy Price:</strong> @Model.BuyPrice$</p>
-                        <p class="data"><strong>Borrow Price:</strong> @Model.BorrowPrice$</p>
-                        <p class="data"><strong>Age Limit:</strong> @Model.AgeLimit+</p>
-                        <p class="data"><strong>Genre:</strong> @Model.Genre</p>
-                        <p class="data" id="bookFormat"><strong>Format:</strong> @Model.Format</p>
-                        @if (Model.Format == "Physical")
+                        <p class="data"><strong>Buy Price:</strong> @Model.Book.BuyPrice$</p>
+                        <p class="data"><strong>Borrow Price:</strong> @Model.Book.BorrowPrice$</p>
+                        <p class="data"><strong>Age Limit:</strong> @Model.Book.AgeLimit+</p>
+                        <p class="data"><strong>Genre:</strong> @Model.Book.Genre</p>
+                        <p class="data" id="bookFormat"><strong>Format:</strong> @Model.Book.Format</p>
+                        @if (Model.Book.Format == "Physical")
                         {
-                            <!--<div class="form-group">-->
-                                <p class="data"><strong>Quantity available in stock:</strong> @Model.Quantity</p>
-                                <label for="quantity" class="qty_desired-label"><strong>Quantity desired:</strong></label>
-                                <input type="number" id="quantity" name="quantity" class="form-control-sm" min="1" max="@Model.Quantity"/>
-                            <!--</div>-->
+                            <p class="data"><strong>Quantity available in stock:</strong> @Model.Book.Quantity</p>
+                            <label for="quantity" class="qty_desired-label"><strong>Quantity desired:</strong></label>
+                            <input type="number" id="quantity" name="quantity" class="form-control-sm" min="1" max="@Model.Book.Quantity"/>
                         }
                     </div>
                 </div>
@@ -52,11 +51,114 @@
             </div>
         </div>
         <div class="card-footer text-end">
-            <a href="@Url.Action("DownloadPdf", "Book", new { isbn = @Model.isbnNumber })" class="btn btn-warning">Download PDF</a>
+            @if (ViewBag.RatingFlag != null && ViewBag.RatingFlag == true)       // <!-- Review Button -->
+            {
+               <button type="button" id="review-btn" class="btn btn-info write-a-review-btn">Write a Review</button>
+            }
+            <a href="@Url.Action("DownloadPdf", "Book", new { isbn = Model.Book.ISBN })" class="btn btn-warning">Download PDF</a>
             <div id="quantityContainer" style="display: none; margin-top: 10px;"></div>
             <button type="button" class="btn btn-secondary btn-back" onclick="window.history.back()">Back</button>
             <button type="button" class="btn btn-success" id="addToCartButton">Add to Cart</button>
         </div>
+        <div id="feedback-form" class="feedback-form" style="display: none;">
+            <div class="review-container">
+                <h2 class="text-center text-white">Submit Your Review</h2>
+                <form id="reviewForm" class="review-form"
+                      action="@Url.Action("BookReviewSubmit", "Book")" method="post">
+                    <div class="form-group">
+                        <label for="email" class="text-white">Email address</label>
+                        <input type="email" class="form-control" id="email" name="Email" value="@userEmail" readonly required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="isbn" class="text-white">Book ISBN</label>
+                        <input type="text" class="form-control" id="isbn" name="ISBN" value="@Model.Book.ISBN" readonly required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="stars" class="text-white">Rating</label>
+                        <div class="stars-container" id="stars-container">
+                            <!-- Stars will be dynamically created here -->
+                        </div>
+                        <input type="hidden" id="stars" name="Stars" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="title" class="text-white">Review Title:</label>
+                        <input type="text" class="form-control" id="title" name="Title" value="@Model.Book.Title">
+                    </div>
+                        
+                    <div class="form-group">
+                        <label for="content" class="text-white">Review Content:</label>
+                        <textarea class="form-control" id="content" name="Content" rows="4" required></textarea>
+                    </div>
+
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-info" id="submit-feedback">Submit Feedback</button>
+                    </div>
+                </form>
+            </div>
+            <script> 
+                document.addEventListener('DOMContentLoaded', function () {
+                    const starsContainer = document.getElementById('stars-container');
+                    const hiddenInput = document.getElementById('stars');
+                    const totalStars = 5;
+
+                    // Create stars dynamically
+                    for (let i = 1; i <= totalStars; i++) {
+                        const star = document.createElement('span');
+                        star.textContent = '★'; // Star symbol
+                        star.classList.add('star');
+                        star.dataset.value = i;
+
+                        // Add hover effect
+                        star.addEventListener('mouseover', function () {
+                            highlightStars(i);
+                        });
+
+                        // Add click event
+                        star.addEventListener('click', function () {
+                            selectStars(i);
+                        });
+
+                        // Remove hover effect
+                        starsContainer.addEventListener('mouseleave', function () {
+                            highlightStars(hiddenInput.value); // Retain selection on mouse leave
+                        });
+
+                        starsContainer.appendChild(star);
+                    }
+
+                    // Highlight stars based on hover or selection
+                    function highlightStars(rating) {
+                        const stars = starsContainer.querySelectorAll('.star');
+                        stars.forEach(star => {
+                            if (star.dataset.value <= rating) {
+                                star.style.color = 'gold'; // Highlight stars up to the rating
+                            } else {
+                                star.style.color = 'gray'; // Reset stars beyond the rating
+                            }
+                        });
+                    }
+
+                    // Select stars on click
+                    function selectStars(rating) {
+                        hiddenInput.value = rating; // Update hidden input with selected value
+                        highlightStars(rating); // Ensure correct stars remain highlighted
+                    }
+                });
+            </script>
+        </div>
+        <!-- BOOK REVIEWS -->
+        @if (Model.BookReviews.Any())
+        {
+            ViewBag.CurrentBookTitle = @Model.Book.Title;
+            @await Html.PartialAsync("_BookReviews", Model.BookReviews)
+        }
+        else
+        {
+            <p>No reviews available for '@Model.Book.Title'.</p>
+        }
     </div>
 </div>
 <!-- Bootstrap JS -->
@@ -65,6 +167,16 @@
 
 
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const reviewBtn = document.getElementById('review-btn');
+        const feedbackForm = document.getElementById('feedback-form');
+
+        // Toggle visibility of the feedback form when the review button is clicked
+        reviewBtn.addEventListener('click', function () {
+            feedbackForm.style.display = feedbackForm.style.display === 'none' ? 'block' : 'none';
+        });
+    });
+    // Add to Cart
     $(document).ready(function() {
         $('#addToCartButton').on('click', function() {
             const cartAction = $('#cartAction').val();
@@ -80,7 +192,7 @@
                 return;
             }
             const url = '@Url.Action("AddToCart", "Book")' +
-                '?isbn=@Model.isbnNumber' +
+                '?isbn=@Model.Book.ISBN' +
                 '&cartAction=' + encodeURIComponent(cartAction) +
                 '&qty=' + encodeURIComponent(qty);
 
@@ -89,24 +201,6 @@
         });
     });
 </script>
-<!--
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const actionSelect = document.getElementById("cartAction");
-        const quantityContainer = document.getElementById("quantityContainer");
-        const bookFormat = '@Model.Format';
-        
-        actionSelect.addEventListener("change", function () {
-            // Check the selected value
-            if (actionSelect.value === "Buy" && bookFormat === "Physical") {
-                // Show the quantity input field
-                quantityContainer.style.display = "block";
-            } else {
-                // Hide the quantity input field
-                quantityContainer.style.display = "none";
-            }
-        });
-    });
-</script> -->
+
 
 
