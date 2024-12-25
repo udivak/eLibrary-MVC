@@ -6,9 +6,9 @@
     ViewData["Title"] = "iReadIt";
     Layout = "_Layout";
     var userName = _context.HttpContext.Session.GetString("userName");
+    string msg = "";
     if (TempData["AddToCartMessage"] != null)
     {
-        string msg = "";
         if (TempData["AddToCartMessage"].ToString().Equals("SUCCESS"))
         {
             msg = "'" + TempData["BookTitle"] + "' has been added to cart successfully.";
@@ -18,6 +18,19 @@
             msg = "Sorry, we don't have enough copies of '" + TempData["BookTitle"] + "' at the moment." +
                   "Your request has been added to our Waiting List.";
         }
+        TempData["AddToCartMessage"] = null;
+    }
+    if (TempData["eLibraryFeedbackMSG"] != null)
+    {
+        if (TempData["eLibraryFeedbackMSG"].ToString().Equals("SUCCESS"))
+        {
+            msg = "Thank you! Your feedback has been submitted.";
+        }
+        TempData["eLibraryFeedbackMSG"] = null;
+    }
+
+    if (!string.IsNullOrEmpty(msg))
+    {
         var jsonMsg = JsonSerializer.Serialize(msg);
         <script>
         alert('@Html.Raw(jsonMsg)');

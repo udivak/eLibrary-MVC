@@ -74,9 +74,13 @@
 {
     <div class="mx-auto p4 rounded border shadow" id="paypal-container" style="width: 420px;">
         <h2 class="text-center mb-5">Complete your order with PayPal</h2>
-        <br />
-        <div id="paypal-button-container"></div>
         <div id="notification-container"></div>
+        <div id="paypal-button-container"></div>
+        
+    </div>
+    
+    <div class="text-center">
+        <a href="@Url.Action("eLibraryFeedback", "eLibraryFeedback")" class="btn btn-lg btn-primary feedback-button" id="feedback-button" style="display: none;">Feedback</a>
     </div>
 }
 
@@ -116,6 +120,8 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     `;
+                document.getElementById("feedback-button").style.display = "block";
+
             }
             else {
                 document.getElementById("notification-container").innerHTML =
@@ -136,7 +142,17 @@
         text-overflow: ellipsis;
         white-space: nowrap;
     }
+    
     .w-auto {
         width: auto !important;
+    }
+
+    .feedback-button {
+        display: inline-block;
+        width: auto;
+        max-width: 200px;
+        margin: 0 auto;
+        margin-top: 1rem;
+        text-align: center;
     }
 </style>

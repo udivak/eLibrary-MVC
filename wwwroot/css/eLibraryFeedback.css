@@ -1,0 +1,27 @@
+.stars-container {
+    display: flex;
+    gap: 5px;
+    cursor: pointer;
+}
+
+/* Star icons (default state) */
+.star {
+    font-size: 2rem;
+    color: gray;
+    transition: color 0.2s ease;
+}
+
+/* Hover effect */
+.star:hover ~ .star {
+    color: gray; /* Reset stars to the right of hovered one */
+}
+
+.star:hover,
+.star:hover ~ .star:first-child {
+    color: gold; /* Highlight stars from the left up to the hovered star */
+}
+
+/* Selected stars */
+.star.selected {
+    color: gold;
+}

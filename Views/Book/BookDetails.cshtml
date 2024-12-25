@@ -4,6 +4,7 @@
     Layout = "_Layout";
     ViewData["Title"] = $"{Model.Title} Details";
 }
+
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
 <link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true"/>
 <link rel="stylesheet" href="~/css/BookDetails.css" asp-append-version="true"/>
@@ -66,27 +67,25 @@
 <script>
     $(document).ready(function() {
         $('#addToCartButton').on('click', function() {
-            const cartAction = document.getElementById('cartAction').value;
-            let qty = document.getElementById('quantity').value;
-            qty = parseInt(qty);
-            if (qty === 0 || isNaN(qty)) {
-                qty = 1;
-            }
-            const isLoggedIn = @(string.IsNullOrEmpty(_context.HttpContext.Session.GetString("userName")) ? "false" : "true");
+            const cartAction = $('#cartAction').val();
+            const qty = parseInt($('#quantity').val()) || 1;
+            const isLoggedIn = @Json.Serialize(!string.IsNullOrEmpty(_context.HttpContext.Session.GetString("userName")));
 
             if (!cartAction) {
                 alert("Please select an action (Buy or Borrow) before proceeding.");
                 return;
             }
-            
-            if (isLoggedIn) {
-                // User is logged in, redirect to AddToCart action
-                window.location.href = '@Url.Action("AddToCart", "Book", new { isbn = Model.isbnNumber })' + '&cartAction=' +
-                    encodeURIComponent(cartAction) + '&qty=' + encodeURIComponent(qty);
-            } else {
-                // User is not logged in, show alert
+            if (!isLoggedIn) {
                 alert("Please Log in before adding to cart.");
+                return;
             }
+            const url = '@Url.Action("AddToCart", "Book")' +
+                '?isbn=@Model.isbnNumber' +
+                '&cartAction=' + encodeURIComponent(cartAction) +
+                '&qty=' + encodeURIComponent(qty);
+
+            console.log("Redirecting to:", url); // Debug log
+            window.location.href = url;
         });
     });
 </script>

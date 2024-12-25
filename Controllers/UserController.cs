@@ -127,10 +127,7 @@ public class UserController : Controller
 
         return Ok(booksInStock);
     }
-
-
-
-
+    
     public IActionResult RegistrationSuccessful(string email)
     {
         var userAdded = _dbContext.Users.FirstOrDefault(u => u.Email == email);

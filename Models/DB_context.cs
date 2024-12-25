@@ -11,16 +11,14 @@ namespace eLibrary.Models
 
         public DbSet<Book> Books { get; set; }
         public DbSet<User> Users { get; set; }
-        
         public DbSet<UserBook> UserBook { get; set; }
-        
         public DbSet<WaitingList> WaitingLists { get; set; }
+        public DbSet<eLibraryFeedback> eLibraryFeedbacks { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            // Explicitly configure the Email as the primary key
+            
             modelBuilder.Entity<User>()
                 .HasKey(u => u.Email);
             
@@ -32,7 +30,9 @@ namespace eLibrary.Models
             
             modelBuilder.Entity<UserBook>()
                 .HasKey(ub => new { ub.Id });
-
+            
+            modelBuilder.Entity<eLibraryFeedback>()
+                .HasKey(f => new { f.Email, f.Stars, f.Content });
         }
 
         // Retrieve all books async
