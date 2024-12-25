@@ -40,7 +40,7 @@
 
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
 <link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true"/>
-<link rel="stylesheet" href="~/css/index.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/css/Index.css" asp-append-version="true"/>
 
 <div class="container">
     <!-- Main Content Section -->
@@ -59,45 +59,104 @@
         <a href="@Url.Action("Profile", "User")" class="btn btn-primary">Go to Profile</a>
     </div>
 }
+
 <!-- Featured Books Section -->
 <div class="featured-books">
-    <h2 class ="featured_books_title">Featured Books</h2>
-    <br>
-    <div class="row">
-        @foreach (var book in Model.Take(4)) // First row of 4 books
-        {
-            <div class="col-md-3">
-                <a href="@Url.Action("BookDetails", "Book", new { isbn = book.isbnNumber })" class="card book-card mb-4">
-                    <img src="~/images/Harry Potter 1.jpg" class="card-img-top book-img" alt="@book.Title">
-                    <div class="card-body">
-                        <h5 class="card-title">@book.Title</h5>
-                        <p class="card-text"><strong class="text-muted">Format: @book.Format</strong></p>
-                        <p class="card-text"><strong class="text-muted">Buy Price: @book.BuyPrice$</strong></p>
-                        <p class="card-text"><strong class="text-muted">Buy Price: @book.BorrowPrice$</strong></p>
+    <h2 class="featured_books_title">Featured Books</h2>
+    <br />
+    <div id="featuredBooksCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+        <!-- Indicators/Dots -->
+        <div class="carousel-indicators">
+            @for (int i = 0; i < (Model.Count() + 4) / 5; i++)
+            {
+                <button type="button" data-bs-target="#featuredBooksCarousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="true" aria-label="Slide @(i + 1)"></button>
+            }
+        </div>
+
+        <!-- Carousel Items -->
+        <div class="carousel-inner">
+            @for (int i = 0; i < Model.Count(); i += 5)
+            {
+                <div class="carousel-item @(i == 0 ? "active" : "")">
+                    <div class="row justify-content-center">
+                        @foreach (var book in Model.Skip(i).Take(5))
+                        {
+                            <div class="col-md-2 col-sm-4 mb-4">
+                                <a href="@Url.Action("BookDetails", "Book", new { isbn = book.isbnNumber })" class="card book-card">
+                                    <img src="~/images/Harry Potter 1.jpg" class="card-img-top book-img" alt="@book.Title">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@book.Title</h5>
+                                        <p class="card-text"><strong class="text-muted">Format: @book.Format</strong></p>
+                                        <p class="card-text"><strong class="text-muted">Buy Price: @book.BuyPrice$</strong></p>
+                                        <p class="card-text"><strong class="text-muted">Borrow Price: @book.BorrowPrice$</strong></p>
+                                    </div>
+                                </a>
+                            </div>
+                        }
                     </div>
-                </a>
-            </div>
-        }
-    </div>
-    <div class="row">
-        @foreach (var book in Model.Skip(4).Take(4)) // Second row of 4 books
-        {
-            <div class="col-md-3">
-                <a href="@Url.Action("BookDetails", "Book",new {isbn =  book.isbnNumber})" class="card book-card mb-4">
-                    <img src="~/images/Harry Potter 1.jpg" class="card-img-top book-img" alt="@book.Title">
-                    <div class="card-body">
-                        <h5 class="card-title">@book.Title</h5>
-                        <p class="card-text"><strong class="text-muted">Format: @book.Format</strong></p>
-                        <p class="card-text"><strong class="text-muted">Buy Price: @book.BuyPrice$</strong></p>
-                        <p class="card-text"><strong class="text-muted">Buy Price: @book.BorrowPrice$</strong></p>
-                    </div>
-                </a>
-            </div>
-        }
+                </div>
+            }
+        </div>
+
+        <!-- Carousel Controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#featuredBooksCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#featuredBooksCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
     </div>
 </div>
 
-
-<!-- The Overlay (always visible) -->
+<!-- The Overlay -->
 <div class="modal-overlay"></div>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var carousel = document.querySelector('#featuredBooksCarousel');
+    var carouselInstance = new bootstrap.Carousel(carousel, {
+        interval: 5000,
+        wrap: true
+    });
+
+    // Get total number of slides
+    var totalSlides = carousel.querySelectorAll('.carousel-item').length;
+    var currentSlide = 0;
+
+    carousel.addEventListener('slide.bs.carousel', function (event) {
+        // Calculate the next slide index
+        if (event.direction === 'left') {
+            currentSlide = (currentSlide + 1) % totalSlides;
+        } else {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+        }
+
+        // Get all carousel items
+        var items = carousel.querySelectorAll('.carousel-item');
+        
+        // Remove any existing transform styles
+        items.forEach(item => {
+            item.style.transform = '';
+        });
+
+        // Ensure proper positioning for infinite loop
+        if (currentSlide === 0 && event.direction === 'left') {
+            items[totalSlides - 1].style.transform = 'translateX(-100%)';
+            items[0].style.transform = 'translateX(0)';
+        } else if (currentSlide === totalSlides - 1 && event.direction === 'right') {
+            items[0].style.transform = 'translateX(100%)';
+            items[totalSlides - 1].style.transform = 'translateX(0)';
+        }
+    });
+
+    // Handle the slid event (after slide complete)
+    carousel.addEventListener('slid.bs.carousel', function () {
+        var items = carousel.querySelectorAll('.carousel-item');
+        items.forEach(item => {
+            item.style.transform = '';
+        });
+    });
+});
+</script>

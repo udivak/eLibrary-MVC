@@ -20,17 +20,19 @@ public class HomeController : Controller
         _dbContext = dbContext;
         _context = context;
     }
+    private ISession Session => _context.HttpContext.Session;
     
     public async Task<IActionResult> Index()        // Home Page
     {
-        var userName = HttpContext.Session.GetString("userName");
         List<Book> featuredBooks = await _dbContext.GetAllBooksAsync();
         if (featuredBooks == null)
         {
             featuredBooks = new List<Book>();
             return View("Index", featuredBooks);
         }
-        featuredBooks = featuredBooks.Take(8).ToList();
+        //take most popular ones
+        featuredBooks = featuredBooks.Take(15).ToList();
+        //
         return View("Index", featuredBooks);
     }
     
