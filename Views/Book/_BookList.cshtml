@@ -1,10 +1,8 @@
 @model IEnumerable<eLibrary.Models.Book>
 <link rel="stylesheet" href="/css/_BookList.css" asp-append-version="true">
 
-<h1>test</h1>
 <div class="container">
-    <h1 class="text-center"></h1>
-
+    <h1 class="text-center">Book List</h1>
 
     <div class="book-list-container" id="bookListContainer">
         <!-- Loader inside the Book List container -->
@@ -17,8 +15,8 @@
             </div>
         </div>
 
-        <div id="bookListContent" style="display: none;">
-            @if (Model != null && Model.Any())
+        <div id="bookListContent">
+            @if (Model != null)
             {
                 <table class="table table-striped">
                     <thead>
@@ -61,12 +59,15 @@
 
         // Initially show spinner
         spinner.style.display = 'flex';
-        bookListContent.style.display = 'none';
+        bookListContent.style.visibility = 'hidden'; // Hide content using visibility
 
         // After 2 seconds, hide spinner and show content
         setTimeout(function () {
+            console.log("hello");
             spinner.style.display = 'none';
-            bookListContent.style.display = 'block';
+            console.log("hello2");
+            bookListContent.style.visibility = 'visible'; // Show content after spinner disappears
+            bookListContent.style.opacity = 1; // Ensure opacity is set to 1
         }, 2000);
     });
 </script>

@@ -202,14 +202,14 @@ public class BookController : Controller
         if (year.HasValue)
             books = books.Where(b => b.Year == year.Value);
 
-        return PartialView("_BookList", books.ToList());
+        return PartialView("FindABook", books.ToList());
     }
 
     public IActionResult FilterBooksByCategory(string genre)
     {
         Genre bookGenre = (Genre)Enum.Parse(typeof(Genre), genre, true);
         var books = _dbContext.Books.Where(b => b.Genre == bookGenre);
-        return PartialView("_BookList", books.ToList());
+        return PartialView("FindABook", books.ToList());
     }
     
     [HttpGet]
