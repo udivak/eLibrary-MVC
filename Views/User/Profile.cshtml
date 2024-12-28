@@ -22,7 +22,7 @@
 
 <div class="layout-container d-flex">
     <!-- Sidebar with vertical tabs -->
-    <div class="sidebar flex-column p-3" style="width: 250px; background-color: #f8f9fa;">
+    <div class="sidebar flex-column p-3" style="width: 250px; background-color: #0e57a0;">
         <ul class="nav nav-pills flex-column" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" data-bs-toggle="pill" href="#MyList" role="tab" data-url="/User/MyList">
@@ -74,6 +74,9 @@
 
             // Animate sliding effect and activate the target pane
             $(targetPaneId).addClass("show active");
+
+            // Update content card background color based on the active tab
+            $("#content-card").addClass("active"); // Activate content card and apply styles
         });
 
         // Function to load tab content via AJAX
@@ -130,6 +133,7 @@
         // Trigger an initial check when the page loads
         checkBookStock();
     });
+
 </script>
 
 </body>

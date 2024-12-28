@@ -1,2 +1,5 @@
 sb-1lojb34815355@personal.example.com
 DX8NtJ!"
+
+gmail = "ireadit21@gmail.com"
+pass = "ireadit1234"
