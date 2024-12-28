@@ -1,16 +1,22 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@model IEnumerable<eLibrary.Models.Book>
-
+@model IEnumerable<eLibrary.Models.WaitingListViewModel>
 
 <div class="card">
     <div class="card-body">
         <h5 class="card-title">My List</h5>
-        <ul>
+        <ul class="list-group">
             @foreach (var book in Model)
             {
-                <li>
-                    <a href="@Url.Action("BookDetails", "Book", new { isbn = book.ISBN })">@book.Title</a>
-
+                <li class="list-group-item">
+                    <!-- Link to BookDetails page -->
+                    <a href="@Url.Action("BookDetails", "Book", new { isbn = book.BookISBN })">
+                        @book.BookTitle
+                    </a>
+                    <div class="d-flex justify-content-between">
+                        <span>Quantity: @book.QuantityRequested</span>
+                        <span>Status: @book.Status</span>
+                    </div>
+                    <div class="text-muted">Added on: @book.AddedDate.ToString("MM/dd/yyyy")</div>
                 </li>
             }
         </ul>

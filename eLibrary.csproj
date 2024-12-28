@@ -11,6 +11,7 @@
       <PackageReference Include="BouncyCastle" Version="1.8.9" />
       <PackageReference Include="itext7" Version="9.0.0" />
       <PackageReference Include="itext7.bouncy-castle-adapter" Version="9.0.0" />
+      <PackageReference Include="MailKit" Version="4.9.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         <PrivateAssets>all</PrivateAssets>
@@ -21,6 +22,7 @@
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.1" />
       <PackageReference Include="PayPal" Version="2.0.0-rc2" />
       <PackageReference Include="PayPalServerSDK" Version="0.6.1" />
+      <PackageReference Include="System.Net.Mail" Version="1.0.0-rtm-00002" />
     </ItemGroup>
 
     <ItemGroup>

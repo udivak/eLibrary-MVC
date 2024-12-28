@@ -9,8 +9,11 @@ public class UserController : Controller
 {
     private DB_context _dbContext;
     private readonly IHttpContextAccessor _context;
-    public UserController(DB_context dbContext, IHttpContextAccessor context)
+    private readonly IEmailService _emailService;
+
+    public UserController(DB_context dbContext, IHttpContextAccessor context, IEmailService emailService)
     {
+        _emailService = emailService;
         _dbContext = dbContext;
         _context = context;
     }
@@ -44,6 +47,18 @@ public class UserController : Controller
         {
             // Add the new user to the database
             _dbContext.Users.Add(newUser);
+            try
+            {
+                await _emailService.SendEmailAsync(
+                    newUser.Email,
+                    "Test Email",
+                    "<h1>Hello</h1><p>This is a test email from MVC application.</p>"
+                );
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Failed to send email: {ex.Message}");
+            }
             await _dbContext.SaveChangesAsync();
 
             // Redirect to RegistrationSuccessful page with email
@@ -92,7 +107,7 @@ public class UserController : Controller
     }
     
     [HttpGet]
-    public IActionResult CheckBookStock()
+    public async Task<IActionResult> CheckBookStock()
     {
         var email = HttpContext.Session.GetString("userEmail");
         if (string.IsNullOrEmpty(email))
@@ -100,32 +115,62 @@ public class UserController : Controller
             return BadRequest(new { Message = "Email is required." });
         }
 
-        var booksInStock = _dbContext.WaitingLists
+        // Current date
+        var currentDate = DateTime.Now.Date;
+
+        // Query UserBook for books that are borrowed and expire in 5 days
+        var booksEndingInFiveDays = _dbContext.UserBook
             .Join(
                 _dbContext.Books,
-                wl => wl.BookISBN,
+                ub => ub.BookISBN,
                 b => b.ISBN,
-                (wl, b) => new { WaitingList = wl, Book = b }
+                (ub, b) => new { UserBook = ub, Book = b }
             )
-            .Where(joined => joined.WaitingList.UserEmail == email && 
-                             joined.Book.Quantity >= joined.WaitingList.QuantityRequested)
+            .Where(joined => joined.UserBook.UserEmail == email &&
+                             !joined.UserBook.IsPurchased &&
+                             joined.UserBook.BorrowExpiryDate.Value == currentDate.AddDays(5))
             .Select(joined => new
             {
                 Title = joined.Book.Title,
                 Isbn = joined.Book.ISBN,
-                QuantityRequested = joined.WaitingList.QuantityRequested,
-                QuantityAvailable = joined.Book.Quantity
+                BorrowDate = joined.UserBook.BorrowDate,
+                BorrowExpiryDate = joined.UserBook.BorrowExpiryDate
             })
             .ToList();
 
-        // Return the result
-        if (booksInStock.Count == 0)
+        if (booksEndingInFiveDays.Count == 0)
         {
-            return NotFound(new { Message = "No books are in stock for this user." });
+            return NotFound(new { Message = "No books are nearing the end of the borrowing period in 5 days." });
         }
 
-        return Ok(booksInStock);
+        // Prepare email content
+        var emailBody = "The following books you borrowed are due in 5 days:\n\n";
+        foreach (var book in booksEndingInFiveDays)
+        {
+            emailBody += $"- {book.Title} (ISBN: {book.Isbn}), Borrowed On: {book.BorrowDate:yyyy-MM-dd}, Due Date: {book.BorrowExpiryDate:yyyy-MM-dd}\n";
+        }
+
+        emailBody += "\nPlease make sure to return or renew them on time.";
+
+        // Send email notification
+        try
+        {
+            await _emailService.SendEmailAsync(
+                email,
+                "Books Due in 5 Days",
+                emailBody
+            );
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { Message = "Failed to send email notification.", Error = ex.Message });
+        }
+
+        // Return success response
+        return Ok(new { Message = "Email notification sent successfully.", Books = booksEndingInFiveDays });
     }
+
+
     
     public IActionResult RegistrationSuccessful(string email)
     {
@@ -211,38 +256,52 @@ public class UserController : Controller
     }
     public async Task<IActionResult> MyList()
     {
-    // Get the user's email from the session
-    string userEmail = HttpContext.Session.GetString("userEmail");
+        // Get the user's email from the session
+        string userEmail = HttpContext.Session.GetString("userEmail");
 
-    if (string.IsNullOrEmpty(userEmail))
-    {
-        return Unauthorized("User is not logged in.");
+        if (string.IsNullOrEmpty(userEmail))
+        {
+            return Unauthorized("User is not logged in.");
+        }
+
+        try
+        {
+            // Join WaitingList with Books to get the book details for the user's waiting list
+            var waitingList = await _dbContext.WaitingLists
+                .Where(w => w.UserEmail == userEmail && !string.IsNullOrEmpty(w.BookISBN))
+                .Join(
+                    _dbContext.Books,
+                    w => w.BookISBN,
+                    b => b.ISBN,
+                    (w, b) => new WaitingListViewModel
+                    {
+                        BookISBN = w.BookISBN,
+                        BookTitle = b.Title,
+                        QuantityRequested = w.QuantityRequested,
+                        Status = w.Status,
+                        AddedDate = w.AddedDate
+                    })
+                .ToListAsync();
+
+            // Check if the waiting list is empty
+            if (!waitingList.Any())
+            {
+                // Log or debug to check if the waiting list is empty
+                Console.WriteLine($"Waiting list is empty for user: {userEmail}");
+                return PartialView("_MyList", new List<WaitingListViewModel>());
+            }
+
+            // Return the books in the waiting list as a partial view
+            return PartialView("_MyList", waitingList);
+        }
+        catch (Exception ex)
+        {
+            // Log the error (could be improved with more sophisticated logging)
+            Console.WriteLine($"Error retrieving books for user {userEmail}: {ex.Message}");
+            return StatusCode(500, "An error occurred while processing your request.");
+        }
     }
 
-    // Retrieve all ISBNs from the WaitingList for the current user
-    var waitingList = await _dbContext.WaitingLists
-        .Where(w => w.UserEmail == userEmail && !string.IsNullOrEmpty(w.BookISBN))
-        .ToListAsync();
-
-    // Check if the waiting list is empty
-    if (!waitingList.Any())
-    {
-        // Log or debug to check if the waiting list is empty
-        Console.WriteLine("Waiting list is empty for user: " + userEmail);
-        return PartialView("_MyList", new List<Book>());
-    }
-
-    // Get the ISBN numbers of the books in the waiting list
-    var isbnNumbers = waitingList.Select(w => w.BookISBN).ToList();
-
-    // Retrieve the books from the Books table using the ISBN numbers
-    var booksInWaitingList = await _dbContext.Books
-        .Where(b => isbnNumbers.Contains(b.ISBN))
-        .ToListAsync();
-
-    // Return the books as a partial view
-    return PartialView("_MyList", booksInWaitingList);
-}
 
 
     // Action to display the user's purchased books

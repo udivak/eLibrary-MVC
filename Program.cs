@@ -1,3 +1,4 @@
+using eLibrary.Controllers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -12,6 +13,10 @@ builder.Services.AddDbContext<DB_context>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+// builder.Services.AddTransient<EmailService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+
+
 
 // Add IHttpContextAccessor and session services
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
