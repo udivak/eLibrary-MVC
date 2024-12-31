@@ -190,36 +190,61 @@
             let cartAction = $('#cartAction').val();
             const qty = parseInt($('#quantity').val()) || 1;
             const isLoggedIn = @Json.Serialize(!string.IsNullOrEmpty(_context.HttpContext.Session.GetString("userName")));
-            
+
             @if (Model.Book.isPopular == 0)
             {
                 <text>
-                if (!cartAction) {
-                    alert("Please select an action (Buy or Borrow) before proceeding.");
-                    return;
-                }
+                    if (!cartAction) {
+                        alert("Please select an action (Buy or Borrow) before proceeding.");
+                        return;
+                    }
                 </text>
             }
             else
             {
                 <text>
-                cartAction = "Buy";
+                    cartAction = "Buy";
                 </text>
             }
-            
+
+
             if (!isLoggedIn) {
                 alert("Please Log in before adding to cart.");
                 return;
             }
-            
-            const url = '@Url.Action("AddToCart", "Book")' +
-                '?isbn=@Model.Book.ISBN' +
-                '&cartAction=' + encodeURIComponent(cartAction) +
-                '&qty=' + encodeURIComponent(qty);
-            
-            window.location.href = url;
+
+            // If action is Borrow, check if user can borrow more books
+            if (cartAction === "Borrow") {
+                $.ajax({
+                    url: '@Url.Action("CanBorrowMore", "User")',
+                    type: 'GET',
+                    success: function(response) {
+                        // If the user can borrow more books, proceed with adding to cart
+                        if (response.status === "OK") {
+                            addToCart();
+                        } else {
+                            alert(response.responseText); // Display error message
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert("You already have 3 books borrowed");
+                    }
+                });
+            } else {
+                addToCart(); // Proceed directly if action is Buy
+            }
+
+            function addToCart() {
+                const url = '@Url.Action("AddToCart", "Book")' +
+                    '?isbn=@Model.Book.ISBN' +
+                    '&cartAction=' + encodeURIComponent(cartAction) +
+                    '&qty=' + encodeURIComponent(qty);
+
+                window.location.href = url;
+            }
         });
     });
+
 </script>
 
 
