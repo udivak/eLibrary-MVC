@@ -51,8 +51,8 @@ public class UserController : Controller
             {
                 await _emailService.SendEmailAsync(
                     newUser.Email,
-                    "Test Email",
-                    "<h1>Hello</h1><p>This is a test email from MVC application.</p>"
+                    "Registration Email",
+                    "<h1>Hello</h1><p>Thank you for registering with us. You can now log in to access your account. Have a nice day :W</p>"
                 );
             }
             catch (Exception ex)
@@ -69,6 +69,95 @@ public class UserController : Controller
         return View("UserRegistration", newUser);
     }
     
+    
+    public async Task<IActionResult> CheckBookAvailabilityByEmail()
+    {
+        var booksInStock = new List<string>();
+        var userEmail = HttpContext.Session.GetString("userEmail");
+        var waitingList = await _dbContext.WaitingLists.Where(w => w.UserEmail == userEmail).ToListAsync();
+        if (waitingList != null)
+        {
+            // Check if any books are in stock
+            foreach (var item in waitingList){
+            var book = await _dbContext.Books.FirstOrDefaultAsync(b => b.ISBN == item.BookISBN);
+            if (book != null && book.Quantity > 0)
+            {
+                booksInStock.Add(book.Title);
+                try
+                {
+                    await _emailService.SendEmailAsync(
+                        item.UserEmail,
+                        "Book Availability",
+                        $"<h1>Hello</h1><p>The book {book.Title} with ISBN {item.BookISBN} is now available. You were waiting for it.</p>"
+                    );
+                    Console.WriteLine("Email sent to " + item.UserEmail);
+                    _dbContext.WaitingLists.Remove(item);
+                    await _dbContext.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error sending email to {item.UserEmail}: {ex.Message}");
+                    return StatusCode(500, new { success = false, message = "Error sending email." });
+                }
+            }
+
+            // Return the book title as JSON
+            // return Ok(new { success = true, booksInStock = new[] { book.Title } });
+            }
+            return Ok(new { success = true, booksInStock = booksInStock.ToArray() });
+        }
+
+        // If no books are in stock, return an empty list
+        return Ok(new { success = true, booksInStock = new string[] { } });
+    }
+
+    
+    
+    public async Task<IActionResult> CheckBookAvailability()
+    {
+        var waitingList = await _dbContext.WaitingLists.ToListAsync();
+        
+        foreach (var waiting in waitingList)
+        {
+            var book = await _dbContext.Books.FirstOrDefaultAsync(b => b.ISBN == waiting.BookISBN);
+            if (book != null && book.Quantity > 0)
+            {
+                try
+                {
+                    await _emailService.SendEmailAsync(
+                        waiting.UserEmail,
+                        "Book Availability",
+                        $"<h1>Hello</h1><p>The book {book.Title} with ISBN {waiting.BookISBN} is now available. You were waiting for it.</p>"
+                    );
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error sending email to {waiting.UserEmail}: {ex.Message}");
+                }
+                
+                // Remove the waiting list entry after sending the email
+                _dbContext.WaitingLists.Remove(waiting);
+                await _dbContext.SaveChangesAsync();
+            }
+        }
+        
+        return Ok();
+    }
+    
+    
+    public async Task<IActionResult> DeleteFromMyList(string bookISBN)
+    {
+        string userEmail = HttpContext.Session.GetString("userEmail");
+
+        var userBook = await _dbContext.UserBook
+            .FirstOrDefaultAsync(ub => ub.UserEmail == userEmail && ub.BookISBN == bookISBN);
+        if (userBook != null)
+        {
+            _dbContext.UserBook.Remove(userBook);
+            await _dbContext.SaveChangesAsync();
+        }
+        return View("Profile");
+    }
     [HttpPost]
     public IActionResult ChangePassword(string currentPassword, string newPassword, string confirmNewPassword)
     {
@@ -140,7 +229,7 @@ public class UserController : Controller
 
         if (booksEndingInFiveDays.Count == 0)
         {
-            return NotFound(new { Message = "No books are nearing the end of the borrowing period in 5 days." });
+            return Ok(new { Message = "No books are nearing the end of the borrowing period in 5 days." });
         }
 
         // Prepare email content
