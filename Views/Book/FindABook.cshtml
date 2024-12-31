@@ -6,7 +6,6 @@
 
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 <link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true" />
-@* <link rel="stylesheet" href="/css/FindABook.css" asp-append-version="true" /> *@
 
 <!-- Hero Section -->
 <div class="hero-section mb-5">
@@ -23,32 +22,16 @@
 <!-- Category Buttons Section -->
 <div class="container mb-4">
     <div class="category-section">
-        <h2 class="text-center mb-4">Browse by Category</h2>
+        <h2 class="text-center mb-4">Browse by Genre</h2>
         <div class="row justify-content-center">
-            <div class="col-md-auto">
-                <button class="btn btn-outline-primary category-button" data-category="Fiction">
-                    <i class="fas fa-book"></i>
-                    Fiction
-                </button>
-            </div>
-            <div class="col-md-auto">
-                <button class="btn btn-outline-primary category-button" data-category="Science">
-                    <i class="fas fa-flask"></i>
-                    Science
-                </button>
-            </div>
-            <div class="col-md-auto">
-                <button class="btn btn-outline-primary category-button" data-category="History">
-                    <i class="fas fa-landmark"></i>
-                    History
-                </button>
-            </div>
-            <div class="col-md-auto">
-                <button class="btn btn-outline-primary category-button" data-category="Technology">
-                    <i class="fas fa-laptop-code"></i>
-                    Technology
-                </button>
-            </div>
+            @foreach (var genre in Enum.GetValues(typeof(Genre)))
+            {
+                <div class="col-md-auto">
+                    <button class="btn btn-outline-primary category-button" data-category="@genre">
+                        <i class="fas fa-book"></i> @genre
+                    </button>
+                </div>
+            }
         </div>
     </div>
 </div>
@@ -58,53 +41,50 @@
     <div class="search-section">
         <h2 class="text-center mb-4">Advanced Search</h2>
         <div class="row g-3">
-            <div class="col-md-6 col-lg-3">
-                <div class="form-floating">
+            <div class="col-md-3">
+                <label for="titleFilter" class="form-label">Title</label>
+                <div class="form-floating input-small">
                     <input type="text" id="titleFilter" class="form-control" placeholder="Title" />
-                    <label for="titleFilter">Title</label>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
-                <div class="form-floating">
+                <label for="authorFilter" class="form-label">Author</label>
+                <div class="form-floating input-small">
                     <input type="text" id="authorFilter" class="form-control" placeholder="Author" />
-                    <label for="authorFilter">Author</label>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
-                <div class="form-floating">
+                <label for="genreFilter" class="form-label">Genre</label>
+                <div class="form-floating input-small">
                     <input type="text" id="genreFilter" class="form-control" placeholder="Genre" />
-                    <label for="genreFilter">Genre</label>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
-                <div class="form-floating">
+                <label for="publisherFilter" class="form-label">Publisher</label>
+                <div class="form-floating input-small">
                     <input type="text" id="publisherFilter" class="form-control" placeholder="Publisher" />
-                    <label for="publisherFilter">Publisher</label>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
-                <div class="form-floating">
+                <label for="yearFilter" class="form-label">Year</label>
+                <div class="form-floating input-small">
                     <input type="number" id="yearFilter" class="form-control" placeholder="Year" />
-                    <label for="yearFilter">Year</label>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
-                <button id="applyFilters" class="btn btn-primary w-100 h-100">
-                    <i class="fas fa-search"></i>
-                    Search
+                <button id="applyFilters" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <label for="onSaleFilter" class="form-label">Filter</label>
+                <button id="onSaleFilter" class="btn btn-secondary">
+                    <i class="fas fa-tags"></i> On Sale / All
                 </button>
             </div>
         </div>
     </div>
 </div>
-@* <div class="spinner-container" id="spinner"> *@
-@*     <div class="spinner"> *@
-@*         Loading *@
-@*         <div class="spinner-sector spinner-sector-hard_blue"></div> *@
-@*         <div class="spinner-sector spinner-sector-blue"></div> *@
-@*         <div class="spinner-sector spinner-sector-soft-blue"></div> *@
-@*     </div> *@
-@* </div> *@
 
 <!-- Results Section -->
 <div id="bookListContainer">
@@ -127,18 +107,6 @@
             publisher: publisher,
             year: year
         }).toString();
-        const spinner = document.getElementById('spinner');
-        const bookListContent = document.getElementById('bookListContent');
-
-        // Initially show spinner
-        spinner.style.display = 'flex';
-        bookListContent.style.display = 'none';
-
-        // After 2 seconds, hide spinner and show content
-        setTimeout(function () {
-            spinner.style.display = 'none';
-            bookListContent.style.display = 'block';
-        }, 2000);
 
         window.location.href = `/Book/FilterBooks?${queryString}`;
     });
@@ -147,25 +115,22 @@
     document.querySelectorAll('.category-button').forEach(button => {
         button.addEventListener('click', function() {
             const category = this.getAttribute('data-category');
-            const spinner = document.getElementById('spinner');
-            const bookListContent = document.getElementById('bookListContent');
-
-            // Initially show spinner
-            spinner.style.display = 'flex';
-            bookListContent.style.display = 'none';
-
-            // After 2 seconds, hide spinner and show content
-            setTimeout(function () {
-                spinner.style.display = 'none';
-                bookListContent.style.display = 'block';
-            }, 2000);
             window.location.href = `/Book/FilterBooksByCategory?genre=${category}`;
         });
     });
 
-    // Handle form submission on enter key
+    // Toggle "On Sale / All" button
+    document.getElementById("onSaleFilter").addEventListener("click", function () {
+        const isOnSale = this.classList.toggle("btn-success");
+        this.classList.toggle("btn-secondary");
+        const filterType = isOnSale ? "On Sale" : "All Books";
+        this.innerHTML = `<i class="fas fa-tags"></i> ${filterType}`;
+        const filterQuery = isOnSale ? "?onSale=true" : "?onSale=false";
+        window.location.href = `/Book/FilterBooks${filterQuery}`;
+    });
+
+    // Handle form submission on Enter key
     document.querySelectorAll('.form-floating input').forEach(input => {
-        
         input.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 document.getElementById('applyFilters').click();
