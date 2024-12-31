@@ -144,7 +144,7 @@ public class BookController : Controller
         return View("DeleteBook", deletedBook);
     }
     
-    public IActionResult FindABook(string title, string author, string publisher, int? year, string format)
+    public IActionResult FindABook(string title, string author, string publisher, int? year, string format, string sale)
     {
         // Start with an empty list of books
         var books = new List<Book>();
@@ -169,6 +169,14 @@ public class BookController : Controller
         else if (!string.IsNullOrEmpty(format))
         {
             books = books.Concat(_dbContext.Books.Where(b => b.Format == format).ToList()).ToList();
+        }
+        else if (sale == "yes")
+        {
+            books = books.Concat(_dbContext.Books.Where(b => b.isOnSale == 1).ToList()).ToList();
+        }
+        else if (sale == "no")
+        {
+            books = books.Concat(_dbContext.Books.Where(b => b.isOnSale == 0).ToList()).ToList();
         }
         else
         {
