@@ -80,7 +80,7 @@ public class UserController : Controller
             // Check if any books are in stock
             foreach (var item in waitingList){
             var book = await _dbContext.Books.FirstOrDefaultAsync(b => b.ISBN == item.BookISBN);
-            if (book != null && book.Quantity > 0)
+            if (book != null)
             {
                 booksInStock.Add(book.Title);
                 try
@@ -120,7 +120,7 @@ public class UserController : Controller
         foreach (var waiting in waitingList)
         {
             var book = await _dbContext.Books.FirstOrDefaultAsync(b => b.ISBN == waiting.BookISBN);
-            if (book != null && book.Quantity > 0)
+            if (book != null )
             {
                 try
                 {
