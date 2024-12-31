@@ -1,30 +1,71 @@
 @model IEnumerable<eLibrary.Models.UserBookView>
 
+
+<link rel="stylesheet" href="/css/_MyBooks.css" asp-append-version="true">
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">My List</h5>
-        <ul>
-            @foreach (var item in Model)
-            {
-                <li>
-                    <a href="@Url.Action("BookDetails", "Book", new { isbn = item.BookISBN })">
-                        @item.BookTitle <!-- Display the book title -->
-                    </a>
-                    <div>
-                        @if (item.IsPurchased)
-                        {
-                            <p>Purchased on: @item.PurchaseDate?.ToString("g")</p>
-                        }
-                        else if (item.BorrowDate != null && item.BorrowExpiryDate != null)
-                        {
-                            <p>
-                                Borrowed on: @item.BorrowDate?.ToString("g")<br />
-                                Expires on: @item.BorrowExpiryDate?.ToString("g")
-                            </p>
-                        }
-                    </div>
-                </li>
-            }
-        </ul>
+        <h5 class="card-title">My Books</h5>
+        <div style="max-height: 620px; overflow-y: auto; padding: 10px;">
+            <ul class="book-list">
+                @foreach (var item in Model)
+                {
+                    <li class="book-item">
+                        <div class="book-details">
+                            <a href="@Url.Action("BookDetails", "Book", new { isbn = item.BookISBN })" style="color: white;">
+                                @item.BookTitle <!-- Display the book title -->
+                            </a>
+                            <div class="book-info">
+                                @if (item.IsPurchased)
+                                {
+                                    <p>Purchased on: @item.PurchaseDate?.ToString("g")</p>
+                                }
+                                else if (item.BorrowDate != null && item.BorrowExpiryDate != null)
+                                {
+                                    <p>
+                                        Borrowed on: @item.BorrowDate?.ToString("g")<br />
+                                        Expired in: @((item.BorrowExpiryDate - DateTime.Now)?.ToString("d' days, 'hh' hours, and 'mm' minutes'"))
+                                    </p>
+                                }
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-danger btn-delete" onclick="confirmDelete('@item.BookISBN', '@item.BookTitle')">Delete</button>
+                    </li>
+                }
+            </ul>
+        </div>
     </div>
 </div>
+
+
+<script>
+    function confirmDelete(bookISBN, bookTitle) {
+        const confirmation = confirm(`Are you sure you want to delete "${bookTitle}" from your list?`);
+        if (confirmation) {
+            // Create and submit a form programmatically
+            const form = document.createElement("form");
+            form.method = "POST";
+            form.action = `/User/DeleteFromMyList?bookISBN=${bookISBN}`;
+
+            // Add CSRF token if required
+            const csrfToken = document.querySelector('input[name="__RequestVerificationToken"]');
+            if (csrfToken) {
+                const hiddenInput = document.createElement("input");
+                hiddenInput.type = "hidden";
+                hiddenInput.name = "__RequestVerificationToken";
+                hiddenInput.value = csrfToken.value;
+                form.appendChild(hiddenInput);
+            }
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+</script>

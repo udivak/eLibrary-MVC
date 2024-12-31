@@ -83,3 +83,8 @@
     opacity: 1;
     visibility: visible;
 }
+
+.container {
+    width: 100%;
+    mergin-left: 10px;
+}
