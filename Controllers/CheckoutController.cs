@@ -38,6 +38,7 @@ public class CheckoutController : Controller
        else
        {
            cartItems = JsonSerializer.Deserialize<List<CartItem>>(serializedCart);
+           Console.WriteLine(cartItems);
            if (cartItems == null)                                                   //Deserialize failed
            {
                cartItems = new List<CartItem>();
@@ -99,6 +100,12 @@ public class CheckoutController : Controller
     [HttpPost]
     public async Task<JsonResult> CreateOrder([FromBody] JsonObject data)
     {
+        // string serializedCart = Session.GetString("ShoppingCart");
+        // Console.WriteLine(serializedCart);
+        // List<CartItem> cartItems = JsonSerializer.Deserialize<List<CartItem>>(serializedCart);
+        // Console.WriteLine(cartItems);
+        // Console.WriteLine(data);
+        // Console.WriteLine(data.ToString());
         var totalAmount = data?["amount"]?.ToString();
         if (totalAmount == null)
         {
