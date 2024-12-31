@@ -80,11 +80,6 @@
                 </select>
                 @Html.ValidationMessageFor(b => b.Format);
             </div>
-            <div class="col-md-6" id="quantityField" style="display: none;">
-                <label for="quantity" class="form-label">Quantity</label>
-                <input type="number" class="form-control" id="quantity" name="Quantity" value="@Model.Quantity">
-            </div>
-            @Html.ValidationMessageFor(b => b.Quantity);
         </div>
         <div class="text-center mt-3">
             <button type="submit" class="btn btn-primary btn-lg">Add Book</button>

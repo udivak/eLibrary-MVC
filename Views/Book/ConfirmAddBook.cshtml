@@ -23,10 +23,6 @@
             <p class="data"><strong>Age Limit:</strong> @Model.AgeLimit+</p>
             <p class="data"><strong>Genre:</strong> @Model.Genre</p>
             <p class="data"><strong>Format:</strong> @Model.Format</p>
-            @if (Model.Format == "Physical")
-            {
-                <p><strong>Quantity:</strong> @Model.Quantity</p>
-            }
         </div>
         <div class="card-footer text-end">
             <button type="button" class="btn btn-secondary btn-back" onclick="window.history.back()">Back</button>
@@ -36,7 +32,6 @@
                asp-route-Publisher="@Model.Publisher" asp-route-Year="@Model.Year"
                asp-route-BuyPrice="@Model.BuyPrice" asp-route-BorrowPrice="@Model.BorrowPrice"
                asp-route-AgeLimit="@Model.AgeLimit" asp-route-Genre="@Model.Genre"
-               asp-route-Format="@Model.Format" asp-route-Quantity="@Model.Quantity"
                class="btn btn-warning">Edit</a>
 
             <form asp-action="AddBookToLibrary" asp-controller="Book" method="post" style="display:inline;">
@@ -50,7 +45,6 @@
                 <input type="hidden" name="AgeLimit" value="@Model.AgeLimit" />
                 <input type="hidden" name="Genre" value="@Model.Genre" />
                 <input type="hidden" name="Format" value="@Model.Format" /> 
-                <input type="hidden" name="Quantity" value="@Model.Quantity" /> 
                 <button type="submit" class="btn btn-success">Add to Library</button>
             </form>
             <a href="/Book/DeleteBook/" class="btn btn-danger">Delete</a>

@@ -104,14 +104,28 @@ public class Book
         set => _genre = value;
     }
     
-    private int _quantity = 0;
-    [Column("Quantity")]
-    [Required]
-    [Range(0, Int32.MaxValue, ErrorMessage = "Quantity cannot be below 0.")]
-    public int Quantity
+    private int _isPopular = 0;
+    [Column("isPopular")]
+    public int isPopular
     {
-        get => _quantity;
-        set => _quantity = value;
+        get => _isPopular;
+        set => _isPopular = value;
+    }
+    
+    private int _isOnSale = 0;
+    [Column("isOnSale")]
+    public int isOnSale
+    {
+        get => _isOnSale;
+        set => _isOnSale = value;
+    }
+    
+    private int _salePercentage = 0;
+    [Column("SalePercentage")]
+    public int SalePercentage
+    {
+        get => _salePercentage;
+        set => _salePercentage = value;
     }
     
     public Book()

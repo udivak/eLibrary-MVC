@@ -59,7 +59,7 @@ public class CheckoutController : Controller
         {
             quantity = 0;
         }
-        book.Quantity += quantity;
+        //book.Quantity += quantity;
         _dbContext.SaveChangesAsync();
         List <CartItem> shoppingCart = ShoppingCart.GetShoppingCart();
         
@@ -186,7 +186,7 @@ public class CheckoutController : Controller
                                 continue;
                             //update book's quantity in db
                             var book = _dbContext.Books.FirstOrDefault(b => b.ISBN == item.ISBN);
-                            book.Quantity -= item.Quantity;
+                            //book.Quantity -= item.Quantity;
                             
                             bool isPurchased = item.Action == "Buy";
                             UserBook newUserBook = new UserBook(userEmail, item.ISBN, isPurchased);

@@ -237,7 +237,7 @@ public class BookController : Controller
         if (book == null)
             return RedirectToAction("Error", "Home");
         TempData["BookTitle"] = $"{book.Title}";
-        if (book.Format == "Physical" && book.Quantity < quantity)                  //No more physical copies
+        /*if (book.Format == "Physical" && book.Quantity < quantity)                  //No more physical copies
         { 
             TempData["AddToCartMessage"] = "FAIL";
             string currentUser = Session.GetString("userEmail");
@@ -245,7 +245,7 @@ public class BookController : Controller
             _dbContext.WaitingLists.Add(waitingList);
             await _dbContext.SaveChangesAsync();
             return RedirectToAction("Index", "Home");
-        }
+        }*/
         int price;
         if (cartAction == "Buy")
         {
@@ -270,11 +270,11 @@ public class BookController : Controller
         var shoppingCart = ShoppingCart.GetShoppingCart();
         CartItem removedItem = shoppingCart.Find(item => item.ISBN == isbn);
         int qty = removedItem.Quantity;
-        if (book.Format == "Physical")
+        /*if (book.Format == "Physical")
         {
             book.Quantity += qty;
             await _dbContext.SaveChangesAsync();
-        }
+        }*/
         ShoppingCart.Remove(removedItem);
         TempData["RemoveFromCartMessage"] = " has been removed from cart.";
         return RedirectToAction("CheckoutPage", "Checkout");
