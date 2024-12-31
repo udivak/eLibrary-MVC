@@ -10,14 +10,14 @@ public interface IEmailService
     Task SendEmailAsync(string toEmail, string subject, string body);
 }
 
-public class EmailService : IEmailService
+public class EmailServiceController : IEmailService
 {
     private readonly EmailSettings _emailSettings;
     
     
 
 
-    public EmailService(IOptions<EmailSettings> emailSettings)
+    public EmailServiceController(IOptions<EmailSettings> emailSettings)
     {
         _emailSettings = emailSettings.Value;
     }

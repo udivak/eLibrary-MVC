@@ -13,8 +13,8 @@ builder.Services.AddDbContext<DB_context>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-// builder.Services.AddTransient<EmailService>();
-builder.Services.AddScoped<IEmailService, EmailService>();
+// builder.Services.AddTransient<EmailServiceController>();
+builder.Services.AddScoped<IEmailService, EmailServiceController>();
 
 
 
