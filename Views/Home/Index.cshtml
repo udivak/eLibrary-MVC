@@ -3,7 +3,7 @@
 @model eLibrary.Models.IndexViewModel;
 @inject IHttpContextAccessor _context;
 @{
-    ViewData["Title"] = "iReadIt";
+    ViewData["Title"] = "iReadit";
     Layout = "_Layout";
     var userName = _context.HttpContext.Session.GetString("userName");
     string msg = "";
@@ -108,9 +108,19 @@
                                     <img src="~/images/Harry Potter 1.jpg" class="card-img-top book-img" alt="@book.Title">
                                     <div class="card-body">
                                         <h5 class="card-title">@book.Title</h5>
-                                        <p class="card-text"><strong class="text-muted">Format: @book.Format</strong></p>
-                                        <p class="card-text"><strong class="text-muted">Buy Price: @book.BuyPrice$</strong></p>
-                                        <p class="card-text"><strong class="text-muted">Borrow Price: @book.BorrowPrice$</strong></p>
+                                        <p class="card-text"><strong class="text-muted">Format:</strong> @book.Format</p>
+                                        @if (book.isPopular == 0)
+                                        {
+                                            <p class="card-text"><strong class="text-muted">Borrow Price:</strong> <s>@book.BorrowPrice</s>$</p>
+
+                                        }
+                                        <p class="card-text"><strong class="text-muted">Buy Price:</strong> <s>@book.BuyPrice</s>$</p>
+                                        <p class="card-text"><strong class="text-muted">Sale Buy Price:</strong> @(Math.Round((float)(book.BuyPrice * (book.SalePercentage/100)), 2))$</p>
+                                        @if (book.isPopular == 0)
+                                        {
+                                            <p class="card-text"><strong class="text-muted">Sale Borrow Price:</strong> @(Math.Round((float)(book.BorrowPrice * (book.SalePercentage/100)), 2))$</p>
+
+                                        }
                                     </div>
                                 </a>
                             </div>
@@ -188,7 +198,6 @@
 
 <!-- The Overlay -->
 <div class="modal-overlay"></div>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var carousel = document.querySelector('#featuredBooksCarousel');
@@ -203,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     carousel.addEventListener('slide.bs.carousel', function (event) {
         // Calculate the next slide index
-        if (event.direction === 'left') {
+        if (event.direction === 'right') {  // Changed from 'left' to 'right'
             currentSlide = (currentSlide + 1) % totalSlides;
         } else {
             currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
@@ -218,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Ensure proper positioning for infinite loop
-        if (currentSlide === 0 && event.direction === 'left') {
+        if (currentSlide === 0 && event.direction === 'right') {  // Changed from 'left' to 'right'
             items[totalSlides - 1].style.transform = 'translateX(-100%)';
             items[0].style.transform = 'translateX(0)';
         } else if (currentSlide === totalSlides - 1 && event.direction === 'right') {

@@ -31,23 +31,31 @@
                     </div>
                     <div class="col-6">
                         <p class="data"><strong>Buy Price:</strong> @Model.Book.BuyPrice$</p>
-                        <p class="data"><strong>Borrow Price:</strong> @Model.Book.BorrowPrice$</p>
+                        @if (Model.Book.isOnSale == 1)
+                        {
+                            <p class="data"><strong>Sale Buy Price:</strong> @(Math.Round((float)(Model.Book.BuyPrice * (Model.Book.SalePercentage/100)), 2))$</p>
+                        }
+                        @if (Model.Book.isPopular == 0)
+                        {
+                            <p class="data"><strong>Borrow Price:</strong> @Model.Book.BorrowPrice$</p>
+                            if (Model.Book.isOnSale == 1)
+                            {
+                                <p class="data"><strong>Sale Borrow Price:</strong> @(Math.Round((float)(Model.Book.BorrowPrice * (Model.Book.SalePercentage/100)), 2))$</p>
+                            }
+                        }
                         <p class="data"><strong>Age Limit:</strong> @Model.Book.AgeLimit+</p>
                         <p class="data"><strong>Genre:</strong> @Model.Book.Genre</p>
                         <p class="data" id="bookFormat"><strong>Format:</strong> @Model.Book.Format</p>
-                        @if (Model.Book.Format == "Physical")
-                        {
-                            <p class="data"><strong>Quantity available in stock:</strong> @Model.Book.Quantity</p>
-                            <label for="quantity" class="qty_desired-label"><strong>Quantity desired:</strong></label>
-                            <input type="number" id="quantity" name="quantity" class="form-control-sm" min="1" max="@Model.Book.Quantity"/>
-                        }
                     </div>
                 </div>
-                <select class="form-control-sm mb-3" id="cartAction" name="Action" required>
-                    <option value="" disabled selected>Select an Action</option>
-                    <option value="Buy">Buy</option>
-                    <option value="Borrow">Borrow</option>
-                </select>
+                @if (Model.Book.isPopular == 0)
+                {
+                    <select class="form-control-sm mb-3" id="cartAction" name="Action" required>
+                        <option value="" disabled selected>Select an Action</option>
+                        <option value="Buy">Buy</option>
+                        <option value="Borrow">Borrow</option>
+                    </select>
+                }
             </div>
         </div>
         <div class="card-footer text-end">
@@ -157,7 +165,7 @@
         }
         else
         {
-            <p>No reviews available for '@Model.Book.Title'.</p>
+            <p class="text-white">No reviews available for '@Model.Book.Title'.</p>
         }
     </div>
 </div>
@@ -179,24 +187,36 @@
     // Add to Cart
     $(document).ready(function() {
         $('#addToCartButton').on('click', function() {
-            const cartAction = $('#cartAction').val();
+            let cartAction = $('#cartAction').val();
             const qty = parseInt($('#quantity').val()) || 1;
             const isLoggedIn = @Json.Serialize(!string.IsNullOrEmpty(_context.HttpContext.Session.GetString("userName")));
-
-            if (!cartAction) {
-                alert("Please select an action (Buy or Borrow) before proceeding.");
-                return;
+            
+            @if (Model.Book.isPopular == 0)
+            {
+                <text>
+                if (!cartAction) {
+                    alert("Please select an action (Buy or Borrow) before proceeding.");
+                    return;
+                }
+                </text>
             }
+            else
+            {
+                <text>
+                cartAction = "Buy";
+                </text>
+            }
+            
             if (!isLoggedIn) {
                 alert("Please Log in before adding to cart.");
                 return;
             }
+            
             const url = '@Url.Action("AddToCart", "Book")' +
                 '?isbn=@Model.Book.ISBN' +
                 '&cartAction=' + encodeURIComponent(cartAction) +
                 '&qty=' + encodeURIComponent(qty);
-
-            console.log("Redirecting to:", url); // Debug log
+            
             window.location.href = url;
         });
     });
