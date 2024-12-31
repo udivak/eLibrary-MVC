@@ -1,11 +1,12 @@
 @model IEnumerable<eLibrary.Models.Book>
 @{
-    ViewBag.Title = "Find and Search for a Book";
+    ViewBag.Title = "Find a Book";
     Layout = "_Layout";
 }
 
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 <link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/FindABook.css" asp-append-version="true" />
 
 <!-- Hero Section -->
 <div class="hero-section mb-5">
@@ -13,13 +14,13 @@
         <div class="row justify-content-center">
             <div class="col-md-8 text-center">
                 <h1 class="display-4">Find Your Next Great Read</h1>
-                <p class="lead">Search through our extensive collection of books</p>
+                <p class="lead">Search through our extensive books collection</p>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Category Buttons Section -->
+<!-- Genre Buttons Section -->
 <div class="container mb-4">
     <div class="category-section">
         <h2 class="text-center mb-4">Browse by Genre</h2>
@@ -43,72 +44,129 @@
         <div class="row g-3">
             <div class="col-md-3">
                 <label for="titleFilter" class="form-label">Title</label>
-                <div class="form-floating input-small">
-                    <input type="text" id="titleFilter" class="form-control" placeholder="Title" />
+                <div class="form-floating">
+                    <input type="text" id="titleFilter" class="form-control input-small" placeholder="Title" />
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
                 <label for="authorFilter" class="form-label">Author</label>
-                <div class="form-floating input-small">
-                    <input type="text" id="authorFilter" class="form-control" placeholder="Author" />
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <label for="genreFilter" class="form-label">Genre</label>
-                <div class="form-floating input-small">
-                    <input type="text" id="genreFilter" class="form-control" placeholder="Genre" />
+                <div class="form-floating">
+                    <input type="text" id="authorFilter" class="form-control input-small" placeholder="Author" />
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
                 <label for="publisherFilter" class="form-label">Publisher</label>
-                <div class="form-floating input-small">
-                    <input type="text" id="publisherFilter" class="form-control" placeholder="Publisher" />
+                <div class="form-floating">
+                    <input type="text" id="publisherFilter" class="form-control input-small" placeholder="Publisher" />
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
                 <label for="yearFilter" class="form-label">Year</label>
-                <div class="form-floating input-small">
-                    <input type="number" id="yearFilter" class="form-control" placeholder="Year" />
+                <div class="form-floating">
+                    <input type="number" id="yearFilter" class="form-control input-small" placeholder="Year" />
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
-                <button id="applyFilters" class="btn btn-primary">
+                <button id="applyFilters" class="btn btn-primary btn-lg">
                     <i class="fas fa-search"></i> Search
                 </button>
             </div>
+            
             <div class="col-md-6 col-lg-3">
-                <label for="onSaleFilter" class="form-label">Filter</label>
-                <button id="onSaleFilter" class="btn btn-secondary">
-                    <i class="fas fa-tags"></i> On Sale / All
-                </button>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="onSaleFilter">
+                    <label class="form-check-label" for="onSaleFilter">
+                        <i class="fas fa-tags"></i> On Sale
+                    </label>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Results Section -->
-<div id="bookListContainer">
-    @await Html.PartialAsync("_BookList", Model)
+<div class="spinner-container" id="spinner">
+    <div class="spinner">
+        Loading...
+        <div class="spinner-sector spinner-sector-hard_blue"></div>
+        <div class="spinner-sector spinner-sector-blue"></div>
+        <div class="spinner-sector spinner-sector-soft-blue"></div>
+    </div>
 </div>
+
+<div id="content" style="display: none; margin: 50px">
+    <h2>Search Results</h2>
+    @if (Model != null && Model.Any())
+    {
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Publisher</th>
+                <th>Year</th>
+                <th>Genre</th>
+                <th>On Sale</th>
+                <th>Details</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var book in Model)
+            {
+                <tr>
+                    <td>@book.Title</td>
+                    <td>@book.Author</td>
+                    <td>@book.Publisher</td>
+                    <td>@book.Year</td>
+                    <td>@book.Genre</td>
+                    <td>@((book.isOnSale == 1) ? "Yes" : "No")</td>
+                    <td>
+                        <a href="@Url.Action("BookDetails", "Book", new { isbn = book.ISBN})" class="btn btn-link">View Details</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No books found matching the criteria.</p>
+    }
+</div>
+
+<script>
+    // Wait 2 seconds, then show content and hide spinner
+    window.addEventListener('DOMContentLoaded', function () {
+        setTimeout(() => {
+            document.getElementById('spinner').style.display = 'none';
+            const content = document.getElementById('content');
+            content.style.display = 'block';
+            content.classList.add('show'); // Add fade-in effect
+        }, 2000);
+
+    });
+</script>
+<!-- <div id="bookListContainer">
+    //await Html.PartialAsync("_BookList", Model)
+</div> -->
+
 
 <script>
     // Handle filter button click
     document.getElementById("applyFilters").addEventListener("click", function () {
         const title = document.getElementById("titleFilter").value;
         const author = document.getElementById("authorFilter").value;
-        const genre = document.getElementById("genreFilter").value;
         const publisher = document.getElementById("publisherFilter").value;
         const year = document.getElementById("yearFilter").value;
 
         const queryString = new URLSearchParams({
             title: title,
             author: author,
-            genre: genre,
             publisher: publisher,
             year: year
         }).toString();
 
-        window.location.href = `/Book/FilterBooks?${queryString}`;
+        window.location.href = `/Book/FindABook?${queryString}`;
     });
 
     // Handle category button clicks
@@ -119,16 +177,19 @@
         });
     });
 
-    // Toggle "On Sale / All" button
-    document.getElementById("onSaleFilter").addEventListener("click", function () {
-        const isOnSale = this.classList.toggle("btn-success");
-        this.classList.toggle("btn-secondary");
+    // Handle "On Sale" toggle switch
+    document.getElementById("onSaleFilter").addEventListener("change", function () {
+        const isOnSale = this.checked;
         const filterType = isOnSale ? "On Sale" : "All Books";
-        this.innerHTML = `<i class="fas fa-tags"></i> ${filterType}`;
         const filterQuery = isOnSale ? "?onSale=true" : "?onSale=false";
+
+        // Change label text dynamically
+        this.nextElementSibling.innerHTML = `<i class="fas fa-tags"></i> ${filterType}`;
+
+        // Redirect to the appropriate filter page
         window.location.href = `/Book/FilterBooks${filterQuery}`;
     });
-
+    
     // Handle form submission on Enter key
     document.querySelectorAll('.form-floating input').forEach(input => {
         input.addEventListener('keypress', function(e) {

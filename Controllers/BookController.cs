@@ -144,7 +144,7 @@ public class BookController : Controller
         return View("DeleteBook", deletedBook);
     }
     
-    public IActionResult FindABook(string title, string author, string genre, string publisher, int? year, string format)
+    public IActionResult FindABook(string title, string author, string publisher, int? year, string format)
     {
         // Start with an empty list of books
         var books = new List<Book>();
@@ -152,35 +152,30 @@ public class BookController : Controller
         // Apply filters based on the user's input
         if (!string.IsNullOrEmpty(title))
         {
-            books = _dbContext.Books.Where(b => b.Title.Contains(title)).ToList();
+            books = books.Concat(_dbContext.Books.Where(b => b.Title.Contains(title)).ToList()).ToList();
         }
         else if (!string.IsNullOrEmpty(author))
         {
-            books = _dbContext.Books.Where(b => b.Author.Contains(author)).ToList();
-        }
-        else if (!string.IsNullOrEmpty(genre) && Enum.TryParse<Genre>(genre, true, out var genreEnum))
-        {
-            books = _dbContext.Books.Where(b => b.Genre == genreEnum).ToList();
+            books = books.Concat(_dbContext.Books.Where(b => b.Author.Contains(author)).ToList()).ToList();
         }
         else if (!string.IsNullOrEmpty(publisher))
         {
-            books = _dbContext.Books.Where(b => b.Publisher.Contains(publisher)).ToList();
+            books = books.Concat(_dbContext.Books.Where(b => b.Publisher.Contains(publisher)).ToList()).ToList();
         }
         else if (year.HasValue)
         {
-            books = _dbContext.Books.Where(b => b.Year == year.Value).ToList();
+            books = books.Concat(_dbContext.Books.Where(b => b.Year == year.Value).ToList()).ToList();
         }
         else if (!string.IsNullOrEmpty(format))
         {
-            books = _dbContext.Books.Where(b => b.Format == format).ToList();
+            books = books.Concat(_dbContext.Books.Where(b => b.Format == format).ToList()).ToList();
         }
         else
         {
-            List<Book> featuredBooks = _dbContext.GetAllBooks().Take(8).ToList();
-            return View(featuredBooks);
+            List<Book> allBooks = _dbContext.GetAllBooks().ToList();
+            return View("FindABook",allBooks);
         }
-        // Return an empty list if no filters are applied (first time visiting)
-        return View("SearchResults", books);
+        return View("FindABook", books);
     }
     
     [HttpGet]
