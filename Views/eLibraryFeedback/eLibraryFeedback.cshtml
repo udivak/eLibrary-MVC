@@ -7,12 +7,12 @@
     var userEmail = _context.HttpContext.Session.GetString("userEmail");
 }
 
-<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-<link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true"/>
-<link rel="stylesheet" href="~/css/eLibraryFeedback.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/eLibraryFeedback.css" asp-append-version="true" />
 
-<div class="container mt-4">
-    <h3 class="text-center">Submit Your Feedback</h3>
+<div class="feedback-container">
+    <h2 class="text-center text-white">Submit Your Feedback</h2>
     @if (string.IsNullOrEmpty(userEmail))
     {
         <div class="alert alert-warning text-center" role="alert" style="font-size: 0.9rem;">
@@ -21,27 +21,28 @@
     }
     else
     {
-        <form action="@Url.Action("eLibraryFeedbackSubmit", "eLibraryFeedback")" method="post" style="font-size: 0.9rem;">
-            <div class="form-group mt-2">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control form-control-sm" id="email" name="email" value="@userEmail" readonly required>
+        <form id="feedbackForm" class="feedback-form"
+              action="@Url.Action("eLibraryFeedbackSubmit", "eLibraryFeedback")" method="post">
+            <div class="form-group">
+                <label for="email" class="text-white">Email address</label>
+                <input type="email" class="form-control" id="email" name="email" value="@userEmail" readonly required>
             </div>
 
-            <div class="form-group mt-2">
-                <label for="stars" class="form-label">Rating</label>
-                <div class="stars-container d-flex" id="stars-container" style="gap: 5px;">
+            <div class="form-group">
+                <label for="stars" class="text-white">Rating</label>
+                <div class="stars-container" id="stars-container">
                     <!-- Stars will be dynamically created here -->
                 </div>
                 <input type="hidden" id="stars" name="stars" required>
             </div>
 
-            <div class="form-group mt-2">
-                <label for="content" class="form-label">Feedback</label>
-                <textarea class="form-control form-control-sm" id="content" name="content" rows="3" required></textarea>
+            <div class="form-group">
+                <label for="content" class="text-white">Your Feedback</label>
+                <textarea class="form-control" id="content" name="content" rows="4" required></textarea>
             </div>
 
-            <div class="form-group mt-2 text-center">
-                <button type="submit" class="btn btn-primary btn-sm" id="submit-feedback">Submit</button>
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-info submit-feedback" id="submit-feedback">Submit Feedback</button>
             </div>
         </form>
     }
@@ -53,24 +54,20 @@
         const hiddenInput = document.getElementById('stars');
         const totalStars = 5;
 
-        // Create stars dynamically
         for (let i = 1; i <= totalStars; i++) {
             const star = document.createElement('span');
             star.textContent = '★';
             star.classList.add('star');
             star.dataset.value = i;
 
-            // Add hover effect
             star.addEventListener('mouseover', function () {
                 highlightStars(i);
             });
 
-            // Add click event
             star.addEventListener('click', function () {
                 selectStars(i);
             });
 
-            // Remove hover effect
             starsContainer.addEventListener('mouseleave', function () {
                 highlightStars(hiddenInput.value);
             });
@@ -78,7 +75,6 @@
             starsContainer.appendChild(star);
         }
 
-        // Highlight stars based on hover or selection
         function highlightStars(rating) {
             const stars = starsContainer.querySelectorAll('.star');
             stars.forEach(star => {
@@ -86,7 +82,6 @@
             });
         }
 
-        // Select stars on click
         function selectStars(rating) {
             hiddenInput.value = rating;
             highlightStars(rating);
