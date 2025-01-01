@@ -197,7 +197,8 @@ public class CheckoutController : Controller
                             emailBody += $"<li>{book.Title} - {item.Quantity} x ${book.BuyPrice} = ${book.BuyPrice * item.Quantity}</li>";
 
                         }
-                        emailBody += "</ul><p>Total: @TOTAL_PRICE$</p>";
+                        int totalPrice = ShoppingCart.GetCartPrice();
+                        emailBody += $"</ul><p>Total: {totalPrice}$</p>";
                         await _emailService.SendEmailAsync(
                             userEmail,
                             "Your Order Confirmation",
