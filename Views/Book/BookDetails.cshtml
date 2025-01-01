@@ -46,6 +46,13 @@
                         <p class="data"><strong>Age Limit:</strong> @Model.Book.AgeLimit+</p>
                         <p class="data"><strong>Genre:</strong> @Model.Book.Genre</p>
                         <p class="data" id="bookFormat"><strong>Format:</strong> @Model.Book.Format</p>
+                        <!-- Container for Rating Stars -->
+                        <div class="rating-container mt-3">
+                            <strong>Average Rating:</strong>
+                            <div id="average-rating-stars" class="stars-container">
+                                <!-- Stars will be dynamically created here -->
+                            </div>
+                        </div>
                     </div>
                 </div>
                 @if (Model.Book.isPopular == 0)
@@ -102,7 +109,7 @@
                     </div>
 
                     <div class="form-group text-center">
-                        <button type="submit" class="btn btn-info" id="submit-feedback">Submit Feedback</button>
+                        <button type="submit" class="btn btn-info submit-feedback" id="submit-feedback">Submit Feedback</button>
                     </div>
                 </form>
             </div>
@@ -244,8 +251,50 @@
             }
         });
     });
-
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const averageRating = @Model.GetAverageRating(); // Replace with your method to get the average rating
+        const starsContainer = document.getElementById('average-rating-stars');
+        const totalStars = 5;
+
+        for (let i = 1; i <= totalStars; i++) {
+            const star = document.createElement('span');
+            star.classList.add('star');
+            star.style.position = 'relative';
+            star.style.display = 'inline-block';
+            star.style.width = '1.5rem';
+            star.style.height = '1.5rem';
+            star.style.fontSize = '1.5rem';
+            star.style.color = 'gray'; // Base color for empty stars
+            star.textContent = '★'; // Star character
+
+            if (i <= Math.floor(averageRating)) {
+                // Full star
+                star.style.color = 'gold';
+            } else if (i - averageRating <= 1) {
+                // Partially filled star
+                const fractionalPart = averageRating - Math.floor(averageRating);
+                const overlay = document.createElement('span');
+                overlay.textContent = '★';
+                overlay.style.color = 'gold';
+                overlay.style.position = 'absolute';
+                overlay.style.width = `${fractionalPart * 100}%`; // Width proportional to fractional part
+                overlay.style.height = '100%';
+                overlay.style.overflow = 'hidden';
+                overlay.style.whiteSpace = 'nowrap';
+                overlay.style.top = '0';
+                overlay.style.left = '0';
+                overlay.style.zIndex = '1';
+                star.appendChild(overlay);
+            }
+
+            starsContainer.appendChild(star);
+        }
+    });
+</script>
+
 
 
 

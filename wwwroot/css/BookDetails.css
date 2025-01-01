@@ -133,7 +133,7 @@
     transform: translateY(-5px);
 }
 
-card-title {
+.card-title {
     font-size: 1rem;
     font-weight: bold;
     overflow: hidden;
@@ -141,4 +141,35 @@ card-title {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+}
+
+.stars-container .star {
+    margin-right: 5px;
+    cursor: default;
+}
+
+.star {
+    font-size: 1.5rem;
+    color: gray; /* Base color for empty stars */
+    position: relative;
+    display: inline-block;
+}
+
+.star span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    color: gold; /* Color for filled part */
+}
+
+
+.rating-container {
+    margin-left: 13px;
+}
+
+.submit-feedback {
+    margin-top: 15px;
 }
