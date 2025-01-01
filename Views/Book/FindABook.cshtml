@@ -25,11 +25,16 @@
     <div class="category-section">
         <h2 class="text-center mb-4">Browse by Genre</h2>
         <div class="row justify-content-center">
-            @foreach (var genre in Enum.GetValues(typeof(Genre)))
+            @foreach (Genre genre in Enum.GetValues(typeof(Genre)))
             {
+                string genreStr = genre.ToString();
+                if (genre == Genre.NonFiction)
+                    genreStr = genreStr.Replace("NonFiction", "Non-Fiction");
+                else if (genre == Genre.ScienceFiction)
+                    genreStr = genreStr.Replace("ScienceFiction", "Science-Fiction");
                 <div class="col-md-auto">
                     <button class="btn btn-outline-primary category-button" data-category="@genre">
-                        <i class="fas fa-book"></i> @genre
+                        <i class="fas fa-book"></i> @genreStr
                     </button>
                 </div>
             }
@@ -87,7 +92,6 @@
                     <label class="form-check-label" for="onSaleAll">All Books</label>
                 </div>
             </div>
-            
         </div>
     </div>
 </div>
@@ -104,7 +108,7 @@
 
 <div id="content" style="display: none; margin: 50px">
     <h2>Search Results</h2>
-    @if (Model != null && Model.Any())
+    @if (Model.Any())
     {
         <table class="table table-striped">
             <thead>
@@ -154,9 +158,6 @@
 
     });
 </script>
-<!-- <div id="bookListContainer">
-    //await Html.PartialAsync("_BookList", Model)
-</div> -->
 
 <script>
     // Handle filter button click
@@ -173,7 +174,6 @@
             year: year,
             sale: onSale
         }).toString();
-
         window.location.href = `/Book/FindABook?${queryString}`;
     });
 

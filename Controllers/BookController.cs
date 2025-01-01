@@ -144,46 +144,50 @@ public class BookController : Controller
         return View("DeleteBook", deletedBook);
     }
     
-    public IActionResult FindABook(string title, string author, string publisher, int? year, string format, string sale)
+    [HttpGet]
+    public async Task<IActionResult> FindABook(string title, string author, string publisher, int? year, string format, string sale)
     {
-        // Start with an empty list of books
-        var books = new List<Book>();
+        IQueryable<Book> query = _dbContext.Books;
 
         // Apply filters based on the user's input
         if (!string.IsNullOrEmpty(title))
         {
-            books = books.Concat(_dbContext.Books.Where(b => b.Title.Contains(title)).ToList()).ToList();
+            query = query.Where(b => b.Title.Contains(title));
         }
-        else if (!string.IsNullOrEmpty(author))
+        if (!string.IsNullOrEmpty(author))
         {
-            books = books.Concat(_dbContext.Books.Where(b => b.Author.Contains(author)).ToList()).ToList();
+            query = query.Where(b => b.Author.Contains(author));
         }
-        else if (!string.IsNullOrEmpty(publisher))
+        if (!string.IsNullOrEmpty(publisher))
         {
-            books = books.Concat(_dbContext.Books.Where(b => b.Publisher.Contains(publisher)).ToList()).ToList();
+            query = query.Where(b => b.Publisher.Contains(publisher));
         }
-        else if (year.HasValue)
+        if (year.HasValue)
         {
-            books = books.Concat(_dbContext.Books.Where(b => b.Year == year.Value).ToList()).ToList();
+            query = query.Where(b => b.Year == year);
         }
-        else if (!string.IsNullOrEmpty(format))
+        if (!string.IsNullOrEmpty(format))
         {
-            books = books.Concat(_dbContext.Books.Where(b => b.Format == format).ToList()).ToList();
+            query = query.Where(b => b.Format.Contains(format));
         }
-        else if (sale == "yes")
+        if (!string.IsNullOrEmpty(sale))
         {
-            books = books.Concat(_dbContext.Books.Where(b => b.isOnSale == 1).ToList()).ToList();
+            if (sale == "yes")
+            {
+                query = query.Where(b => b.isOnSale == 1);
+            }
+            else if (sale == "no")
+            {
+                query = query.Where(b => b.isOnSale == 0);
+            }
         }
-        else if (sale == "no")
+        if (string.IsNullOrEmpty(title) && string.IsNullOrEmpty(author) && string.IsNullOrEmpty(publisher) && !year.HasValue && string.IsNullOrEmpty(format) && string.IsNullOrEmpty(sale))
         {
-            books = books.Concat(_dbContext.Books.Where(b => b.isOnSale == 0).ToList()).ToList();
-        }
-        else
-        {
-            List<Book> allBooks = _dbContext.GetAllBooks().ToList();
+            List<Book> allBooks = await _dbContext.GetAllBooksAsync();
             return View("FindABook",allBooks);
         }
-        return View("FindABook", books);
+        var result = await query.ToListAsync();
+        return View("FindABook", result);
     }
     
     [HttpGet]
