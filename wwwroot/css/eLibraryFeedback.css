@@ -25,3 +25,35 @@
 .star.selected {
     color: gold;
 }
+
+ .feedback-container {
+     max-width: 800px;
+     margin: 0 auto;
+     padding: 20px;
+     border: 1px solid white;
+     border-radius: 8px;
+     background-color: #2d2b2b; /* Dark background for better contrast */
+     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+ }
+
+.feedback-container h2 {
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+.feedback-form .form-group {
+    margin-bottom: 15px;
+}
+
+.feedback-form label {
+    font-weight: bold;
+}
+
+.feedback-form .form-control {
+    border-radius: 4px;
+}
+
+.submit-feedback {
+    font-size: 1rem;
+    padding: 8px 16px;
+}

@@ -24,6 +24,7 @@ public class eLibraryFeedbackController : Controller
     public async Task<IActionResult> eLibraryFeedbackSubmit(eLibraryFeedback feedback)
     {
         feedback.UserName = Session.GetString("userName");
+        feedback.CreatedAt = DateTime.Today.ToString("d");
         try
         {
             _dbContext.eLibraryFeedbacks.Add(feedback);
