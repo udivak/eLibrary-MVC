@@ -1,0 +1,11 @@
+.form-check-input:checked {
+    background-color: green; /* Green when active */
+    border-color: green; /* Green border */
+}
+.form-check-label {
+    color: #ffffff;
+}
+/* Optional: Add a smooth transition for toggle change */
+.form-check-input {
+    transition: background-color 0.3s ease;
+}

@@ -1,12 +1,12 @@
 @model IEnumerable<eLibrary.Models.Book>
 @{
-    ViewBag.Title = "Find and Search for a Book";
+    ViewBag.Title = "Find a Book";
     Layout = "_Layout";
 }
 
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 <link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true" />
-@* <link rel="stylesheet" href="/css/FindABook.css" asp-append-version="true" /> *@
+<link rel="stylesheet" href="~/css/FindABook.css" asp-append-version="true" />
 
 <!-- Hero Section -->
 <div class="hero-section mb-5">
@@ -14,41 +14,30 @@
         <div class="row justify-content-center">
             <div class="col-md-8 text-center">
                 <h1 class="display-4">Find Your Next Great Read</h1>
-                <p class="lead">Search through our extensive collection of books</p>
+                <p class="lead">Search through our extensive books collection</p>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Category Buttons Section -->
+<!-- Genre Buttons Section -->
 <div class="container mb-4">
     <div class="category-section">
-        <h2 class="text-center mb-4">Browse by Category</h2>
+        <h2 class="text-center mb-4">Browse by Genre</h2>
         <div class="row justify-content-center">
-            <div class="col-md-auto">
-                <button class="btn btn-outline-primary category-button" data-category="Fiction">
-                    <i class="fas fa-book"></i>
-                    Fiction
-                </button>
-            </div>
-            <div class="col-md-auto">
-                <button class="btn btn-outline-primary category-button" data-category="Science">
-                    <i class="fas fa-flask"></i>
-                    Science
-                </button>
-            </div>
-            <div class="col-md-auto">
-                <button class="btn btn-outline-primary category-button" data-category="History">
-                    <i class="fas fa-landmark"></i>
-                    History
-                </button>
-            </div>
-            <div class="col-md-auto">
-                <button class="btn btn-outline-primary category-button" data-category="Technology">
-                    <i class="fas fa-laptop-code"></i>
-                    Technology
-                </button>
-            </div>
+            @foreach (Genre genre in Enum.GetValues(typeof(Genre)))
+            {
+                string genreStr = genre.ToString();
+                if (genre == Genre.NonFiction)
+                    genreStr = genreStr.Replace("NonFiction", "Non-Fiction");
+                else if (genre == Genre.ScienceFiction)
+                    genreStr = genreStr.Replace("ScienceFiction", "Science-Fiction");
+                <div class="col-md-auto">
+                    <button class="btn btn-outline-primary category-button" data-category="@genre">
+                        <i class="fas fa-book"></i> @genreStr
+                    </button>
+                </div>
+            }
         </div>
     </div>
 </div>
@@ -58,114 +47,192 @@
     <div class="search-section">
         <h2 class="text-center mb-4">Advanced Search</h2>
         <div class="row g-3">
-            <div class="col-md-6 col-lg-3">
+            <div class="col-md-3">
+                <label for="titleFilter" class="form-label">Title</label>
                 <div class="form-floating">
-                    <input type="text" id="titleFilter" class="form-control" placeholder="Title" />
-                    <label for="titleFilter">Title</label>
+                    <input type="text" id="titleFilter" class="form-control input-small" placeholder="Title" />
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
+                <label for="authorFilter" class="form-label">Author</label>
                 <div class="form-floating">
-                    <input type="text" id="authorFilter" class="form-control" placeholder="Author" />
-                    <label for="authorFilter">Author</label>
+                    <input type="text" id="authorFilter" class="form-control input-small" placeholder="Author" />
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
+                <label for="publisherFilter" class="form-label">Publisher</label>
                 <div class="form-floating">
-                    <input type="text" id="genreFilter" class="form-control" placeholder="Genre" />
-                    <label for="genreFilter">Genre</label>
+                    <input type="text" id="publisherFilter" class="form-control input-small" placeholder="Publisher" />
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
+                <label for="yearFilter" class="form-label">Year</label>
                 <div class="form-floating">
-                    <input type="text" id="publisherFilter" class="form-control" placeholder="Publisher" />
-                    <label for="publisherFilter">Publisher</label>
+                    <input type="number" id="yearFilter" class="form-control input-small" placeholder="Year" />
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
-                <div class="form-floating">
-                    <input type="number" id="yearFilter" class="form-control" placeholder="Year" />
-                    <label for="yearFilter">Year</label>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <button id="applyFilters" class="btn btn-primary w-100 h-100">
-                    <i class="fas fa-search"></i>
-                    Search
+                <button id="applyFilters" class="btn btn-primary btn-lg">
+                    <i class="fas fa-search"></i> Search
                 </button>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <label class="form-label">On Sale</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="onSaleOptions" id="onSaleYes" value="yes" />
+                    <label class="form-check-label" for="onSaleYes">Yes</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="onSaleOptions" id="onSaleNo" value="no" checked />
+                    <label class="form-check-label" for="onSaleNo">No</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="onSaleOptions" id="onSaleAll" value="no" checked />
+                    <label class="form-check-label" for="onSaleAll">All Books</label>
+                </div>
             </div>
         </div>
     </div>
 </div>
-@* <div class="spinner-container" id="spinner"> *@
-@*     <div class="spinner"> *@
-@*         Loading *@
-@*         <div class="spinner-sector spinner-sector-hard_blue"></div> *@
-@*         <div class="spinner-sector spinner-sector-blue"></div> *@
-@*         <div class="spinner-sector spinner-sector-soft-blue"></div> *@
-@*     </div> *@
-@* </div> *@
 
 <!-- Results Section -->
-<div id="bookListContainer">
-    @await Html.PartialAsync("_BookList", Model)
+<div class="spinner-container" id="spinner">
+    <div class="spinner">
+        Loading...
+        <div class="spinner-sector spinner-sector-hard_blue"></div>
+        <div class="spinner-sector spinner-sector-blue"></div>
+        <div class="spinner-sector spinner-sector-soft-blue"></div>
+    </div>
 </div>
+
+<div id="content" style="display: none; margin: 50px">
+    <h2>Search Results</h2>
+    @if (Model.Any())
+    {
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Publisher</th>
+                <th>Year</th>
+                <th>Genre</th>
+                <th>On Sale</th>
+                <th>Details</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var book in Model)
+            {
+                <tr>
+                    <td>@book.Title</td>
+                    <td>@book.Author</td>
+                    <td>@book.Publisher</td>
+                    <td>@book.Year</td>
+                    <td>@book.Genre</td>
+                    <td>@((book.isOnSale == 1) ? "Yes" : "No")</td>
+                    <td>
+                        <a href="@Url.Action("BookDetails", "Book", new { isbn = book.ISBN})" class="btn btn-link">View Details</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No books found matching the criteria.</p>
+    }
+</div>
+
+<script>
+    // Wait 2 seconds, then show content and hide spinner
+    window.addEventListener('DOMContentLoaded', function () {
+        setTimeout(() => {
+            document.getElementById('spinner').style.display = 'none';
+            const content = document.getElementById('content');
+            content.style.display = 'block';
+            content.classList.add('show'); // Add fade-in effect
+        }, 2000);
+
+    });
+</script>
 
 <script>
     // Handle filter button click
     document.getElementById("applyFilters").addEventListener("click", function () {
         const title = document.getElementById("titleFilter").value;
         const author = document.getElementById("authorFilter").value;
-        const genre = document.getElementById("genreFilter").value;
         const publisher = document.getElementById("publisherFilter").value;
         const year = document.getElementById("yearFilter").value;
-
+        const onSale = document.querySelector('input[name="onSaleOptions"]:checked').value;
         const queryString = new URLSearchParams({
             title: title,
             author: author,
-            genre: genre,
             publisher: publisher,
-            year: year
+            year: year,
+            sale: onSale
         }).toString();
-        const spinner = document.getElementById('spinner');
-        const bookListContent = document.getElementById('bookListContent');
-
-        // Initially show spinner
-        spinner.style.display = 'flex';
-        bookListContent.style.display = 'none';
-
-        // After 2 seconds, hide spinner and show content
-        setTimeout(function () {
-            spinner.style.display = 'none';
-            bookListContent.style.display = 'block';
-        }, 2000);
-
-        window.location.href = `/Book/FilterBooks?${queryString}`;
+        window.location.href = `/Book/FindABook?${queryString}`;
     });
 
-    // Handle category button clicks
+    // Handle genre button clicks
     document.querySelectorAll('.category-button').forEach(button => {
         button.addEventListener('click', function() {
-            const category = this.getAttribute('data-category');
-            const spinner = document.getElementById('spinner');
-            const bookListContent = document.getElementById('bookListContent');
-
-            // Initially show spinner
-            spinner.style.display = 'flex';
-            bookListContent.style.display = 'none';
-
-            // After 2 seconds, hide spinner and show content
-            setTimeout(function () {
-                spinner.style.display = 'none';
-                bookListContent.style.display = 'block';
-            }, 2000);
-            window.location.href = `/Book/FilterBooksByCategory?genre=${category}`;
+            const genre = this.getAttribute('data-category');
+            window.location.href = `/Book/FindABook?genre=${genre}`;
         });
     });
 
-    // Handle form submission on enter key
+    // Set the radio button state based on the sale parameter in the URL
+    document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const saleParam = urlParams.get('sale');
+
+        if (saleParam === "yes") {
+            document.getElementById("onSaleYes").checked = true;
+            document.getElementById("onSaleNo").checked = false;
+            document.getElementById("onSaleAll").checked = false;
+        } else if (saleParam === "no") {
+            document.getElementById("onSaleNo").checked = true;
+            document.getElementById("onSaleYes").checked = false;
+            document.getElementById("onSaleAll").checked = false;
+        } else {
+            // Default to "All" if no parameter is present
+            document.getElementById("onSaleAll").checked = true;
+            document.getElementById("onSaleNo").checked = false;
+            document.getElementById("onSaleYes").checked = false;
+        }
+    });
+
+    // Event listener for the radio buttons
+    document.getElementById("onSaleYes").addEventListener("change", function() {
+        if (this.checked) {
+            const currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.set('sale', 'yes');
+            window.location.href = currentUrl.toString();
+        }
+    });
+
+    document.getElementById("onSaleNo").addEventListener("change", function() {
+        if (this.checked) {
+            const currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.set('sale', 'no');
+            window.location.href = currentUrl.toString();
+        }
+    });
+    
+    document.getElementById("onSaleAll").addEventListener("change", function() {
+        if (this.checked) {
+            const currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.set('sale', 'all');
+            window.location.href = currentUrl.toString();
+        }
+    });
+
+    // Handle form submission on Enter key
     document.querySelectorAll('.form-floating input').forEach(input => {
-        
         input.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 document.getElementById('applyFilters').click();

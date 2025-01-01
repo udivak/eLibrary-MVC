@@ -144,43 +144,50 @@ public class BookController : Controller
         return View("DeleteBook", deletedBook);
     }
     
-    public IActionResult FindABook(string title, string author, string genre, string publisher, int? year, string format)
+    [HttpGet]
+    public async Task<IActionResult> FindABook(string title, string author, string publisher, int? year, string format, string sale)
     {
-        // Start with an empty list of books
-        var books = new List<Book>();
+        IQueryable<Book> query = _dbContext.Books;
 
         // Apply filters based on the user's input
         if (!string.IsNullOrEmpty(title))
         {
-            books = _dbContext.Books.Where(b => b.Title.Contains(title)).ToList();
+            query = query.Where(b => b.Title.Contains(title));
         }
-        else if (!string.IsNullOrEmpty(author))
+        if (!string.IsNullOrEmpty(author))
         {
-            books = _dbContext.Books.Where(b => b.Author.Contains(author)).ToList();
+            query = query.Where(b => b.Author.Contains(author));
         }
-        else if (!string.IsNullOrEmpty(genre) && Enum.TryParse<Genre>(genre, true, out var genreEnum))
+        if (!string.IsNullOrEmpty(publisher))
         {
-            books = _dbContext.Books.Where(b => b.Genre == genreEnum).ToList();
+            query = query.Where(b => b.Publisher.Contains(publisher));
         }
-        else if (!string.IsNullOrEmpty(publisher))
+        if (year.HasValue)
         {
-            books = _dbContext.Books.Where(b => b.Publisher.Contains(publisher)).ToList();
+            query = query.Where(b => b.Year == year);
         }
-        else if (year.HasValue)
+        if (!string.IsNullOrEmpty(format))
         {
-            books = _dbContext.Books.Where(b => b.Year == year.Value).ToList();
+            query = query.Where(b => b.Format.Contains(format));
         }
-        else if (!string.IsNullOrEmpty(format))
+        if (!string.IsNullOrEmpty(sale))
         {
-            books = _dbContext.Books.Where(b => b.Format == format).ToList();
+            if (sale == "yes")
+            {
+                query = query.Where(b => b.isOnSale == 1);
+            }
+            else if (sale == "no")
+            {
+                query = query.Where(b => b.isOnSale == 0);
+            }
         }
-        else
+        if (string.IsNullOrEmpty(title) && string.IsNullOrEmpty(author) && string.IsNullOrEmpty(publisher) && !year.HasValue && string.IsNullOrEmpty(format) && string.IsNullOrEmpty(sale))
         {
-            List<Book> featuredBooks = _dbContext.GetAllBooks().Take(8).ToList();
-            return View(featuredBooks);
+            List<Book> allBooks = await _dbContext.GetAllBooksAsync();
+            return View("FindABook",allBooks);
         }
-        // Return an empty list if no filters are applied (first time visiting)
-        return View("SearchResults", books);
+        var result = await query.ToListAsync();
+        return View("FindABook", result);
     }
     
     [HttpGet]
