@@ -16,9 +16,7 @@
 <body>
 
 <!-- Notifications Section -->
-<div class="notifications">
-    You have new notifications!
-</div>
+<div class="notifications"></div>
 
 <div class="layout-container d-flex">
     <!-- Sidebar with vertical tabs -->
@@ -103,10 +101,10 @@
 
         function checkBookStock() {
             $.ajax({
-                url: "/User/CheckBookStock", // Replace with your server endpoint
+                url: "/User/CheckBookAvailabilityByEmail", // Replace with your server endpoint
                 type: "GET",
                 success: function (data) {
-                    if (data && data.booksInStock && data.booksInStock.length > 0) {
+                    if (data && data.success && data.booksInStock && data.booksInStock.length > 0) {
                         // Create notification message
                         const bookTitles = data.booksInStock.join(", ");
                         showNotification(`The following books are back in stock: ${bookTitles}`);

@@ -14,13 +14,16 @@ public class CheckoutController : Controller
     private string PaypalUrl { get; set; } = "";
     private DB_context _dbContext;
     private readonly IHttpContextAccessor _context;
-    public CheckoutController(IConfiguration configuration, DB_context dbContext, IHttpContextAccessor context)
+    private readonly IEmailService _emailService;
+
+    public CheckoutController(IConfiguration configuration, DB_context dbContext, IHttpContextAccessor context, IEmailService emailService)
     {
         PaypalClientID = configuration["PaypalSettings:ClientID"]!;
         PaypalSecret = configuration["PaypalSettings:Secret"]!;
         PaypalUrl = configuration["PaypalSettings:Url"]!;
         _dbContext = dbContext;
         _context = context;
+        _emailService = emailService;
     }
     private ISession Session => _context.HttpContext.Session;
     
@@ -35,6 +38,7 @@ public class CheckoutController : Controller
        else
        {
            cartItems = JsonSerializer.Deserialize<List<CartItem>>(serializedCart);
+           Console.WriteLine(cartItems);
            if (cartItems == null)                                                   //Deserialize failed
            {
                cartItems = new List<CartItem>();
@@ -96,6 +100,12 @@ public class CheckoutController : Controller
     [HttpPost]
     public async Task<JsonResult> CreateOrder([FromBody] JsonObject data)
     {
+        // string serializedCart = Session.GetString("ShoppingCart");
+        // Console.WriteLine(serializedCart);
+        // List<CartItem> cartItems = JsonSerializer.Deserialize<List<CartItem>>(serializedCart);
+        // Console.WriteLine(cartItems);
+        // Console.WriteLine(data);
+        // Console.WriteLine(data.ToString());
         var totalAmount = data?["amount"]?.ToString();
         if (totalAmount == null)
         {
@@ -154,6 +164,7 @@ public class CheckoutController : Controller
 
         string accessToken = await GetPayPalAccessToken();
         string url = PaypalUrl + $"/v2/checkout/orders/{orderId}/capture";
+        string userEmail = Session.GetString("userEmail");
 
         using (var client = new HttpClient())
         {
@@ -162,7 +173,6 @@ public class CheckoutController : Controller
             var requestMessage = new HttpRequestMessage(HttpMethod.Post, url);
             requestMessage.Content = new StringContent("", null, "application/json");
             var httpResponse = await client.SendAsync(requestMessage);
-
             if (httpResponse.IsSuccessStatusCode)
             {
                 var strResponse = await httpResponse.Content.ReadAsStringAsync();
@@ -174,7 +184,9 @@ public class CheckoutController : Controller
                     {
                         //save the order to db
                         var shoppingCart = ShoppingCart.GetShoppingCart();
-                        string userEmail = Session.GetString("userEmail");
+                        string emailBody = "<h1>Order Confirmation</h1><p>Thank you for your order!</p><ul>";
+
+                        // string userEmail = Session.GetString("userEmail");
                         foreach (CartItem item in shoppingCart)
                         {
                             if (item == null)
@@ -187,7 +199,16 @@ public class CheckoutController : Controller
                             UserBook newUserBook = new UserBook(userEmail, item.ISBN, isPurchased);
                             _dbContext.UserBook.Add(newUserBook);
                             await _dbContext.SaveChangesAsync();
+                            emailBody += $"<li>{book.Title} - {item.Quantity} x ${book.BuyPrice} = ${book.BuyPrice * item.Quantity}</li>";
+
                         }
+                        emailBody += "</ul><p>Total: $TOTAL_PRICE</p>";
+                        await _emailService.SendEmailAsync(
+                            userEmail,
+                            "Your Order Confirmation",
+                            emailBody
+                        );
+                        Console.WriteLine("Email sent to " + userEmail);
                         return new JsonResult("success");
                     }
                 }
