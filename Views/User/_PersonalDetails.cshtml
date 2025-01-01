@@ -1,56 +1,74 @@
 @model eLibrary.Models.User
 
-<style>
-    .card{
-        max-width: 100%; /* Set maximum width */
-        margin-left: 10px;
-    }
-    #passwordChangeForm {
-        display: none; /* Hide the form by default */
-        margin-top: 20px;
-    }
-</style>
 
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">Personal Details</h5>
-        <p><strong>First Name:</strong> @Model.FirstName</p>
-        <p><strong>Last Name:</strong> @Model.LastName</p>
-        <p><strong>Username:</strong> @Model.UserName</p>
-        <p><strong>Email:</strong> @Model.Email</p>
-        <p><strong>Created At:</strong> @Model.CreatedAt</p>
-        <p><strong>Address:</strong> @Model.Address</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Details</title>
+</head>
+<link href="~/css/_PersonalDetails.css" rel="stylesheet" asp-append-version="true">
 
-        <!-- Button to open the password change form -->
-        <button type="button" class="btn btn-primary" id="changePasswordBtn">Change Password</button>
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1>Personal Details</h1>
+        </div>
+        <div class="card-content">
+            <div class="details-grid">
+                <div class="detail-item">
+                    <div class="detail-label">First Name</div>
+                    <div class="detail-value">@Model.FirstName</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Last Name</div>
+                    <div class="detail-value">@Model.LastName</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Username</div>
+                    <div class="detail-value">@Model.UserName</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Email</div>
+                    <div class="detail-value">@Model.Email</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Created At</div>
+                    <div class="detail-value">@Model.CreatedAt</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Address</div>
+                    <div class="detail-value">@Model.Address</div>
+                </div>
+            </div>
 
-        <!-- Password Change Form -->
-        <div id="passwordChangeForm">
-            <hr />
-            <h5 class="card-title">Change Password</h5>
-            <form method="post" action="@Url.Action("ChangePassword", "User")">
+            <button class="btn" id="changePasswordBtn">Change Password</button>
+
+            <form id="passwordForm" class="password-form" action="@Url.Action("ChangePassword", "User")" method="post">
                 <div class="form-group">
                     <label for="CurrentPassword">Current Password</label>
-                    <input type="password" class="form-control" id="CurrentPassword" name="CurrentPassword" required />
+                    <input type="password" id="CurrentPassword" name="CurrentPassword" required>
                 </div>
                 <div class="form-group">
                     <label for="NewPassword">New Password</label>
-                    <input type="password" class="form-control" id="NewPassword" name="NewPassword" required />
+                    <input type="password" id="NewPassword" name="NewPassword" required>
                 </div>
                 <div class="form-group">
                     <label for="ConfirmNewPassword">Confirm New Password</label>
-                    <input type="password" class="form-control" id="ConfirmNewPassword" name="ConfirmNewPassword" required />
+                    <input type="password" id="ConfirmNewPassword" name="ConfirmNewPassword" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Change Password</button>
+                <button type="submit" class="btn">Update Password</button>
             </form>
         </div>
     </div>
 </div>
 
 <script>
-    // JavaScript to toggle the password change form
-    document.getElementById("changePasswordBtn").addEventListener("click", function () {
-        var form = document.getElementById("passwordChangeForm");
-        form.style.display = form.style.display === "none" ? "block" : "none"; // Toggle visibility
+    document.getElementById('changePasswordBtn').addEventListener('click', function() {
+        document.getElementById('passwordForm').classList.toggle('active');
+        this.textContent = this.textContent === 'Change Password' ? 'Hide Form' : 'Change Password';
     });
 </script>
+
+</html>
