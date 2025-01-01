@@ -52,5 +52,13 @@ namespace eLibrary.Models
             }
             return totalPrice;
         }
+        
+        public static void ClearCart()
+        {
+            var shoppingCart = GetShoppingCart();
+            shoppingCart.Clear();
+            var serializedCart = JsonSerializer.Serialize(shoppingCart);
+            Session.SetString("ShoppingCart", serializedCart);
+        }
     }
 }

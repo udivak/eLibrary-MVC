@@ -14,9 +14,6 @@ public class EmailServiceController : IEmailService
 {
     private readonly EmailSettings _emailSettings;
     
-    
-
-
     public EmailServiceController(IOptions<EmailSettings> emailSettings)
     {
         _emailSettings = emailSettings.Value;

@@ -182,19 +182,14 @@ public class CheckoutController : Controller
                     string paypalOrderStatus = jsonResponse["status"]?.ToString() ?? "";
                     if (paypalOrderStatus == "COMPLETED")
                     {
-                        //save the order to db
                         var shoppingCart = ShoppingCart.GetShoppingCart();
                         string emailBody = "<h1>Order Confirmation</h1><p>Thank you for your order!</p><ul>";
 
-                        // string userEmail = Session.GetString("userEmail");
                         foreach (CartItem item in shoppingCart)
                         {
                             if (item == null)
                                 continue;
-                            //update book's quantity in db
                             var book = _dbContext.Books.FirstOrDefault(b => b.ISBN == item.ISBN);
-                            //book.Quantity -= item.Quantity;
-                            
                             bool isPurchased = item.Action == "Buy";
                             UserBook newUserBook = new UserBook(userEmail, item.ISBN, isPurchased);
                             _dbContext.UserBook.Add(newUserBook);
@@ -202,18 +197,19 @@ public class CheckoutController : Controller
                             emailBody += $"<li>{book.Title} - {item.Quantity} x ${book.BuyPrice} = ${book.BuyPrice * item.Quantity}</li>";
 
                         }
-                        emailBody += "</ul><p>Total: $TOTAL_PRICE</p>";
+                        emailBody += "</ul><p>Total: @TOTAL_PRICE$</p>";
                         await _emailService.SendEmailAsync(
                             userEmail,
                             "Your Order Confirmation",
                             emailBody
                         );
-                        Console.WriteLine("Email sent to " + userEmail);
+                        ShoppingCart.ClearCart();
                         return new JsonResult("success");
                     }
                 }
             }
         }
+        ShoppingCart.ClearCart();
         return new JsonResult("success");
     }
     
