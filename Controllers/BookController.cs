@@ -145,7 +145,7 @@ public class BookController : Controller
     }
     
     [HttpGet]
-    public async Task<IActionResult> FindABook(string title, string author, string publisher, int? year, string format, string sale)
+    public async Task<IActionResult> FindABook(string title, string author, string publisher, int? year, string format, string sale, string genre)
     {
         IQueryable<Book> query = _dbContext.Books;
 
@@ -181,7 +181,13 @@ public class BookController : Controller
                 query = query.Where(b => b.isOnSale == 0);
             }
         }
-        if (string.IsNullOrEmpty(title) && string.IsNullOrEmpty(author) && string.IsNullOrEmpty(publisher) && !year.HasValue && string.IsNullOrEmpty(format) && string.IsNullOrEmpty(sale))
+        if (!string.IsNullOrEmpty(genre))
+        {
+            Genre bookGenre = (Genre)Enum.Parse(typeof(Genre), genre, true);
+            query = query.Where(b => b.Genre == bookGenre);
+        }
+        if (string.IsNullOrEmpty(title) && string.IsNullOrEmpty(author) && string.IsNullOrEmpty(publisher)
+            && !year.HasValue && string.IsNullOrEmpty(format) && string.IsNullOrEmpty(sale) && string.IsNullOrEmpty(genre))
         {
             List<Book> allBooks = await _dbContext.GetAllBooksAsync();
             return View("FindABook",allBooks);
