@@ -105,7 +105,7 @@
                         {
                             <div class="col-md-2 col-sm-4 mb-4">
                                 <a href="@Url.Action("BookDetails", "Book", new { isbn = book.ISBN })" class="card book-card">
-                                    <img src="~/images/Harry Potter 1.jpg" class="card-img-top book-img" alt="@book.Title">
+                                    <img src="@Url.Content("~/images/"+book.Title+".jpg")" class="card-img-top book-img" alt="@book.Title">
                                     <div class="card-body">
                                         <h5 class="card-title">@book.Title</h5>
                                         <p class="card-text"><strong class="text-muted">Format:</strong> @book.Format</p>

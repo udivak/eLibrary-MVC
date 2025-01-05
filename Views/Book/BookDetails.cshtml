@@ -4,6 +4,7 @@
     Layout = "_Layout";
     ViewData["Title"] = $"{Model.Book.Title} Details";
     var userEmail = _context.HttpContext.Session.GetString("userEmail");
+    var imgPath = "~/images/" + Model.Book.Title + ".jpg";
 }
 
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
@@ -17,7 +18,7 @@
         </div>
         <div class="card-body d-flex align-items-start">
             <div class="book-image-container">
-                <img src="~/images/Harry Potter 1.jpg" class="card-img-top book-img" alt="@Model.Book.Title">
+                <img src="@Url.Content(imgPath)" class="card-img-top book-img" alt="@Model.Book.Title">
             </div>
             <div class="book-details-text">
                 <div class="row">
