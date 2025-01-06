@@ -48,7 +48,6 @@ public class HomeController : Controller
         {
             feedbacks = new List<eLibraryFeedback>();
         }
-        
         IndexViewModel IndexLists = new IndexViewModel(featuredBooks, feedbacks);
         return View("Index", IndexLists);
     }

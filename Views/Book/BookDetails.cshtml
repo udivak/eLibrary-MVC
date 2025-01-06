@@ -31,18 +31,23 @@
                         <p class="data"><strong>Age Limit:</strong> @Model.Book.AgeLimit+</p>
                     </div>
                     <div class="col-6">
-                        <p class="data"><strong>Buy Price:</strong> @Model.Book.BuyPrice$</p>
                         @if (Model.Book.isOnSale == 1)
                         {
-                            <p class="data"><strong>Sale Buy Price:</strong> @(Math.Round((float)(Model.Book.BuyPrice * (Model.Book.SalePercentage/100)), 2))$</p>
+                            <p class="data"><strong>Buy Price:</strong> <s>@Model.Book.BuyPrice</s>$</p>
+                            <p class="data"><strong>Sale Buy Price:</strong> @(Math.Round(Model.Book.BuyPrice * ((100 - Model.Book.SalePercentage) / 100.0), 2))$</p>
                         }
-                        @if (Model.Book.isPopular == 0)
+                        else
+                        {
+                            <p class="data"><strong>Buy Price:</strong> @Model.Book.BuyPrice$</p>
+                        }
+                        @if (Model.Book.isPopular == 0 && Model.Book.isOnSale == 1) // Not Popular and in sale
+                        {
+                            <p class="data"><strong>Borrow Price:</strong> <s>@Model.Book.BorrowPrice$</s></p>
+                            <p class="data"><strong>Sale Borrow Price:</strong> @(Math.Round(Model.Book.BorrowPrice * ((100 - Model.Book.SalePercentage) / 100.0), 2))$</p>
+                        }
+                        @if (Model.Book.isPopular == 0 && Model.Book.isOnSale == 0) // not popular and not in sale
                         {
                             <p class="data"><strong>Borrow Price:</strong> @Model.Book.BorrowPrice$</p>
-                            if (Model.Book.isOnSale == 1)
-                            {
-                                <p class="data"><strong>Sale Borrow Price:</strong> @(Math.Round((float)(Model.Book.BorrowPrice * (Model.Book.SalePercentage/100)), 2))$</p>
-                            }
                         }
                         <p class="data"><strong>Age Limit:</strong> @Model.Book.AgeLimit+</p>
                         <p class="data"><strong>Genre:</strong> @Model.Book.Genre</p>
