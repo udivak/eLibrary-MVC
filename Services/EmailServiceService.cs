@@ -3,18 +3,18 @@ using System.Net.Mail;
 using eLibrary.Models;
 using Microsoft.Extensions.Options;
 
-namespace eLibrary.Controllers;
+namespace eLibrary.Services;
 
 public interface IEmailService
 {
     Task SendEmailAsync(string toEmail, string subject, string body);
 }
 
-public class EmailServiceController : IEmailService
+public class EmailService : IEmailService
 {
     private readonly EmailSettings _emailSettings;
     
-    public EmailServiceController(IOptions<EmailSettings> emailSettings)
+    public EmailService(IOptions<EmailSettings> emailSettings)
     {
         _emailSettings = emailSettings.Value;
     }

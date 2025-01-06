@@ -2,21 +2,25 @@ using eLibrary.Controllers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using eLibrary.Models; // Make sure to include your models namespace
+using eLibrary.Models; 
+using eLibrary.Services;
+
 using Microsoft.EntityFrameworkCore; // Required for EF Core
 
 var builder = WebApplication.CreateBuilder(args);
-
+// Register EmailService with dependency injection
+builder.Services.AddTransient<EmailService>();
 // Register DB_context with dependency injection and use SQLite
 builder.Services.AddDbContext<DB_context>(options =>
     options.UseSqlite("Data Source=eLibraryDB.db")); // Point to your SQLite file
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-// builder.Services.AddTransient<EmailServiceController>();
-builder.Services.AddScoped<IEmailService, EmailServiceController>();
 
+// Register IEmailService with EmailService
+builder.Services.AddTransient<IEmailService, EmailService>();
 
+builder.Services.AddHostedService<WaitlistService>();
 
 // Add IHttpContextAccessor and session services
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

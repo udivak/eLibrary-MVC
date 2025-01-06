@@ -10,6 +10,8 @@ public class WaitingList
     [Key]
     [Column(Order = 0)]
     public string BookISBN { get; set; } // Foreign key to the Books table
+    
+    public int Position { get; set; }
 
     [Key]
     [Column(Order = 1)]
