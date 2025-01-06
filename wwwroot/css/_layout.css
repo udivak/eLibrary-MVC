@@ -129,7 +129,8 @@ body {
 .navbar-brand {
     color: #007bff !important;
     font-weight: bold !important;
-    font-size: 2.5rem !important;
+    font-size: 2.8rem !important;
+    margin-right: 25px !important;
 }
 
 .navbar-brand:hover {
@@ -138,7 +139,7 @@ body {
 
 .navbar-nav .nav-item .nav-link:active {
     background-color: #0056b3; /* Active button background */
-    color: #ffffff; /* Active button text */
+    color: #ffffff;
 }
 
 /* Ensure the page takes full height */
