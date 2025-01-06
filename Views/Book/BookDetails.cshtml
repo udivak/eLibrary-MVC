@@ -23,35 +23,65 @@
             <div class="book-details-text">
                 <div class="row">
                     <div class="col-6">
-                        <p class="data"><strong>Title: </strong> @Model.Book.Title</p>
-                        <p class="data"><strong>Author:</strong> @Model.Book.Author</p>
-                        <p class="data"><strong>ISBN:</strong> @Model.Book.ISBN</p>
-                        <p class="data"><strong>Publisher:</strong> @Model.Book.Publisher</p>
-                        <p class="data"><strong>Year:</strong> @Model.Book.Year</p>
-                        <p class="data"><strong>Age Limit:</strong> @Model.Book.AgeLimit+</p>
+                        <p class="data">
+                            <span class="underline">Title: </span> @Model.Book.Title
+                        </p>
+                        <p class="data">
+                            <span class="underline">Author:</span> @Model.Book.Author
+                        </p>
+                        <p class="data">
+                            <span class="underline">ISBN:</span> @Model.Book.ISBN
+                        </p>
+                        <p class="data">
+                            <span class="underline">Publisher:</span> @Model.Book.Publisher
+                        </p>
+                        <p class="data">
+                            <span class="underline">Year:</span> @Model.Book.Year
+                        </p>
+                        <p class="data">
+                            <span class="underline">Age Limit:</span> @Model.Book.AgeLimit+
+                        </p>
                     </div>
                     <div class="col-6">
                         @if (Model.Book.isOnSale == 1)
                         {
-                            <p class="data"><strong>Buy Price:</strong> <s>@Model.Book.BuyPrice</s>$</p>
-                            <p class="data"><strong>Sale Buy Price:</strong> @(Math.Round(Model.Book.BuyPrice * ((100 - Model.Book.SalePercentage) / 100.0), 2))$</p>
+                            <p class="data">
+                                <span class="underline">Buy Price:</span> <s>@Model.Book.BuyPrice</s>$
+                            </p>
+                            <p class="data">
+                                <span class="sale-price">Sale Buy Price:</span> @(Math.Round(Model.Book.BuyPrice * ((100 - Model.Book.SalePercentage) / 100.0), 2))$
+                            </p>
                         }
                         else
                         {
-                            <p class="data"><strong>Buy Price:</strong> @Model.Book.BuyPrice$</p>
+                            <p class="data">
+                                <span class="underline">Buy Price:</span> @Model.Book.BuyPrice$
+                            </p>
                         }
                         @if (Model.Book.isPopular == 0 && Model.Book.isOnSale == 1) // Not Popular and in sale
                         {
-                            <p class="data"><strong>Borrow Price:</strong> <s>@Model.Book.BorrowPrice$</s></p>
-                            <p class="data"><strong>Sale Borrow Price:</strong> @(Math.Round(Model.Book.BorrowPrice * ((100 - Model.Book.SalePercentage) / 100.0), 2))$</p>
+                            <p class="data">
+                                <span class="underline">Borrow Price:</span> <s>@Model.Book.BorrowPrice$</s>
+                            </p>
+                            <p class="data">
+                                <span class="sale-price">Sale Borrow Price:</span> @(Math.Round(Model.Book.BorrowPrice * ((100 - Model.Book.SalePercentage) / 100.0), 2))$
+                            </p>
                         }
                         @if (Model.Book.isPopular == 0 && Model.Book.isOnSale == 0) // not popular and not in sale
                         {
-                            <p class="data"><strong>Borrow Price:</strong> @Model.Book.BorrowPrice$</p>
+                            <p class="data">
+                                <span class="underline">Borrow Price:</span> @Model.Book.BorrowPrice$
+                            </p>
                         }
-                        <p class="data"><strong>Age Limit:</strong> @Model.Book.AgeLimit+</p>
-                        <p class="data"><strong>Genre:</strong> @Model.Book.Genre</p>
-                        <p class="data" id="bookFormat"><strong>Format:</strong> @Model.Book.Format</p>
+                        <p class="data">
+                            <span class="underline">Age Limit:</span> @Model.Book.AgeLimit+
+                        </p>
+                        <p class="data">
+                            <span class="underline">Genre:</span> @Model.Book.Genre
+                        </p>
+                        <p class="data" id="bookFormat">
+                            <span class="underline">Format:</span> @Model.Book.Format
+                        </p>
                         <!-- Container for Rating Stars -->
                         <div class="rating-container mt-3">
                             <strong>Average Rating:</strong>

@@ -108,24 +108,38 @@
                                     <img src="@Url.Content("~/images/"+book.Title+".jpg")" class="card-img-top book-img" alt="@book.Title">
                                     <div class="card-body">
                                         <h5 class="card-title">@book.Title</h5>
-                                        <p class="card-text"><strong class="text-muted">Format:</strong> @book.Format</p>
+                                        <p class="card-text">
+                                            <span class="underline">Format:</span> @book.Format
+                                        </p>
                                         @if (book.isOnSale == 1)
                                         {
-                                            <p class="card-text"><strong class="text-muted">Buy Price:</strong> <s>@book.BuyPrice</s>$</p>
-                                            <p class="card-text"><strong class="text-muted">Sale Buy Price:</strong> @(Math.Round(book.BuyPrice * ((100 - book.SalePercentage) / 100.0), 2))$</p>
+                                            <p class="card-text">
+                                                <span class="underline">Buy Price:</span> <s>@book.BuyPrice</s>$
+                                            </p>
+                                            <p class="card-text">
+                                                <span class="sale-price">Sale Buy Price:</span> @(Math.Round(book.BuyPrice * ((100 - book.SalePercentage) / 100.0), 2))$
+                                            </p>
                                         }
                                         else
                                         {
-                                            <p class="card-text"><strong class="text-muted">Buy Price:</strong> @book.BuyPrice$</p>
+                                            <p class="card-text">
+                                                <span class="underline">Buy Price:</span> @book.BuyPrice$
+                                            </p>
                                         }
                                         @if (book.isPopular == 0 && book.isOnSale == 1)   // Not Popular and in sale
                                         {
-                                            <p class="card-text"><strong class="text-muted">Borrow Price:</strong> <s>@book.BorrowPrice$</s></p>
-                                            <p class="card-text"><strong class="text-muted">Sale Borrow Price:</strong> @(Math.Round(book.BorrowPrice * ((100 - book.SalePercentage) / 100.0), 2))$</p>
+                                            <p class="card-text">
+                                                <span class="underline">Borrow Price:</span> <s>@book.BorrowPrice$</s>
+                                            </p>
+                                            <p class="card-text">
+                                                <span class="sale-price">Sale Borrow Price:</span> @(Math.Round(book.BorrowPrice * ((100 - book.SalePercentage) / 100.0), 2))$
+                                            </p>
                                         }
                                         @if (book.isPopular == 0 && book.isOnSale == 0)   // not popular and not in sale
                                         {
-                                            <p class="card-text"><strong class="text-muted">Borrow Price:</strong> @book.BorrowPrice$</p>
+                                            <p class="card-text">
+                                                <span class="underline">Borrow Price:</span> @book.BorrowPrice$
+                                            </p>
                                         }
                                     </div>
                                 </a>

@@ -16,8 +16,10 @@
         <label for="sortBy" style="font-size: 18px;" class="sort-label">Sort By:</label>
         <br />
         <select id="sortBy" class="form-control-sm" placeholder="Sort By">
-            <option value="priceAsc">Price: Low to High</option>
-            <option value="priceDesc">Price: High to Low</option>
+            <option value="priceAsc">Buy Price: Low to High</option>
+            <option value="priceDesc">Buy Price: High to Low</option>
+            <option value="priceAsc">Borrow Price: Low to High</option>
+            <option value="priceDesc">Borrow Price: High to Low</option>
             <option value="mostPopular">Most Popular</option>
             <option value="genre">Genre</option>
             <option value="year">Year of Publishing</option>
@@ -50,7 +52,6 @@
         <button class="btn btn-primary sort-button" onclick="applySorting()">Sort</button>
     </div>
     <br />
-
     @{
         int totalBooks = Model.Count();
         int booksPerRow = 4;
@@ -58,37 +59,60 @@
     }
     @for (int rowIndex = 0; rowIndex < totalRows; rowIndex++)
     {
-        <div class="row">
+        <div class="row g-1 justify-content-center">
             @foreach (var book in Model.Skip(rowIndex * booksPerRow).Take(booksPerRow))
             {
-                <div class="col-md-3">
-                    <a href="@Url.Action("BookDetails", "Book", new { isbn = book.ISBN })" class="card book-card mb-4">
+                <div class="col-md-3 col-sm-6 col-xs-12 d-flex justify-content-center">
+                    <a href="@Url.Action("BookDetails", "Book", new { isbn = book.ISBN })" class="card book-card">
                         <img src="@Url.Content("~/images/"+book.Title+".jpg")" class="card-img-top book-img" alt="@book.Title">
                         <div class="card-body">
                             <h5 class="card-title">@book.Title</h5>
-                            <p class="card-text"><strong class="text-muted">Author:</strong> @book.Author</p>
-                            <p class="card-text"><strong class="text-muted">Publisher:</strong> @book.Publisher</p>
-                            <p class="card-text"><strong class="text-muted">Year:</strong> @book.Year</p>
+                            <p class="card-text">
+                                <span class="underline">Author:</span> @book.Author
+                            </p>
+                            <p class="card-text">
+                                <span class="underline">Publisher:</span> @book.Publisher
+                            </p>
+                            <p class="card-text">
+                                <span class="underline">Year:</span> @book.Year
+                            </p>
+                            <!-- Pricing details -->
                             @if (book.isOnSale == 1)
                             {
-                                <p class="card-text"><strong class="text-muted">Buy Price:</strong> <s>@book.BuyPrice</s>$</p>
-                                <p class="card-text"><strong class="text-muted">Sale Buy Price:</strong> @(Math.Round(book.BuyPrice * ((100 - book.SalePercentage) / 100.0), 2))$</p>
+                                <p class="card-text">
+                                    <span class="underline">Buy Price:</span> <s>@book.BuyPrice</s>$
+                                </p>
+                                <p class="card-text">
+                                    <span class="sale-price">Sale Buy Price:</span> @(Math.Round(book.BuyPrice * ((100 - book.SalePercentage) / 100.0), 2))$
+                                </p>
                             }
                             else
                             {
-                                <p class="card-text"><strong class="text-muted">Buy Price:</strong> @book.BuyPrice$</p>
+                                <p class="card-text">
+                                    <span class="underline">Buy Price:</span> @book.BuyPrice$
+                                </p>
                             }
                             @if (book.isPopular == 0 && book.isOnSale == 1)   // Not Popular and in sale
                             {
-                                <p class="card-text"><strong class="text-muted">Borrow Price:</strong> <s>@book.BorrowPrice$</s></p>
-                                <p class="card-text"><strong class="text-muted">Sale Borrow Price:</strong> @(Math.Round(book.BorrowPrice * ((100 - book.SalePercentage) / 100.0), 2))$</p>
+                                <p class="card-text">
+                                    <span class="underline">Borrow Price:</span> <s>@book.BorrowPrice$</s>
+                                </p>
+                                <p class="card-text">
+                                    <span class="sale-price">Sale Borrow Price:</span> @(Math.Round(book.BorrowPrice * ((100 - book.SalePercentage) / 100.0), 2))$
+                                </p>
                             }
                             @if (book.isPopular == 0 && book.isOnSale == 0)   // not popular and not in sale
                             {
-                                <p class="card-text"><strong class="text-muted">Borrow Price:</strong> @book.BorrowPrice$</p>
+                                <p class="card-text">
+                                    <span class="underline">Borrow Price:</span> @book.BorrowPrice$
+                                </p>
                             }
-                            <p class="card-text"><strong class="text-muted">Genre:</strong> @book.Genre.ToString()</p>
-                            <p class="card-text"><strong class="text-muted">Age Limit:</strong> @book.AgeLimit</p>
+                            <p class="card-text">
+                                <span class="underline">Genre:</span> @book.Genre.ToString()
+                            </p>
+                            <p class="card-text">
+                                <span class="underline">Age Limit:</span> @book.AgeLimit
+                            </p>
                         </div>
                     </a>
                 </div>

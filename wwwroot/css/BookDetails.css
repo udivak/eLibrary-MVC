@@ -165,11 +165,29 @@
     color: gold; /* Color for filled part */
 }
 
-
 .rating-container {
     margin-left: 13px;
 }
 
 .submit-feedback {
     margin-top: 15px;
+}
+
+a {
+    text-decoration: none; /* Remove underline from the entire link */
+    color: inherit; /* Optional: Maintain default text color */
+}
+
+a:hover {
+    text-decoration: none; /* Prevent underline on hover */
+}
+
+.underline {
+    text-decoration: underline; /* Apply underline only to this class */
+    font-weight: bold; /* Optional: Bold text for attribute names */
+}
+
+.sale-price {
+    color: red; /* Optional: Highlight the sale price in red */
+    font-weight: bold; /* Optional: Make the sale price bold */
 }
