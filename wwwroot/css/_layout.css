@@ -139,7 +139,7 @@ body {
 
 .navbar-nav .nav-item .nav-link:active {
     background-color: #0056b3; /* Active button background */
-    color: #ffffff; /* Active button text */
+    color: #ffffff;
 }
 
 /* Ensure the page takes full height */
