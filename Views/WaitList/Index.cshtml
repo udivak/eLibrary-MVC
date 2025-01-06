@@ -1,0 +1,27 @@
+@model IEnumerable<eLibrary.Models.Book>
+
+@{
+    ViewData["Title"] = "Books in Waiting List";
+}
+
+<h1>Books in Waiting List</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>Book Title</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var book in Model)
+    {
+        <tr>
+            <td>@book.Title</td>
+            <td>
+                <a href="@Url.Action("WaitList", "Waitlist", new { bookISBN = book.ISBN })">View Waiting List</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
