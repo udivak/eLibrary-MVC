@@ -23,8 +23,8 @@
                 @Html.ValidationMessageFor(b => b.Author)
             </div>
             <div class="col-md-6">
-                <label for="isbnNumber" class="form-label">ISBN Number</label>
-                <input type="text" class="form-control" id="isbnNumber" name="isbnNumber" value="@Model.ISBN">
+                <label for="isbn" class="form-label">ISBN Number</label>
+                <input type="text" class="form-control" id="isbn" name="ISBN" value="@Model.ISBN">
                 @Html.ValidationMessageFor(b => b.ISBN)
             </div>
             <div class="col-md-6">
@@ -76,7 +76,6 @@
                     <option value="ePub">ePub</option>
                     <option value="f2b">fb2</option>
                     <option value="mobi">mobi</option>
-                    <option value="Physical">Physical</option>
                 </select>
                 @Html.ValidationMessageFor(b => b.Format)
             </div>

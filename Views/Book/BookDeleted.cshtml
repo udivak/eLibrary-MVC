@@ -2,13 +2,18 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Book Deleted Successfully!";
+    /*string bookTitle = "";
+    if (!string.IsNullOrEmpty(ViewBag.DeletedBookTitle)) 
+        bookTitle = ViewBag.DeletedBookTitle;
+    else if (!string.IsNullOrEmpty(Model.Title))
+        bookTitle = Model.Title;*/
 }
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
 <link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true"/>
 
 <div class="container mt-5">
     <div class="alert alert-success text-center">
-        <h1>Book Deleted Successfully!</h1>
+        <h1>@Model.Title has been Deleted Successfully!</h1>
         <p>The book has been deleted from the library.</p>
         <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Back to Home Page</a>
     </div>

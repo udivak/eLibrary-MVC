@@ -38,7 +38,17 @@ namespace eLibrary.Models
             modelBuilder.Entity<BookReview>()
                 .HasKey(br => new { br.Email, br.ISBN });
         }
-
+        
+        public async Task<List<WaitingList>> GetAllWaitingListAsync(string isbn)
+        {
+            return await WaitingLists.Where(wl => wl.BookISBN == isbn).ToListAsync();
+        }
+        
+        public async Task<List<UserBook>> GetAllUserBookAsync(string isbn)
+        {
+            return await UserBook.Where(ub => ub.BookISBN == isbn).ToListAsync();
+        }
+        
         public async Task<List<BookReview>> GetBookReviewsAsync(string isbn)
         {
             return await BookReviews.Where(br => br.ISBN == isbn).ToListAsync();
