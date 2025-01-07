@@ -33,6 +33,7 @@
                     <thead>
                     <tr>
                         <th class="text-truncate">Book Title</th>
+                        <th class="text-truncate">Author</th>
                         <th class="text-truncate">ISBN</th>
                         <th class="text-truncate">Quantity</th>
                         <th class="text-truncate">Action</th>
@@ -47,6 +48,7 @@
                     {
                         <tr>
                             <td class="text-truncate">@item.Title</td>
+                            <td class="text-truncate">@item.Author</td>
                             <td class="text-truncate">@item.ISBN</td>
                             <td>@item.Quantity</td>
                             <td>@item.Action</td>
@@ -68,7 +70,7 @@
                     </tbody>
                     <tfoot>
                     <tr>
-                        <td colspan="7" class="text-end">Total Order Price</td>
+                        <td colspan="8" class="text-end">Total Order Price</td>
                         <td class="font-weight-bold">@Model.Sum(item => item.Quantity * item.Price)$</td>
                     </tr>
                     </tfoot>

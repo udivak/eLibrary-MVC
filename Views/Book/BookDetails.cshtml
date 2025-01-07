@@ -264,16 +264,17 @@
                         // If the user can borrow more books, proceed with adding to cart
                         if (response.status === "OK") {
                             addToCart();
-                        } else {
-                            alert(response.responseText); // Display error message
+                        } else if (response.status === "Error"){
+                            alert(response.message); // Display error message
                         }
                     },
                     error: function(xhr, status, error) {
-                        alert("You already have 3 books borrowed");
-                    }
+                        console.error("Error occurred:", error);
+                        alert("An unexpected error occurred. Please try again later.");
+                        }
                 });
             } else {
-                addToCart(); // Proceed directly if action is Buy
+                addToCart(); // Proceed directly if action = Buy
             }
 
             function addToCart() {

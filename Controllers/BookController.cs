@@ -271,7 +271,7 @@ public class BookController : Controller
         }
 
         bool isOnSale = book.isOnSale == 1;
-        CartItem addItem = new CartItem(book.ISBN, book.Title, cartAction, price, quantity, isOnSale, book.SalePercentage);
+        CartItem addItem = new CartItem(book.ISBN, book.Title, book.Author, cartAction, price, quantity, isOnSale, book.SalePercentage);
         ShoppingCart.Add(addItem);
         TempData["AddToCartMessage"] = "SUCCESS";
         return RedirectToAction("Index", "Home");
