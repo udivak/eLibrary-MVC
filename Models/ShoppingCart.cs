@@ -53,5 +53,10 @@ namespace eLibrary.Models
             var serializedCart = JsonSerializer.Serialize(shoppingCart);
             Session.SetString("ShoppingCart", serializedCart);
         }
+        public static int GetBorrowdBookCount()
+        {
+            var shoppingCart = GetShoppingCart();
+            return shoppingCart.Count(item => item.Action == "Borrow");
+        }
     }
 }
