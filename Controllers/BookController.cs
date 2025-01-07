@@ -235,6 +235,7 @@ public class BookController : Controller
         }
         return View("BookAdded", addedBook);
     }
+    
     public async Task<IActionResult> AddToCart(string isbn, string cartAction, string qty)
     {
         int quantity;
@@ -246,7 +247,7 @@ public class BookController : Controller
         {
             quantity = 0;
         }
-        var book = _dbContext.Books.FirstOrDefault(b => b.ISBN == isbn);
+        var book = await _dbContext.Books.FirstOrDefaultAsync(b => b.ISBN == isbn);
         if (book == null)
             return RedirectToAction("Error", "Home");
         TempData["BookTitle"] = $"{book.Title}";
@@ -268,7 +269,9 @@ public class BookController : Controller
         {
             price = book.BorrowPrice;
         }
-        CartItem addItem = new CartItem(book.ISBN, book.Title, cartAction, price, quantity);
+
+        bool isOnSale = book.isOnSale == 1;
+        CartItem addItem = new CartItem(book.ISBN, book.Title, cartAction, price, quantity, isOnSale, book.SalePercentage);
         ShoppingCart.Add(addItem);
         TempData["AddToCartMessage"] = "SUCCESS";
         return RedirectToAction("Index", "Home");
@@ -276,14 +279,16 @@ public class BookController : Controller
     
     public async Task<IActionResult> RemoveFromCart(string isbn)
     {
-        var book = _dbContext.Books.FirstOrDefault(b => b.ISBN == isbn);
+        var book = await _dbContext.Books.FirstOrDefaultAsync(b => b.ISBN == isbn);
         if (book == null)
             return RedirectToAction("Error", "Home");
         TempData["BookTitle"] = $"'{book.Title}'";
         var shoppingCart = ShoppingCart.GetShoppingCart();
-        CartItem removedItem = shoppingCart.Find(item => item.ISBN == isbn);
-        int qty = removedItem.Quantity;
-        /*if (book.Format == "Physical")
+        var removedItem = shoppingCart.Find(item => item.ISBN == isbn);
+        if (removedItem == null)
+            return RedirectToAction("Error", "Home");
+        /*int qty = removedItem.Quantity;
+        if (book.Format == "Physical")
         {
             book.Quantity += qty;
             await _dbContext.SaveChangesAsync();
@@ -297,6 +302,7 @@ public class BookController : Controller
     {
         return View(_dbContext.Books.ToList());
     }
+    
     public IActionResult DownloadPdf(string isbn)
     {
         var book = _dbContext.Books.FirstOrDefault(b => b.ISBN == isbn);
@@ -336,5 +342,4 @@ public class BookController : Controller
             return File(pdfBytes, "application/pdf", $"{book.Title}.pdf");
         }
     }
-    
 }

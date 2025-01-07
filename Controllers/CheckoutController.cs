@@ -165,7 +165,7 @@ public class CheckoutController : Controller
 
         string accessToken = await GetPayPalAccessToken();
         string url = PaypalUrl + $"/v2/checkout/orders/{orderId}/capture";
-        string userEmail = Session.GetString("userEmail");
+        var userEmail = Session.GetString("userEmail");
 
         using (var client = new HttpClient())
         {
@@ -188,17 +188,14 @@ public class CheckoutController : Controller
 
                         foreach (CartItem item in shoppingCart)
                         {
-                            if (item == null)
-                                continue;
                             var book = _dbContext.Books.FirstOrDefault(b => b.ISBN == item.ISBN);
                             bool isPurchased = item.Action == "Buy";
                             UserBook newUserBook = new UserBook(userEmail, item.ISBN, isPurchased);
                             _dbContext.UserBook.Add(newUserBook);
                             await _dbContext.SaveChangesAsync();
                             emailBody += $"<li>{book.Title} - {item.Quantity} x ${book.BuyPrice} = ${book.BuyPrice * item.Quantity}</li>";
-
                         }
-                        int totalPrice = ShoppingCart.GetCartPrice();
+                        double totalPrice = ShoppingCart.GetCartPrice();
                         emailBody += $"</ul><p>Total: {totalPrice}$</p>";
                         await _emailService.SendEmailAsync(
                             userEmail,
