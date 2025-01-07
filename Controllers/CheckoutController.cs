@@ -193,7 +193,7 @@ public class CheckoutController : Controller
                             UserBook newUserBook = new UserBook(userEmail, item.ISBN, isPurchased);
                             _dbContext.UserBook.Add(newUserBook);
                             await _dbContext.SaveChangesAsync();
-                            emailBody += $"<li>{book.Title} - {item.Quantity} x ${book.BuyPrice} = ${book.BuyPrice * item.Quantity}</li>";
+                            emailBody += $"<li>{book.Title} - 1 x {book.BuyPrice}$ = {book.BuyPrice}$</li>";
                         }
                         double totalPrice = ShoppingCart.GetCartPrice();
                         emailBody += $"</ul><p>Total: {totalPrice}$</p>";

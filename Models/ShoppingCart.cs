@@ -43,7 +43,7 @@ namespace eLibrary.Models
         public static double GetCartPrice()
         {
             var shoppingCart = GetShoppingCart();
-            return shoppingCart.Sum(item => item.Quantity * item.Price);
+            return shoppingCart.Sum(item => item.Price);
         }
         
         public static void ClearCart()
