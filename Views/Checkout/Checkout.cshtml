@@ -35,11 +35,9 @@
                         <th class="text-truncate">Book Title</th>
                         <th class="text-truncate">Author</th>
                         <th class="text-truncate">ISBN</th>
-                        <th class="text-truncate">Quantity</th>
                         <th class="text-truncate">Action</th>
                         <th class="text-truncate">On Sale</th>
-                        <th class="text-truncate">Price Per Unit</th>
-                        <th class="text-truncate">Total Price</th>
+                        <th class="text-truncate">Price</th>
                         <th class="text-truncate w-auto">Remove From Cart</th>
                     </tr>
                     </thead>
@@ -50,7 +48,6 @@
                             <td class="text-truncate">@item.Title</td>
                             <td class="text-truncate">@item.Author</td>
                             <td class="text-truncate">@item.ISBN</td>
-                            <td>@item.Quantity</td>
                             <td>@item.Action</td>
                             @if (item.IsOnSale)
                             {
@@ -61,7 +58,6 @@
                                 <td>No</td>
                             }
                             <td>@item.Price$</td>
-                            <td>@(item.Quantity * item.Price)$</td>
                             <td class="text-center remove-from-cart-col">
                                 <a href="@Url.Action("RemoveFromCart", "Book", new { isbn = item.ISBN })" class="btn btn-danger btn-sm">X</a>
                             </td>
@@ -70,8 +66,8 @@
                     </tbody>
                     <tfoot>
                     <tr>
-                        <td colspan="8" class="text-end">Total Order Price</td>
-                        <td class="font-weight-bold">@Model.Sum(item => item.Quantity * item.Price)$</td>
+                        <td colspan="6" class="text-end">Total Order Price</td>
+                        <td class="font-weight-bold">@Model.Sum(item => item.Price)$</td>
                     </tr>
                     </tfoot>
                 </table>
@@ -102,7 +98,7 @@
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    amount : @Model.Sum(item => item.Quantity * item.Price)
+                    amount : @Model.Sum(item => item.Price)
                 })
             });
             const order = await response.json();

@@ -239,15 +239,6 @@ public class BookController : Controller
     
     public async Task<IActionResult> AddToCart(string isbn, string cartAction, string qty)
     {
-        int quantity;
-        try
-        {
-            quantity = int.Parse(qty);
-        }
-        catch (ArgumentNullException)
-        {
-            quantity = 0;
-        }
         var book = await _dbContext.Books.FirstOrDefaultAsync(b => b.ISBN == isbn);
         if (book == null)
             return RedirectToAction("Error", "Home");
@@ -272,7 +263,7 @@ public class BookController : Controller
         }
 
         bool isOnSale = book.isOnSale == 1;
-        CartItem addItem = new CartItem(book.ISBN, book.Title, book.Author, cartAction, price, quantity, isOnSale, book.SalePercentage);
+        CartItem addItem = new CartItem(book.ISBN, book.Title, book.Author, cartAction, price, isOnSale, book.SalePercentage);
         ShoppingCart.Add(addItem);
         TempData["AddToCartMessage"] = "SUCCESS";
         return RedirectToAction("Index", "Home");
