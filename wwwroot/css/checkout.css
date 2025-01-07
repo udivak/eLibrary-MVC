@@ -20,3 +20,26 @@
 .remove-from-cart-col {
     width: 40px;
 }
+
+.feedback-btn {
+    margin: 30px;
+}
+
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.w-auto {
+    width: auto !important;
+}
+
+.feedback-button {
+    display: inline-block;
+    width: auto;
+    max-width: 200px;
+    margin: 0 auto;
+    margin-top: 1rem;
+    text-align: center;
+}

@@ -7,12 +7,13 @@
     
     if (TempData["RemoveFromCartMessage"] != null)
     {
-        string msg = TempData["BookTitle"].ToString() + TempData["RemoveFromCartMessage"].ToString();
+        string msg = TempData["BookTitle"] + TempData["RemoveFromCartMessage"].ToString();
         var jsonMsg = JsonSerializer.Serialize(msg);
         <script>
         alert('@Html.Raw(jsonMsg)');
         </script>
     }
+    
 }
 
 <link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true"/>
@@ -22,7 +23,7 @@
     <main role="main" class="pb-3">
         <div class="container">
             <h1>Checkout</h1>
-            @if (Model == null || !Model.Any())
+            @if (!Model.Any())
             {
                 <p>No items in the cart.</p>
             }
@@ -32,9 +33,11 @@
                     <thead>
                     <tr>
                         <th class="text-truncate">Book Title</th>
+                        <th class="text-truncate">Author</th>
                         <th class="text-truncate">ISBN</th>
                         <th class="text-truncate">Quantity</th>
                         <th class="text-truncate">Action</th>
+                        <th class="text-truncate">On Sale</th>
                         <th class="text-truncate">Price Per Unit</th>
                         <th class="text-truncate">Total Price</th>
                         <th class="text-truncate w-auto">Remove From Cart</th>
@@ -45,9 +48,18 @@
                     {
                         <tr>
                             <td class="text-truncate">@item.Title</td>
+                            <td class="text-truncate">@item.Author</td>
                             <td class="text-truncate">@item.ISBN</td>
                             <td>@item.Quantity</td>
                             <td>@item.Action</td>
+                            @if (item.IsOnSale)
+                            {
+                                <td>Yes</td>
+                            }
+                            else
+                            {
+                                <td>No</td>
+                            }
                             <td>@item.Price$</td>
                             <td>@(item.Quantity * item.Price)$</td>
                             <td class="text-center remove-from-cart-col">
@@ -58,15 +70,12 @@
                     </tbody>
                     <tfoot>
                     <tr>
-                        <td colspan="6" class="text-end">Total Order Price</td>
+                        <td colspan="8" class="text-end">Total Order Price</td>
                         <td class="font-weight-bold">@Model.Sum(item => item.Quantity * item.Price)$</td>
                     </tr>
                     </tfoot>
                 </table>
             }
-            <div class="text-center">
-                <a href="#" class="btn btn-lg btn-primary" id="checkout-button">Checkout</a>
-            </div>
         </div>
     </main>
 </div>
@@ -76,11 +85,10 @@
         <h2 class="text-center mb-5">Complete your order with PayPal</h2>
         <div id="notification-container"></div>
         <div id="paypal-button-container"></div>
-        
     </div>
     
-    <div class="text-center">
-        <a href="@Url.Action("eLibraryFeedback", "eLibraryFeedback")" class="btn btn-lg btn-primary feedback-button" id="feedback-button" style="display: none;">Feedback</a>
+    <div class="text-center feedback-btn">
+        <a href="@Url.Action("eLibraryFeedback", "eLibraryFeedback")" class="btn btn-lg btn-primary feedback-button" id="feedback-button" style="display: none;">Give us Feedback</a>
     </div>
 }
 
@@ -136,23 +144,3 @@
     }).render('#paypal-button-container');
 </script>
 
-<style>
-    .text-truncate {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-    
-    .w-auto {
-        width: auto !important;
-    }
-
-    .feedback-button {
-        display: inline-block;
-        width: auto;
-        max-width: 200px;
-        margin: 0 auto;
-        margin-top: 1rem;
-        text-align: center;
-    }
-</style>

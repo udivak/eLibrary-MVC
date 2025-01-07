@@ -32,6 +32,7 @@ public class UserController : Controller
         User user = new User();
         return View("UserRegistration", user);
     }
+    
     [HttpPost]
     public async Task<IActionResult> RegistrationSubmit(User newUser)
     {
@@ -71,7 +72,6 @@ public class UserController : Controller
         return View("UserRegistration", newUser);
     }
     
-    
     [HttpGet]
     public async Task<IActionResult> CanBorrowMore()
     {
@@ -79,10 +79,11 @@ public class UserController : Controller
         var userBooks = await _dbContext.UserBook.Where(ub => ub.UserEmail == userEmail && !ub.IsPurchased).CountAsync();
         if (userBooks < 3)
         {
-            return Ok();
+            return Json(new { status = "OK" });
         }
-        return Conflict("You already have 3 books borrowed");
+        return Json(new { status = "Error", message = "You already have 3 books borrowed." });
     }
+    
     public async Task<IActionResult> CheckBookAvailabilityByEmail()
     {
         var booksInStock = new List<string>();

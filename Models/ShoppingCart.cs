@@ -40,17 +40,10 @@ namespace eLibrary.Models
             return JsonSerializer.Deserialize<List<CartItem>>(serializedCart) ?? new List<CartItem>();
         }
 
-        public static int GetCartPrice()
+        public static double GetCartPrice()
         {
             var shoppingCart = GetShoppingCart();
-            int totalPrice = 0;
-            foreach (CartItem item in shoppingCart)
-            {
-                if (item == null)
-                    continue;
-                totalPrice += item.Quantity * item.Price;
-            }
-            return totalPrice;
+            return shoppingCart.Sum(item => item.Quantity * item.Price);
         }
         
         public static void ClearCart()
