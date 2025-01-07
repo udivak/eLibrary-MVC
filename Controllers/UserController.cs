@@ -78,7 +78,8 @@ public class UserController : Controller
     {
         string userEmail = HttpContext.Session.GetString("userEmail");
         var userBooks = await _dbContext.UserBook.Where(ub => ub.UserEmail == userEmail && !ub.IsPurchased).CountAsync();
-        if (userBooks < 3)
+        var borrowed_in_Cart = ShoppingCart.GetBorrowdBookCount();
+        if (userBooks + borrowed_in_Cart < 3)
         {
             return Json(new { status = "OK" });
         }
@@ -96,6 +97,8 @@ public class UserController : Controller
     
     public async Task<IActionResult> CheckBookAvailabilityByEmail()
     {
+        CheckBookStock();
+
         var booksInStock = new List<string>();
         var userEmail = HttpContext.Session.GetString("userEmail");
         var waitingList = await _dbContext.WaitingLists.Where(w => w.UserEmail == userEmail).ToListAsync();
@@ -229,7 +232,7 @@ public class UserController : Controller
         }
 
         // Current date
-        var currentDate = DateTime.Now.Date;
+        var currentDate = DateTime.Now;
 
         // Query UserBook for books that are borrowed and expire in 5 days
         var booksEndingInFiveDays = _dbContext.UserBook
@@ -241,7 +244,7 @@ public class UserController : Controller
             )
             .Where(joined => joined.UserBook.UserEmail == email &&
                              !joined.UserBook.IsPurchased &&
-                             joined.UserBook.BorrowExpiryDate.Value == currentDate.AddDays(5))
+                             joined.UserBook.BorrowExpiryDate.Value <= currentDate.AddDays(5))
             .Select(joined => new
             {
                 Title = joined.Book.Title,

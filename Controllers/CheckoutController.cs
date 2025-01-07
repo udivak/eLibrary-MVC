@@ -185,7 +185,7 @@ public class CheckoutController : Controller
                     {
                         var shoppingCart = ShoppingCart.GetShoppingCart();
                         string emailBody = "<h1>Order Confirmation</h1><p>Thank you for your order!</p><ul>";
-
+                        var totalPrice = 0;
                         foreach (CartItem item in shoppingCart)
                         {
                             var book = _dbContext.Books.FirstOrDefault(b => b.ISBN == item.ISBN);
@@ -194,8 +194,9 @@ public class CheckoutController : Controller
                             _dbContext.UserBook.Add(newUserBook);
                             await _dbContext.SaveChangesAsync();
                             emailBody += $"<li>{book.Title} - 1 x {book.BuyPrice}$ = {book.BuyPrice}$</li>";
+                            totalPrice += book.BuyPrice;
                         }
-                        double totalPrice = ShoppingCart.GetCartPrice();
+                        // double totalPrice = ShoppingCart.GetCartPrice();
                         emailBody += $"</ul><p>Total: {totalPrice}$</p>";
                         await _emailService.SendEmailAsync(
                             userEmail,
