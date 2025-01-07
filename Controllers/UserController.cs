@@ -32,6 +32,7 @@ public class UserController : Controller
         User user = new User();
         return View("UserRegistration", user);
     }
+    
     [HttpPost]
     public async Task<IActionResult> RegistrationSubmit(User newUser)
     {

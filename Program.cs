@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<EmailService>();
 // Register DB_context with dependency injection and use SQLite
 builder.Services.AddDbContext<DB_context>(options =>
-    options.UseSqlite("Data Source=eLibraryDB.db")); // Point to your SQLite file
+    options.UseSqlite("Data Source=eLibraryDB.db"));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
