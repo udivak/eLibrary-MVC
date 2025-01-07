@@ -17,7 +17,7 @@
             <h3 class="text-2xl font-semibold leading-none tracking-tight" style="color: black">My Books</h3>
         </div>
         <div class="card-content p-6">
-            <div class="scroll-area h-[600px] overflow-y-auto">
+            <div class="scroll-area h-[600px] overflow-y-auto" style="max-height: 600px; overflow-y: auto;">
                 <ul class="list-none p-0 space-y-4" id="bookList">
                     @foreach (var book in Model)
                     {
@@ -36,7 +36,7 @@
                                         var timeLeft = book.BorrowExpiryDate.Value - DateTime.Now;
                                         <p>
                                             Borrowed on: @book.BorrowDate?.ToString("g")<br />
-                                            Expires in: @timeLeft.Days days, @timeLeft.Hours hours, and @timeLeft.Minutes minutes
+                                            Expired in: @timeLeft.Days days, @timeLeft.Hours hours, and @timeLeft.Minutes minutes
                                         </p>
                                     }
                                 </div>

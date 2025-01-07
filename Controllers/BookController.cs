@@ -243,15 +243,6 @@ public class BookController : Controller
         if (book == null)
             return RedirectToAction("Error", "Home");
         TempData["BookTitle"] = $"{book.Title}";
-        /*if (book.Format == "Physical" && book.Quantity < quantity)                  //No more physical copies
-        { 
-            TempData["AddToCartMessage"] = "FAIL";
-            string currentUser = Session.GetString("userEmail");
-            var waitingList = new WaitingList(isbn, currentUser, quantity);
-            _dbContext.WaitingLists.Add(waitingList);
-            await _dbContext.SaveChangesAsync();
-            return RedirectToAction("Index", "Home");
-        }*/
         int price;
         if (cartAction == "Buy")
         {

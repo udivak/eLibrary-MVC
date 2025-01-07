@@ -260,6 +260,7 @@
                 $.ajax({
                     url: '@Url.Action("CanBorrowMore", "User")',
                     type: 'GET',
+                    data: { isbn: '@Model.Book.ISBN' },
                     success: function(response) {
                         // If the user can borrow more books, proceed with adding to cart
                         if (response.status === "OK") {
