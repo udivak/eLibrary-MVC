@@ -73,7 +73,8 @@ public class UserController : Controller
     }
     
     [HttpGet]
-    public async Task<IActionResult> CanBorrowMore()
+    [HttpPost]
+    public async Task<IActionResult> CanBorrowMore(string bookISBN)
     {
         string userEmail = HttpContext.Session.GetString("userEmail");
         var userBooks = await _dbContext.UserBook.Where(ub => ub.UserEmail == userEmail && !ub.IsPurchased).CountAsync();
@@ -81,6 +82,15 @@ public class UserController : Controller
         {
             return Json(new { status = "OK" });
         }
+        else
+        {
+            // Add the book to the waiting list
+            var waitingListItem = new WaitingList(bookISBN, userEmail, 1);
+            _dbContext.WaitingLists.Add(waitingListItem);
+            await _dbContext.SaveChangesAsync();
+            return Json(new { status = "Error", message = "You already have 3 books borrowed. The book was added to your waiting list." });
+        }
+        
         return Json(new { status = "Error", message = "You already have 3 books borrowed." });
     }
     
