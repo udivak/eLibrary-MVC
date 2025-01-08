@@ -34,7 +34,7 @@ The project is organized into the following folders:
 
 ## Database
 
-The project uses a SQL Server database to store data. The database schema is defined in the `DB_context.cs` file.
+The project uses a SQLite database to store data. The database schema is defined in the `DB_context.cs` file.
 
 ## Configuration
 
