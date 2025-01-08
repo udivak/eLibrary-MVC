@@ -35,7 +35,6 @@ public class HomeController : Controller
         featuredBooks = featuredBooks.Take(15).ToList();
         //
         return View("Index", featuredBooks);*/
-        
         List<Book> featuredBooks = await _dbContext.GetAllBooksAsync();
         if (featuredBooks == null)
         {

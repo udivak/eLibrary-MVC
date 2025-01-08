@@ -104,7 +104,7 @@ public class Book
         set => _genre = value;
     }
     
-    private int _isPopular = 0;
+    private int _isPopular;
     [Column("isPopular")]
     public int isPopular
     {
@@ -112,7 +112,7 @@ public class Book
         set => _isPopular = value;
     }
     
-    private int _isOnSale = 0;
+    private int _isOnSale;
     [Column("isOnSale")]
     public int isOnSale
     {
@@ -120,13 +120,30 @@ public class Book
         set => _isOnSale = value;
     }
     
-    private int _salePercentage = 0;
+    private int _salePercentage;
     [Column("SalePercentage")]
     public int SalePercentage
     {
         get => _salePercentage;
         set => _salePercentage = value;
     }
+    
+    private DateTime? _isOnSaleDate;
+    [Column("isOnSaleDate")]
+    public DateTime? isOnSaleDate
+    {
+        get => _isOnSaleDate;
+        set => _isOnSaleDate = value;
+    }
+    
+    private DateTime? _isOnSaleExpiryDate;
+    [Column("isOnSaleExpiryDate")]
+    public DateTime? isOnSaleExpiryDate
+    {
+        get => _isOnSaleExpiryDate;
+        set => _isOnSaleExpiryDate = value;
+    }
+    
     
     public Book()
     {
@@ -147,6 +164,8 @@ public class Book
         Format = format;
         Genre bookGenre = (Genre)Enum.Parse(typeof(Genre), genre);
         Genre = bookGenre;
+        isOnSaleDate = null;
+        isOnSaleExpiryDate = null;
     }
 
 }
