@@ -10,6 +10,7 @@ using iText.Layout;
 using iText.Layout.Element;
 using System.IO;
 using System.Reflection.Metadata;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Data.Sqlite;
 
 namespace eLibrary.Controllers;
@@ -140,9 +141,84 @@ public class BookController : Controller
         return View("AddBook", book);
     }
 
-    public IActionResult DeleteBook(Book deletedBook)       //Delete new book without adding to DB
+    [HttpDelete]
+    public async Task<IActionResult> DeleteBook(string deletedBookISBN)
     {
-        return View("DeleteBook", deletedBook);
+        var deletedBook = _dbContext.Books.FirstOrDefault(b => b.ISBN == deletedBookISBN);
+        //ViewBag.DeletedBookTitle = deletedBook.Title;
+        if (deletedBook == null)
+        {
+            TempData["DeleteBookMessage"] = "FAIL";
+            return RedirectToAction("Index", "Home");
+        }
+        var deletedBookReviews = _dbContext.GetBookReviewsAsync(deletedBookISBN).Result;
+        var userBooks = _dbContext.GetAllUserBookAsync(deletedBookISBN).Result;
+        var waitingLists = _dbContext.GetAllWaitingListAsync(deletedBookISBN).Result;
+        
+        _dbContext.RemoveRange(deletedBookReviews);
+        _dbContext.RemoveRange(userBooks);
+        _dbContext.RemoveRange(waitingLists);
+        _dbContext.Remove(deletedBook);
+        
+        await _dbContext.SaveChangesAsync();
+        
+        //return RedirectToAction("DeleteBookPage", "Book", deletedBook, deletedBook.Title);
+        return Json(new { deletedBook = "null", title = deletedBook.Title });
+    }
+
+    public IActionResult DeleteBookPage(Book deletedBook, string title)
+    {
+        if (string.IsNullOrEmpty(deletedBook.Title))
+        {
+            deletedBook.Title = title;
+        }
+        return View("BookDeleted", deletedBook);
+    }
+
+    [HttpPatch]
+    public async Task<IActionResult> TogglePopular(string isbn)
+    {
+        var book = await _dbContext.Books.FirstOrDefaultAsync(b => b.ISBN == isbn);
+        string msg;
+        if (book == null)
+        {
+            return NotFound(new { msg = "Book not found, please try again."});
+        }
+        if (book.isPopular == 1)
+        {
+            book.isPopular = 0;
+            msg = " has been marked as not popular.";
+        }
+        else
+        {
+            book.isPopular = 1;
+            msg = " has been marked as popular.";
+        }
+        await _dbContext.SaveChangesAsync();
+        return Ok(new { title = book.Title, msg });
+    }
+    
+    [HttpPatch]
+    public async Task<IActionResult> ToggleOnSale(string isbn)
+    {
+        var book = await _dbContext.Books.FirstOrDefaultAsync(b => b.ISBN == isbn);
+        string msg;
+        if (book == null)
+        {
+            return NotFound(new { msg = "Book not found, please try again."});
+        }
+        if (book.isOnSale == 1)
+        {
+            book.isOnSale = 0;
+            msg = " has been marked as not on sale.";
+        }
+        else
+        {
+            book.isOnSale = 1;
+            msg = " has been marked as on sale.";
+        }
+        await _dbContext.SaveChangesAsync();
+        return Ok(new { title = book.Title, msg });
     }
     
     [HttpGet]

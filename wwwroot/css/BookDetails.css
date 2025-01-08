@@ -54,6 +54,15 @@
     margin-left: 10px;
 }
 
+.pdf-btn {
+    margin-left: 10px;
+    color: #000000 !important;
+}
+
+.add-to-cart-btn, .on-sale-btn, .popular-btn {
+    margin-left: 10px;
+}
+
 .book-details-container .write-a-review-btn {
     margin-right: 10px;
     margin-left: 10px;

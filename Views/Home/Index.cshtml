@@ -47,7 +47,19 @@
         }
         TempData["BookRatingMSG"] = null;
     }
-    
+
+    if (TempData["DeleteBookMessage"] != null)
+    {
+        if (TempData["DeleteBookMessage"].ToString().Equals("SUCCESS"))
+        {
+        }
+        
+        if (TempData["DeleteBookMessage"].ToString().Equals("FAIL"))
+        {
+            msg = "An error occured while deleting the book.";
+        }
+        
+    }
     if (!string.IsNullOrEmpty(msg))
     {
         var jsonMsg = JsonSerializer.Serialize(msg);

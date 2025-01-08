@@ -85,7 +85,7 @@ public class Book
         set => _ageLimit = value;
     }
 
-    private string _format; //eBook formats - PDF, epub, f2b, mobi, Physical
+    private string _format; //eBook formats - PDF, epub, f2b, mobi
     [Column("Format")]
     [Required]
     [RegularExpression("^(PDF|ePub|fb2|mobi|Physical)$")]
