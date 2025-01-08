@@ -163,7 +163,7 @@ public class BookController : Controller
         await _dbContext.SaveChangesAsync();
         
         //return RedirectToAction("DeleteBookPage", "Book", deletedBook, deletedBook.Title);
-        return Json(new { deletedBook = "null", title = deletedBook.Title });
+        return Ok(new { deletedBook = "null", title = deletedBook.Title });
     }
 
     public IActionResult DeleteBookPage(Book deletedBook, string title)

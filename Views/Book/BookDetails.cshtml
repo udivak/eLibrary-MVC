@@ -234,7 +234,6 @@
                     method: 'DELETE',
                     data: { deletedBookISBN: @Model.Book.ISBN },
                     success: function(response) {
-                        alert("Book deleted successfully.");
                         window.location.href = '@Url.Action("DeleteBookPage", "Book")?deletedBook=' + response.deletedBook + '&title=' + response.title;
                     },
                     error: function() {
