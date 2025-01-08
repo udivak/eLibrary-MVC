@@ -16,7 +16,6 @@ using Microsoft.Data.Sqlite;
 namespace eLibrary.Controllers;
 public class BookController : Controller
 {
-    
     private DB_context _dbContext;
     private readonly IHttpContextAccessor _context;
     public BookController(DB_context dbContext, IHttpContextAccessor context)
@@ -215,6 +214,8 @@ public class BookController : Controller
         else
         {
             book.isOnSale = 1;
+            book.isOnSaleDate = DateTime.Now;
+            book.isOnSaleExpiryDate = DateTime.Now.AddDays(7);
             msg = " has been marked as on sale.";
         }
         await _dbContext.SaveChangesAsync();
@@ -313,7 +314,7 @@ public class BookController : Controller
         return View("BookAdded", addedBook);
     }
     
-    public async Task<IActionResult> AddToCart(string isbn, string cartAction, string qty)
+    public async Task<IActionResult> AddToCart(string isbn, string cartAction)
     {
         var book = await _dbContext.Books.FirstOrDefaultAsync(b => b.ISBN == isbn);
         if (book == null)

@@ -21,6 +21,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IEmailService, EmailService>();
 
 builder.Services.AddHostedService<WaitlistService>();
+builder.Services.AddScoped<BookService>();
 
 // Add IHttpContextAccessor and session services
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -31,6 +32,12 @@ builder.Services.AddSession(options =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var bookService = scope.ServiceProvider.GetRequiredService<BookService>();
+    bookService.UpdateExpiredSales();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

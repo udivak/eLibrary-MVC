@@ -184,17 +184,20 @@ public class CheckoutController : Controller
                     {
                         var shoppingCart = ShoppingCart.GetShoppingCart();
                         string emailBody = "<h1>Order Confirmation</h1><p>Thank you for your order!</p><ul>";
-                        var totalPrice = 0;
                         foreach (CartItem item in shoppingCart)
                         {
-                            var book = _dbContext.Books.FirstOrDefault(b => b.ISBN == item.ISBN);
-                            bool isPurchased = item.Action == "Buy";
-                            UserBook newUserBook = new UserBook(userEmail, item.ISBN, isPurchased);
-                            _dbContext.UserBook.Add(newUserBook);
-                            await _dbContext.SaveChangesAsync();
-                            emailBody += $"<li>{book.Title} - 1 x {book.BuyPrice}$ = {book.BuyPrice}$</li>";
-                            totalPrice += book.BuyPrice;
+                            // var book = _dbContext.Books.FirstOrDefault(b => b.ISBN == item.ISBN);
+                            // bool isPurchased = item.Action == "Buy";
+                            // UserBook newUserBook = new UserBook(userEmail, item.ISBN, isPurchased);
+                            // _dbContext.UserBook.Add(newUserBook);
+                            // await _dbContext.SaveChangesAsync();
+                            // emailBody += $"<li>{book.Title} - 1 x {book.BuyPrice}$ = {book.BuyPrice}$</li>";
+                             UserBook newUserBook = new UserBook(userEmail, item.ISBN, item.Action == "Buy");
+                             await _dbContext.UserBook.AddAsync(newUserBook);
+                             await _dbContext.SaveChangesAsync();
+                             emailBody += $"<li>{item.Title} - 1 x {item.Price}$ = {item.Price}$</li>";
                         }
+                        var totalPrice = ShoppingCart.GetCartPrice();
                         // double totalPrice = ShoppingCart.GetCartPrice();
                         emailBody += $"</ul><p>Total: {totalPrice}$</p>";
                         await _emailService.SendEmailAsync(
