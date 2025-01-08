@@ -109,11 +109,12 @@
             @if (_context.HttpContext.Session.GetInt32("isAdmin") == 1)
             {
                 <button type="button" id="delete-btn" class="btn btn-danger delete-book-btn">Delete Book</button>
+                <button type="button" id="popular-btn" class="btn btn-secondary popular-btn" style="background-color: #9400D3">Mark as Popular</button>
+                <button type="button" id="on-sale-btn" class="btn btn-dark on-sale-btn">Mark on Sale</button>
             }
             <a href="@Url.Action("DownloadPdf", "Book", new { isbn = Model.Book.ISBN })" class="btn btn-warning pdf-btn">Download PDF</a>
             <div id="quantityContainer" style="display: none; margin-top: 10px;"></div>
-            <button type="button" class="btn btn-secondary btn-back" onclick="window.history.back()">Back</button>
-            <button type="button" class="btn btn-success" id="addToCartButton">Add to Cart</button>
+            <button type="button" class="btn btn-success add-to-cart-btn" id="addToCartButton">Add to Cart</button>
         </div>
         <div id="feedback-form" class="feedback-form" style="display: none;">
             <div class="review-container">
@@ -227,7 +228,6 @@
         $('#delete-btn').on('click', function() {
             const url = '@Url.Action("DeleteBook", "Book")';
             const confirmation = confirm("Are you sure you want to delete this book?");
-            console.log("in the func");
             if (confirmation) {
                 $.ajax({
                     url: url,
@@ -239,6 +239,46 @@
                     },
                     error: function() {
                         alert("Failed to delete book. Please try again.");
+                    }
+                });
+            }
+        });
+    })
+    // Mark as popular button
+    $(document).ready(function() {
+        $('#popular-btn').on('click', function() {
+            const url = '@Url.Action("TogglePopular", "Book")';
+            const confirmation = confirm("Are you sure you want to mark this book as popular?");
+            if (confirmation) {
+                $.ajax({
+                    url: url,
+                    method: 'PATCH',
+                    data: { isbn: @Model.Book.ISBN },
+                    success: function(response) {
+                        alert(response.title + response.msg);
+                    },
+                    error: function(response) {
+                        alert(response.responseJSON.msg);
+                    }
+                });
+            }
+        });
+    })
+    // Mark as not on sale button
+    $(document).ready(function() {
+        $('#on-sale-btn').on('click', function() {
+            const url = '@Url.Action("ToggleOnSale", "Book")';
+            const confirmation = confirm("Are you sure you want to mark this book as on sale?");
+            if (confirmation) {
+                $.ajax({
+                    url: url,
+                    method: 'PATCH',
+                    data: { isbn: @Model.Book.ISBN },
+                    success: function(response) {
+                        alert(response.title + response.msg);
+                    },
+                    error: function(response) {
+                        alert(response.responseJSON.msg);
                     }
                 });
             }
