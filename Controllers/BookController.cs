@@ -313,7 +313,7 @@ public class BookController : Controller
         return View("BookAdded", addedBook);
     }
     
-    public async Task<IActionResult> AddToCart(string isbn, string cartAction, string qty)
+    public async Task<IActionResult> AddToCart(string isbn, string cartAction)
     {
         var book = await _dbContext.Books.FirstOrDefaultAsync(b => b.ISBN == isbn);
         if (book == null)

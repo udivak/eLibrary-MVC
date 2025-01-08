@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using eLibrary.Services;
 
-
 namespace eLibrary.Controllers;
 public class UserController : Controller
 {
@@ -182,43 +181,37 @@ public class UserController : Controller
             _dbContext.UserBook.Remove(userBook);
             await _dbContext.SaveChangesAsync();
         }
-        return View("Profile");
+        return RedirectToAction("Profile");
     }
     
     [HttpPost]
-    public IActionResult ChangePassword(string currentPassword, string newPassword, string confirmNewPassword)
+    public async Task<IActionResult> ChangePassword(string currentPassword, string newPassword, string confirmNewPassword)
     {
         if (newPassword != confirmNewPassword)
         {
-            ModelState.AddModelError("", "New passwords do not match.");
-            return View(); // Return the same view with the error
+            TempData["ChangePasswordMsg"] = "New passwords do not match. please try again.";
+            return View("Profile");
         }
 
-        // Get the user from the database by the username or user ID
-        var username = User.Identity.Name; // Assuming you use the username to identify the user
-        var user = _dbContext.Users.FirstOrDefault(u => u.UserName == username); 
-
+        var userEmail = Session.GetString("userEmail");
+        var user = _dbContext.Users.FirstOrDefault(u => u.Email == userEmail); 
         if (user == null)
         {
-            return NotFound(); // If user not found
+            return NotFound();
         }
-
-        // Verify the current password with the stored hashed password
-        if (!BCrypt.Net.BCrypt.Verify(currentPassword, user.Password)) // Assuming password is hashed
+        
+        if (!BCrypt.Net.BCrypt.Verify(currentPassword, user.Password))
         {
-            ModelState.AddModelError("", "Current password is incorrect.");
-            return View(); // Return the same view with the error
+            TempData["ChangePasswordMsg"] = "Current password is incorrect. please try again.";
+            return RedirectToAction("Profile");
         }
-
-        // Hash the new password
+        
         var hashedNewPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
-
-        // Update the password in the database
         user.Password = hashedNewPassword;
-        _dbContext.SaveChanges(); // Save changes to the database
+        await _dbContext.SaveChangesAsync();
 
-        TempData["SuccessMessage"] = "Password changed successfully.";
-        return RedirectToAction("Profile"); // Redirect to the profile or success page
+        TempData["ChangePasswordMsg"] = "Password changed successfully.";
+        return RedirectToAction("Profile");
     }
     
     [HttpGet]
