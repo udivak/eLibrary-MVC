@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace eLibrary.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -59,14 +61,14 @@ public class UserBookController : Controller
 
     // Clean up expired borrowed books
     [HttpPost]
-    public IActionResult CleanupExpiredBorrowedBooks()
+    public async Task<IActionResult> CleanupExpiredBorrowedBooks()
     {
-        var expiredBooks = _dbContext.UserBook
+        var expiredBooks = await  _dbContext.UserBook
             .Where(ub => !ub.IsPurchased && ub.BorrowExpiryDate < DateTime.Now)
-            .ToList();
+            .ToListAsync();
 
         _dbContext.UserBook.RemoveRange(expiredBooks);
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
 
         return Ok($"{expiredBooks.Count} expired borrowed books removed.");
     }

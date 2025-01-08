@@ -171,7 +171,6 @@ public class UserController : Controller
         return Ok();
     }
     
-    
     public async Task<IActionResult> DeleteFromMyList(string bookISBN)
     {
         string userEmail = HttpContext.Session.GetString("userEmail");
@@ -185,10 +184,10 @@ public class UserController : Controller
         }
         return View("Profile");
     }
+    
     [HttpPost]
     public IActionResult ChangePassword(string currentPassword, string newPassword, string confirmNewPassword)
     {
-        // Validate the passwords
         if (newPassword != confirmNewPassword)
         {
             ModelState.AddModelError("", "New passwords do not match.");
@@ -285,8 +284,6 @@ public class UserController : Controller
         // Return success response
         return Ok(new { Message = "Email notification sent successfully.", Books = booksEndingInFiveDays });
     }
-
-
     
     public IActionResult RegistrationSuccessful(string email)
     {

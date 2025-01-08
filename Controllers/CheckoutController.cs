@@ -39,8 +39,7 @@ public class CheckoutController : Controller
        else
        {
            cartItems = JsonSerializer.Deserialize<List<CartItem>>(serializedCart);
-           Console.WriteLine(cartItems);
-           if (cartItems == null)                                                   //Deserialize failed
+           if (cartItems == null)                                        //Deserialize failed
            {
                cartItems = new List<CartItem>();
            }
