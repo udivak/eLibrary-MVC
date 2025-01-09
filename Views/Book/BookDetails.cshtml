@@ -99,6 +99,12 @@
                         <option value="Borrow">Borrow</option>
                     </select>
                 }
+                @if (Model.Book.isPopular == 1)
+                {
+                    <p>
+                        <span class="badge text-white">Most Popular</span>
+                    </p>
+                }
             </div>
         </div>
         <div class="card-footer text-end">

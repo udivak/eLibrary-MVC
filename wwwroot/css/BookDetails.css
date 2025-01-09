@@ -205,3 +205,11 @@
     color: red;
     font-weight: bold;
 }
+
+.badge {
+    font-size: 1.5rem;
+    padding: 0.5em 1em;
+    border-radius: 0.5em;
+    background-color: #9939c5;
+    margin-left: 10px;
+}
