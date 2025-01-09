@@ -1,17 +1,19 @@
 *, *::after, *::before {
     box-sizing: border-box;
 }
+
 .spinner-container {
-    position: absolute; /* Allow absolute positioning for centering */
+    position: absolute; 
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* Center it precisely */
+    transform: translate(-50%, -50%); 
     width: 50%;
     height: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 .spinner{
     width: 100px;
     height: 100px;
@@ -23,6 +25,7 @@
     position: relative;
     animation: text-color 2s ease-in-out infinite;
 }
+
 .spinner-sector{
     position: absolute;
     width: 100%;
@@ -32,25 +35,26 @@
     mix-blend-mode: overlay;
     animation: rotate var(--duration) var(--timing) infinite;
     pointer-events: none;
-    
 }
+
 .spinner-sector-hard_blue{
     border-left-color: #052c65;
     --duration: 1.5s;
     --timing: ease-in-out;
 }
+
 .spinner-sector-blue{
     border-top-color: #0b5ed7;
     --duration: 2s;
     --timing: ease-in;
-
 }
+
 .spinner-sector-soft-blue{
     border-right-color: #0dcaf0;
     --duration: 2.5s;
     --timing: ease-out;
-    
 }
+
 @keyframes rotate {
     0%{
         transform: rotate(0deg);
@@ -59,6 +63,7 @@
         transform: rotate(360deg);
     }
 }
+
 @keyframes text-color{
     0%, 100%{
         color: rgba(0,0,0,1);
@@ -70,6 +75,7 @@
         color: rgba(0,0,0,0.1);
     }
 }
+
 #content {
     opacity: 0;
     transition: opacity 0.5s ease-in-out;

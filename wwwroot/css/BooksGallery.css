@@ -11,82 +11,82 @@
 }
 
 a {
-    text-decoration: none; /* Remove underline from the entire link */
-    color: inherit; /* Optional: Maintain default text color */
+    text-decoration: none;
+    color: inherit;
 }
 
 a:hover {
-    text-decoration: none; /* Prevent underline on hover */
+    text-decoration: none;
 }
 
 .underline {
-    text-decoration: underline; /* Apply underline only to this class */
-    font-weight: bold; /* Optional: Bold text for attribute names */
+    text-decoration: underline;
+    font-weight: bold;
 }
 
 .sale-price {
-    color: red; /* Optional: Highlight the sale price in red */
-    font-weight: bold; /* Optional: Make the sale price bold */
+    color: red;
+    font-weight: bold;
 }
 
 .featured-books .row {
     display: flex;
-    flex-wrap: wrap; /* Allows cards to wrap based on screen size */
+    flex-wrap: wrap;
     justify-content: space-between;
 }
 
 .book-card {
-    width: 400px; /* Set a fixed width */
-    height: 685px; /* Set a fixed height */
+    width: 400px;
+    height: 685px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Ensures content is spaced evenly */
+    justify-content: space-between;
     align-items: center;
-    margin: auto; /* Centers the cards horizontally */
+    margin: auto;
     margin-bottom: 15px !important;
     margin-right: 10px !important;
     margin-left: 10px !important;
-    text-align: center; /* Centers the text content inside the card */
+    text-align: center;
 }
 
 .book-img {
-    width: 100%; /* Make the image span the width of the card */
-    height: 350px; /* Set a fixed height for the image */
-    object-fit: contain; /* Ensure the image fits properly without distortion */
-    border-radius: 5px; /* Optional: Add rounded corners to the image */
+    width: 100%; 
+    height: 350px; 
+    object-fit: contain; 
+    border-radius: 5px; 
 }
 
 .book-card .card-body {
-    flex-grow: 1; /* Makes the card body stretch to fill remaining space */
+    flex-grow: 1; 
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
 }
 
 .card-body p {
-    margin-bottom: 5px; /* Add consistent spacing between text */
+    margin-bottom: 5px; 
 }
 
 @media (max-width: 1200px) {
     .col-md-3 {
-        flex: 0 0 25%; /* Four cards per row for larger screens */
+        flex: 0 0 25%; 
     }
 }
 
 @media (max-width: 992px) {
     .col-md-3 {
-        flex: 0 0 33.33%; /* Three cards per row for medium screens */
+        flex: 0 0 33.33%; 
     }
 }
 
 @media (max-width: 768px) {
     .col-md-3 {
-        flex: 0 0 50%; /* Two cards per row for smaller screens */
+        flex: 0 0 50%; 
     }
 }
 
 @media (max-width: 576px) {
     .col-md-3 {
-        flex: 0 0 100%; /* One card per row for extra small screens */
+        flex: 0 0 100%; 
     }
 }

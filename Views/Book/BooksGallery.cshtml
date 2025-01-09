@@ -7,7 +7,7 @@
     Layout = "_Layout";
 }
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-<link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/BooksGallery.css" asp-append-version="true"/>
 
 <div class="featured-books">
@@ -55,7 +55,7 @@
     @{
         int totalBooks = Model.Count();
         int booksPerRow = 4;
-        int totalRows = (int)Math.Ceiling(totalBooks / (double)booksPerRow); // Calculate the total number of rows
+        int totalRows = (int)Math.Ceiling(totalBooks / (double)booksPerRow);       // Calculate the total number of rows
     }
     @for (int rowIndex = 0; rowIndex < totalRows; rowIndex++)
     {
@@ -101,7 +101,7 @@
                                     <span class="sale-price">Sale Borrow Price:</span> @(Math.Round(book.BorrowPrice * ((100 - book.SalePercentage) / 100.0), 2))$
                                 </p>
                             }
-                            @if (book.isPopular == 0 && book.isOnSale == 0)   // not popular and not in sale
+                            @if (book.isPopular == 0 && book.isOnSale == 0)   // Not popular and not in sale
                             {
                                 <p class="card-text">
                                     <span class="underline">Borrow Price:</span> @book.BorrowPrice$
@@ -128,11 +128,9 @@
         var genreDiv = document.getElementById("genreDiv");
         var yearDiv = document.getElementById("yearDiv");
 
-        // Hide both genre and year inputs initially
         genreDiv.style.display = "none";
         yearDiv.style.display = "none";
 
-        // Show the appropriate field based on the sort selection
         if (sortBy === 'genre') {
             genreDiv.style.display = "block";  // Show genre select
         } else if (sortBy === 'year') {
@@ -142,18 +140,18 @@
 
     // Function to apply the sorting and refresh the page with the selected parameters
     function applySorting() {
-        var sortBy = document.getElementById("sortBy").value;
-        var genre = document.getElementById("genre").value;
-        var year = document.getElementById("year").value;
+        const sortBy = document.getElementById("sortBy").value;
+        const genre = document.getElementById("genre").value;
+        const year = document.getElementById("year").value;
 
         // Redirect to the same page with query parameters for sorting
-        var url = '@Url.Action("BooksGallery", "Book")' + '?sortBy=' + sortBy;
+        let url = '@Url.Action("BooksGallery", "Book")' + '?sortBy=' + sortBy;
         if (sortBy === 'genre') {
             url += '&genre=' + genre;
         } else if (sortBy === 'year') {
             url += '&year=' + year;
         }
-        window.location.href = url;  // Redirect with query parameters
+        window.location.href = url; 
     }
 </script>
 

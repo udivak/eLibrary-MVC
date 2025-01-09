@@ -58,8 +58,8 @@
         {
             msg = "An error occured while deleting the book.";
         }
-        
     }
+    
     if (!string.IsNullOrEmpty(msg))
     {
         var jsonMsg = JsonSerializer.Serialize(msg);
@@ -70,10 +70,9 @@
 }
 
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-<link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true"/>
 <link rel="stylesheet" href="~/css/Index.css" asp-append-version="true"/>
-<!-- Include Font Awesome for stars -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
 
 
 <div class="container">
@@ -238,19 +237,16 @@ document.addEventListener('DOMContentLoaded', function() {
         wrap: true
     });
 
-    // Get total number of slides
     var totalSlides = carousel.querySelectorAll('.carousel-item').length;
     var currentSlide = 0;
 
     carousel.addEventListener('slide.bs.carousel', function (event) {
-        // Calculate the next slide index
-        if (event.direction === 'right') {  // Changed from 'left' to 'right'
+        if (event.direction === 'right') {
             currentSlide = (currentSlide + 1) % totalSlides;
         } else {
             currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
         }
 
-        // Get all carousel items
         var items = carousel.querySelectorAll('.carousel-item');
         
         // Remove any existing transform styles
@@ -259,7 +255,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Ensure proper positioning for infinite loop
-        if (currentSlide === 0 && event.direction === 'right') {  // Changed from 'left' to 'right'
+        if (currentSlide === 0 && event.direction === 'right') {
             items[totalSlides - 1].style.transform = 'translateX(-100%)';
             items[0].style.transform = 'translateX(0)';
         } else if (currentSlide === totalSlides - 1 && event.direction === 'right') {
@@ -267,8 +263,7 @@ document.addEventListener('DOMContentLoaded', function() {
             items[totalSlides - 1].style.transform = 'translateX(0)';
         }
     });
-
-    // Handle the slid event (after slide complete)
+    
     carousel.addEventListener('slid.bs.carousel', function () {
         var items = carousel.querySelectorAll('.carousel-item');
         items.forEach(item => {

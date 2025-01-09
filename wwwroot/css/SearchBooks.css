@@ -1,4 +1,3 @@
-/* General Styles */
 body {
     font-family: Arial, sans-serif;
     background-color: #f8f9fa;
@@ -10,60 +9,53 @@ body {
     margin-top: 50px;
 }
 
-/* Category Buttons Style */
 .category-button {
     margin: 5px;
     width: 120px;
 }
 
-/* Adjust spacing for the search filters in one row */
 .container.mb-4 .row .col-md-2 {
     margin-right: 10px;
 }
 
-/* Ensure the book list container has space below the search bar */
 #bookListContainer {
     position: absolute;
-    top: 100%; /* Start right after the search bar */
+    top: 100%; 
     left: 0;
     width: 100%;
-    max-width: none; /* Remove max-width restriction */
+    max-width: none; 
     text-align: center;
-    padding: 20px 0; /* Optional: add padding if needed */
+    padding: 20px 0; 
 }
 
-/* Style for the category buttons to keep them aligned horizontally */
 .category-button {
     margin: 5px;
 }
 
-/* Ensure the search filters in one row have equal spacing and are centered */
 .container .row {
     display: flex;
     justify-content: center;
-    gap: 10px; /* Space between each filter input */
+    gap: 10px;
 }
 
-/* Ensure the buttons (Apply Filters) are aligned properly */
 #applyFilters {
     margin-top: 10px;
 }
 
-
 .spinner-container {
-    position: fixed; /* Fixed positioning for full viewport coverage */
+    position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* Center it precisely */
+    transform: translate(-50%, -50%);
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent background */
-    z-index: 9999; /* Make sure it's above all content */
-    padding: 20px; /* Add some padding for a neat appearance */
-    border-radius: 8px; /* Optional: smooth the corners */
-    width: auto; /* Let the width adjust to content */
-    height: auto; /* Let the height adjust to content */
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 9999; 
+    padding: 20px;
+    border-radius: 8px; 
+    width: auto; 
+    height: auto; 
 }
 
 .spinner{
@@ -77,6 +69,7 @@ body {
     position: relative;
     animation: text-color 2s ease-in-out infinite;
 }
+
 .spinner-sector{
     position: absolute;
     width: 100%;
@@ -86,25 +79,26 @@ body {
     mix-blend-mode: overlay;
     animation: rotate var(--duration) var(--timing) infinite;
     pointer-events: none;
-
 }
+
 .spinner-sector-hard_blue{
     border-left-color: #052c65;
     --duration: 1.5s;
     --timing: ease-in-out;
 }
+
 .spinner-sector-blue{
     border-top-color: #0b5ed7;
     --duration: 2s;
     --timing: ease-in;
-
 }
+
 .spinner-sector-soft-blue{
     border-right-color: #0dcaf0;
     --duration: 2.5s;
     --timing: ease-out;
-
 }
+
 @keyframes rotate {
     0%{
         transform: rotate(0deg);
@@ -113,6 +107,7 @@ body {
         transform: rotate(360deg);
     }
 }
+
 @keyframes text-color{
     0%, 100%{
         color: rgba(0,0,0,1);
@@ -124,6 +119,7 @@ body {
         color: rgba(0,0,0,0.1);
     }
 }
+
 #content {
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
@@ -133,7 +129,6 @@ body {
     opacity: 1;
 }
 
-/* Loader */
 .loader {
     position: fixed;
     top: 0;
@@ -174,13 +169,11 @@ body {
     }
 }
 
-/* Form Styles */
 form {
     background-color: white;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Category Buttons */
 .category-button {
     border-radius: 50px;
     padding: 10px 20px;
@@ -199,34 +192,29 @@ form {
     pointer-events: none;
 }
 
-/* Sort Dropdown */
 #sortOptions {
     font-size: 16px;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     form {
         width: 90%;
     }
-
     #sortOptions {
         width: 100%;
     }
 }
 
-
-/*spinner*/
 .container {
     margin-top: 50px;
 }
 
 .book-list-container {
-    position: relative; /* Container of the books list and loader */
+    position: relative; 
 }
 
 .spinner-container {
-    position: absolute; /* Absolute position inside the container */
+    position: absolute; 
     top: 0;
     left: 0;
     width: 50%;
@@ -234,9 +222,9 @@ form {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent background */
-    z-index: 9999; /* Ensure it is above the content */
-    display: none; /* Initially hidden */
+    background-color: rgba(255, 255, 255, 0.7); 
+    z-index: 9999; 
+    display: none; 
 }
 
 .spinner {

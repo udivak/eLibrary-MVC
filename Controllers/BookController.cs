@@ -30,7 +30,7 @@ public class BookController : Controller
         var book = _dbContext.Books.FirstOrDefault(b => b.ISBN == isbn);
         if (book == null)
         {
-            return NotFound(); // Return 404 if the book is not found
+            return NotFound();
         }
 
         string currentUser = Session.GetString("userEmail");
@@ -47,7 +47,7 @@ public class BookController : Controller
         var reviews = await _dbContext.GetBookReviewsAsync(book.ISBN);
         BookDetailsViewModel bookDetailsViewModel= new BookDetailsViewModel(book, reviews);
         
-        return View("BookDetails", bookDetailsViewModel); // Pass the book to the view
+        return View("BookDetails", bookDetailsViewModel);
     }
 
     [HttpPost]
@@ -89,14 +89,12 @@ public class BookController : Controller
     public async Task<IActionResult> BooksGallery(string sortBy, string genre, int? year)
     {
         var books = await _dbContext.GetAllBooksAsync();
-        // Apply sorting based on the chosen option
-        if (string.IsNullOrEmpty(sortBy))
+        if (string.IsNullOrEmpty(sortBy))                   // No sorting selected, return books as is (default order)
         {
-            // No sorting selected, return books as is (default order)
+            
             return View("BooksGallery", books);
         }
-        // Sorting logic
-        switch (sortBy)
+        switch (sortBy)                             // Sorting logic
         {
             case "priceAsc":
                 books = books.OrderBy(b => b.BuyPrice).ToList();
@@ -104,9 +102,9 @@ public class BookController : Controller
             case "priceDesc":
                 books = books.OrderByDescending(b => b.BuyPrice).ToList();
                 break;
-            /*case "mostPopular":
-                books = books.OrderByDescending(b => b.Popularity).ToList(); // Assuming Popularity is a property
-                break;*/
+            case "mostPopular":
+                books = books.FindAll(b => b.isPopular == 1).ToList();
+                break;
             case "genre":
                 if (!string.IsNullOrEmpty(genre))
                 {
@@ -121,10 +119,9 @@ public class BookController : Controller
                 }
                 break;
             default:
-                books = books.OrderBy(b => b.Title).ToList(); // Default sorting by title
+                books = books.OrderBy(b => b.Title).ToList();       // Default sorting by title
                 break;
         }
-
         return View("BooksGallery", books);
     }
     
@@ -133,7 +130,7 @@ public class BookController : Controller
     {
         if (ModelState.IsValid)
         {
-            _dbContext.Books.Add(book);     // Add the new book to the database
+            await _dbContext.Books.AddAsync(book);     
             await _dbContext.SaveChangesAsync(); 
             return RedirectToAction("BookAdded", new { isbn = book.ISBN });   //Success Message
         }
@@ -143,8 +140,7 @@ public class BookController : Controller
     [HttpDelete]
     public async Task<IActionResult> DeleteBook(string deletedBookISBN)
     {
-        var deletedBook = _dbContext.Books.FirstOrDefault(b => b.ISBN == deletedBookISBN);
-        //ViewBag.DeletedBookTitle = deletedBook.Title;
+        var deletedBook = await _dbContext.Books.FirstOrDefaultAsync(b => b.ISBN == deletedBookISBN);
         if (deletedBook == null)
         {
             TempData["DeleteBookMessage"] = "FAIL";
@@ -160,8 +156,6 @@ public class BookController : Controller
         _dbContext.Remove(deletedBook);
         
         await _dbContext.SaveChangesAsync();
-        
-        //return RedirectToAction("DeleteBookPage", "Book", deletedBook, deletedBook.Title);
         return Ok(new { deletedBook = "null", title = deletedBook.Title });
     }
 
@@ -226,7 +220,6 @@ public class BookController : Controller
     public async Task<IActionResult> FindABook(string title, string author, string publisher, int? year, string format, string sale, string genre)
     {
         IQueryable<Book> query = _dbContext.Books;
-
         // Apply filters based on the user's input
         if (!string.IsNullOrEmpty(title))
         {
@@ -275,38 +268,9 @@ public class BookController : Controller
     }
     
     [HttpGet]
-    public IActionResult FilterBooks(string title, string author, string genre, string publisher, int? year)
+    public async Task<IActionResult> BookAdded(string isbn)
     {
-        var books = _dbContext.Books.AsQueryable();
-        
-        if (!string.IsNullOrEmpty(title))
-            books = books.Where(b => b.Title.Contains(title));
-        if (!string.IsNullOrEmpty(author))
-            books = books.Where(b => b.Author.Contains(author));
-        if (!string.IsNullOrEmpty(genre))
-        {
-            Genre bookGenre = (Genre)Enum.Parse(typeof(Genre), genre, true);
-            books = books.Where(b => b.Genre == bookGenre);
-        }
-        if (!string.IsNullOrEmpty(publisher))
-            books = books.Where(b => b.Publisher.Contains(publisher));
-        if (year.HasValue)
-            books = books.Where(b => b.Year == year.Value);
-
-        return PartialView("FindABook", books.ToList());
-    }
-
-    public IActionResult FilterBooksByCategory(string genre)
-    {
-        Genre bookGenre = (Genre)Enum.Parse(typeof(Genre), genre, true);
-        var books = _dbContext.Books.Where(b => b.Genre == bookGenre);
-        return PartialView("FindABook", books.ToList());
-    }
-    
-    [HttpGet]
-    public IActionResult BookAdded(string isbn)
-    {
-        var addedBook = _dbContext.Books.FirstOrDefault(b => b.ISBN == isbn);
+        var addedBook = await _dbContext.Books.FirstOrDefaultAsync(b => b.ISBN == isbn);
         if (addedBook == null)             // If the book is not found in DB
         {
             return RedirectToAction("Index", "Home");
@@ -347,41 +311,27 @@ public class BookController : Controller
         var removedItem = shoppingCart.Find(item => item.ISBN == isbn);
         if (removedItem == null)
             return RedirectToAction("Error", "Home");
-        /*int qty = removedItem.Quantity;
-        if (book.Format == "Physical")
-        {
-            book.Quantity += qty;
-            await _dbContext.SaveChangesAsync();
-        }*/
+        
         ShoppingCart.Remove(removedItem);
         TempData["RemoveFromCartMessage"] = " has been removed from cart.";
         return RedirectToAction("CheckoutPage", "Checkout");
     }
-
-    public IActionResult SearchResults()
-    {
-        return View(_dbContext.Books.ToList());
-    }
     
-    public IActionResult DownloadPdf(string isbn)
+    public async Task<IActionResult> DownloadPdf(string isbn)
     {
-        var book = _dbContext.Books.FirstOrDefault(b => b.ISBN == isbn);
+        var book = await _dbContext.Books.FirstOrDefaultAsync(b => b.ISBN == isbn);
         if (book == null)
         {
             return NotFound();
         }
-
-        // Create a memory stream to hold the PDF data
         using (var memoryStream = new MemoryStream())
         {
-            // Create a PdfWriter instance
             using (var writer = new PdfWriter(memoryStream))
             {
                 using (var pdfDocument = new PdfDocument(writer))
                 {
                     var document = new iText.Layout.Document(pdfDocument);
-
-                    // Add content to the PDF document
+                    
                     document.Add(new Paragraph($"Book Title: {book.Title}"));
                     document.Add(new Paragraph($"Author: {book.Author}"));
                     document.Add(new Paragraph($"ISBN: {book.ISBN}"));
@@ -390,15 +340,11 @@ public class BookController : Controller
                     document.Add(new Paragraph($"Genre: {book.Genre}"));
                     document.Add(new Paragraph($"Pre: You Need To Buy The Book First!!!"));
 
-                    // Close the document to finalize the PDF
                     document.Close();
                 }
             }
-
-            // Convert to byte array before the stream is disposed
             byte[] pdfBytes = memoryStream.ToArray();
         
-            // Return the PDF bytes as a file
             return File(pdfBytes, "application/pdf", $"{book.Title}.pdf");
         }
     }

@@ -24,23 +24,15 @@ public class HomeController : Controller
     
     public async Task<IActionResult> Index()        // Home Page
     {
-        /*
-        List<Book> featuredBooks = await _dbContext.GetAllBooksAsync();
-        if (featuredBooks == null)
-        {
-            featuredBooks = new List<Book>();
-            return View("Index", featuredBooks);
-        }
-        //take most popular ones
-        featuredBooks = featuredBooks.Take(15).ToList();
-        //
-        return View("Index", featuredBooks);*/
         List<Book> featuredBooks = await _dbContext.GetAllBooksAsync();
         if (featuredBooks == null)
         {
             featuredBooks = new List<Book>();
         }
-        featuredBooks = featuredBooks.Take(15).ToList();
+        else
+        {
+            featuredBooks = featuredBooks.Take(15).ToList();
+        }
         
         List<eLibraryFeedback> feedbacks = await _dbContext.GetAlleLibraryFeedbacksAsync();
         if (feedbacks == null)

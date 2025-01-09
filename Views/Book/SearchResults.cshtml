@@ -4,7 +4,7 @@
     Layout = "_Layout";
 }
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-<link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true"/>
 <link rel="stylesheet" href="/css/SearchResults.css" asp-append-version="true">
 
 <div class="spinner-container" id="spinner">
@@ -18,7 +18,7 @@
 
 <div id="content" style="display: none;">
     <h2>Search Results</h2>
-    @if (Model != null && Model.Any())
+    @if (Model.Any())
     {
         <table class="table table-striped">
             <thead>
@@ -64,6 +64,5 @@
             content.style.display = 'block';
             content.classList.add('show'); // Add fade-in effect
         }, 2000);
-
     });
 </script>

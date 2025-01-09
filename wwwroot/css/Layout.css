@@ -1,6 +1,6 @@
 body {
     background-color: #2d2b2b !important;
-    color: #ffffff !important; /* White font color */
+    color: #ffffff !important;
 }
 
 .auth-section {
@@ -29,7 +29,6 @@ body {
 }
 #loginModal input {
     width: 70%;
-    
 }
 #loginModal label {
     width: 100%;
@@ -86,12 +85,12 @@ body {
 }
 
 .custom-navbar {
-    background-color: #2d2b2b; /* Replace with your desired background color */
-    color: white; /* Text color */
-    border-bottom: 1px solid #444444; /* Optional: Add a subtle border */
+    background-color: #2d2b2b; 
+    color: white; 
+    border-bottom: 1px solid #444444;
     margin: 20px;
     padding: 20px;
-    height: auto; /* Allow automatic height adjustment */
+    height: auto;
 }
 
 .navbar-nav .nav-item .nav-link {
@@ -118,12 +117,12 @@ body {
 }
 
 .navbar-toggler {
-    padding: 2px 5px !important; /* Reduce padding for toggler */
-    font-size: 12px !important; /* Adjust font size for toggler */
+    padding: 2px 5px !important; 
+    font-size: 12px !important;
 }
 
 .navbar-collapse {
-    margin: 0; !important /* Remove extra margins */
+    margin: 0; !important;
 }
 
 .navbar-brand {
@@ -138,17 +137,15 @@ body {
 }
 
 .navbar-nav .nav-item .nav-link:active {
-    background-color: #0056b3; /* Active button background */
+    background-color: #0056b3; 
     color: #ffffff;
 }
 
-/* Ensure the page takes full height */
 html, body {
     height: 100%;
     margin: 0;
 }
 
-/* Flex container for the page layout */
 .container-general {
     display: flex;
     flex-direction: column;
@@ -157,7 +154,7 @@ html, body {
     margin: 0;
 }
 
-/* Makes sure the main content area expands to fill available space */
+
 main {
     flex: 1;
 }
@@ -166,28 +163,26 @@ main {
     margin-bottom: 15px;
 }
 
-/* Modal Styles */
+
 .modal {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 350px;
-    /*background-color: #abcdf3;  /* Same as page background */
     background-color: #2d2b2b;
-    color: #000000;  /* Set text color to match page */
+    color: #000000;  
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 30px;
     box-sizing: border-box;
     opacity: 0;
     visibility: hidden;
-    max-height: 0; /* Start with no height (hidden) */
-    overflow: hidden; /* Prevent overflow */
-    transition: all 0.5s ease-in-out; /* Transition for sliding effect */
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.5s ease-in-out;
 }
 
-/* Modal Content */
 .modal-content {
     background-color: #abcdf3;
     display: block;
@@ -198,7 +193,6 @@ main {
 .modal-content h2 {
     color: #000000;
 }
-
 
 .modal input[type="text"], .modal input[type="password"] {
     width: 100%;
@@ -226,7 +220,6 @@ main {
     background-color: #4cb1ae;
 }
 
-/* Modal Overlay */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -239,7 +232,7 @@ main {
     visibility: visible;
     display: none;
 }
-/* Optional: Close button styling */
+
 #closeModal {
     display: block;
     margin-top: 15px;

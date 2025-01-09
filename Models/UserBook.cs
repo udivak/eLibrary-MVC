@@ -31,7 +31,7 @@ public class UserBook
         UserEmail = userEmail;
         BookISBN = isbn;
         IsPurchased = isPurchased;
-        if (!isPurchased) // false = borrowed
+        if (!isPurchased)                               // false = borrowed
         {
             BorrowDate = DateTime.Now;
             BorrowExpiryDate = DateTime.Now.AddDays(30);
