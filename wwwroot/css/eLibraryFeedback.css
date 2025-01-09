@@ -4,24 +4,21 @@
     cursor: pointer;
 }
 
-/* Star icons (default state) */
 .star {
     font-size: 2rem;
     color: gray;
     transition: color 0.2s ease;
 }
 
-/* Hover effect */
 .star:hover ~ .star {
-    color: gray; /* Reset stars to the right of hovered one */
+    color: gray; 
 }
 
 .star:hover,
 .star:hover ~ .star:first-child {
-    color: gold; /* Highlight stars from the left up to the hovered star */
+    color: gold; 
 }
 
-/* Selected stars */
 .star.selected {
     color: gold;
 }
@@ -32,8 +29,8 @@
      padding: 20px;
      border: 1px solid white;
      border-radius: 8px;
-     background-color: #2d2b2b; /* Dark background for better contrast */
-     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+     background-color: #2d2b2b; 
+     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
  }
 
 .feedback-container h2 {

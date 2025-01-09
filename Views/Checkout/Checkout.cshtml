@@ -4,7 +4,6 @@
 @{
     ViewData["Title"] = "Checkout";
     Layout = "_Layout";
-    
     if (TempData["RemoveFromCartMessage"] != null)
     {
         string msg = TempData["BookTitle"] + TempData["RemoveFromCartMessage"].ToString();
@@ -13,11 +12,10 @@
         alert('@Html.Raw(jsonMsg)');
         </script>
     }
-    
 }
 
-<link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true"/>
-<link rel="stylesheet" href="~/css/checkout.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/css/Checkout.css" asp-append-version="true"/>
 
 <div class="container-general">
     <main role="main" class="pb-3">

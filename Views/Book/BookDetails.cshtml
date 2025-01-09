@@ -8,7 +8,7 @@
 }
 
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-<link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true"/>
 <link rel="stylesheet" href="~/css/BookDetails.css" asp-append-version="true"/>
 
 <div class="book-details-container">
@@ -99,6 +99,12 @@
                         <option value="Borrow">Borrow</option>
                     </select>
                 }
+                @if (Model.Book.isPopular == 1)
+                {
+                    <p>
+                        <span class="badge text-white">Most Popular</span>
+                    </p>
+                }
             </div>
         </div>
         <div class="card-footer text-end">
@@ -163,11 +169,11 @@
                     // Create stars dynamically
                     for (let i = 1; i <= totalStars; i++) {
                         const star = document.createElement('span');
-                        star.textContent = '★'; // Star symbol
+                        star.textContent = '★'; 
                         star.classList.add('star');
                         star.dataset.value = i;
 
-                        // Add hover effect
+                        
                         star.addEventListener('mouseover', function () {
                             highlightStars(i);
                         });
@@ -177,9 +183,8 @@
                             selectStars(i);
                         });
 
-                        // Remove hover effect
                         starsContainer.addEventListener('mouseleave', function () {
-                            highlightStars(hiddenInput.value); // Retain selection on mouse leave
+                            highlightStars(hiddenInput.value);
                         });
 
                         starsContainer.appendChild(star);
@@ -199,12 +204,13 @@
 
                     // Select stars on click
                     function selectStars(rating) {
-                        hiddenInput.value = rating; // Update hidden input with selected value
-                        highlightStars(rating); // Ensure correct stars remain highlighted
+                        hiddenInput.value = rating; 
+                        highlightStars(rating);
                     }
                 });
             </script>
         </div>
+        
         <!-- BOOK REVIEWS -->
         @if (Model.BookReviews.Any())
         {
@@ -293,6 +299,7 @@
             feedbackForm.style.display = feedbackForm.style.display === 'none' ? 'block' : 'none';
         });
     });
+    
     // Add to Cart
     $(document).ready(function() {
         $('#addToCartButton').on('click', function() {
@@ -325,7 +332,7 @@
             // If action is Borrow, check if user can borrow more books
             if (cartAction === "Borrow") {
                 $.ajax({
-                    url: '@Url.Action("CanBorrowMore", "User")',
+                    url: '@Url.Action("CanBorrowMore", "User")' + '?bookISBN=@Model.Book.ISBN',
                     type: 'GET',
                     data: { isbn: '@Model.Book.ISBN' },
                     success: function(response) {
@@ -338,20 +345,19 @@
                     },
                     error: function(xhr, status, error) {
                         console.error("Error occurred:", error);
-                        alert("An unexpected error occurred. Please try again later.");
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            alert(xhr.responseJSON.message);
                         }
+                    }
                 });
             } else {
                 addToCart(); // Proceed directly if action = Buy
             }
 
             function addToCart() {
-                const url = '@Url.Action("AddToCart", "Book")' +
+                window.location.href = '@Url.Action("AddToCart", "Book")' +
                     '?isbn=@Model.Book.ISBN' +
-                    '&cartAction=' + encodeURIComponent(cartAction) +
-                    '&qty=' + encodeURIComponent(qty);
-
-                window.location.href = url;
+                    '&cartAction=' + encodeURIComponent(cartAction);
             }
         });
     });
@@ -369,8 +375,8 @@
             star.style.width = '1.5rem';
             star.style.height = '1.5rem';
             star.style.fontSize = '1.5rem';
-            star.style.color = 'gray'; // Base color for empty stars
-            star.textContent = '★'; // Star character
+            star.style.color = 'gray'; 
+            star.textContent = '★'; 
 
             if (i <= Math.floor(averageRating)) {
                 // Full star
@@ -382,7 +388,7 @@
                 overlay.textContent = '★';
                 overlay.style.color = 'gold';
                 overlay.style.position = 'absolute';
-                overlay.style.width = `${fractionalPart * 100}%`; // Width proportional to fractional part
+                overlay.style.width = `${fractionalPart * 100}%`;
                 overlay.style.height = '100%';
                 overlay.style.overflow = 'hidden';
                 overlay.style.whiteSpace = 'nowrap';
@@ -395,7 +401,6 @@
             starsContainer.appendChild(star);
         }
     });
-
 </script>
 
 

@@ -67,7 +67,6 @@
                 const clickedTab = $(this);
                 const targetPaneId = clickedTab.attr("href");
 
-                // Hide other tab panes and activate the clicked tab
                 $(".tab-pane").removeClass("show active");
                 $(".profile-nav-link").removeClass("active");
                 clickedTab.addClass("active");
@@ -79,10 +78,10 @@
                 $(targetPaneId).addClass("show active");
 
                 // Update content card background color based on the active tab
-                $("#content-card").addClass("active"); // Activate content card and apply styles
+                $("#content-card").addClass("active");
             });
 
-        // Function to load tab content via AJAX
+        // Function to load tab content
             function loadTabContent(tab) {
                 const url = tab.data("url");
                 const target = tab.attr("href");
@@ -106,7 +105,7 @@
 
         function checkBookStock() {
             $.ajax({
-                url: "/User/CheckBookAvailabilityByEmail", // Replace with your server endpoint
+                url: "@Url.Action("CheckBookAvailabilityByEmail","User")", // Replace with your server endpoint
                 type: "GET",
                 success: function (data) {
                     if (data && data.success && data.booksInStock && data.booksInStock.length > 0) {

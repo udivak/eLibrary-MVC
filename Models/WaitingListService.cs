@@ -27,7 +27,6 @@ public class WaitlistService : BackgroundService
                 var dbContext = scope.ServiceProvider.GetRequiredService<DB_context>();
                 var books = await dbContext.Books.ToListAsync();
 
-                // Limit concurrency with SemaphoreSlim
                 var semaphore = new SemaphoreSlim(10); // Allow up to 10 concurrent tasks
                 var tasks = books.Select(async book =>
                 {

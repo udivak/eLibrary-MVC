@@ -47,50 +47,6 @@ public class CheckoutController : Controller
         ViewBag.PaypalClientID = PaypalClientID;
         return View("Checkout", cartItems);
     }
-
-    public void RemoveFromCart(string isbn, string qty)
-    {
-        var book = _dbContext.Books.FirstOrDefault(b => b.ISBN == isbn);
-        int quantity;
-        try
-        {
-            quantity = int.Parse(qty);
-        }
-        catch (Exception)
-        {
-            quantity = 0;
-        }
-        //book.Quantity += quantity;
-        _dbContext.SaveChangesAsync();
-        List <CartItem> shoppingCart = ShoppingCart.GetShoppingCart();
-        
-    }
-    
-    /*public IActionResult Checkout()
-    {
-        // Fetch data to populate the cart
-        List<Book> books = _dbContext.GetAllBooks().Take(4).ToList();
-        if (books == null || !books.Any()) // Check if books are not null and not empty
-        {
-            return View("Checkout", new List<CartItem>()); // Return an empty cart view if no books found
-        }
-        List<CartItem> cart = new List<CartItem>();
-        Random random = new Random();
-        foreach (var book in books)
-        {
-            CartItem temp = new CartItem(book.isbnNumber, book.Title, "Buy", book.BuyPrice, random.Next(1, 6));
-            cart.Add(temp);
-        }
-        // Ensure the session is populated before passing data to the view
-        string serializedCart = JsonSerializer.Serialize(cart);
-        Session.SetString("ShoppingCart", serializedCart);
-        // Validate the cart items
-        if (cart == null || !cart.Any())
-        {
-            return View("Checkout", new List<CartItem>());
-        }
-        return RedirectToAction("CheckoutPage", "Checkout");
-    }*/
     
     public async Task<string> Token()                 //Test Func to see the PayPal Access Token
     {
@@ -100,12 +56,6 @@ public class CheckoutController : Controller
     [HttpPost]
     public async Task<JsonResult> CreateOrder([FromBody] JsonObject data)
     {
-        // string serializedCart = Session.GetString("ShoppingCart");
-        // Console.WriteLine(serializedCart);
-        // List<CartItem> cartItems = JsonSerializer.Deserialize<List<CartItem>>(serializedCart);
-        // Console.WriteLine(cartItems);
-        // Console.WriteLine(data);
-        // Console.WriteLine(data.ToString());
         var totalAmount = data?["amount"]?.ToString();
         if (totalAmount == null)
         {
@@ -126,9 +76,9 @@ public class CheckoutController : Controller
         
         createOrderRequest.Add("purchase_units", purchasedUnits);
         
-        //get access token
+        // get access token
         string accessToken = await GetPayPalAccessToken();
-        //send request
+        // send request
         string url = PaypalUrl + "/v2/checkout/orders";
 
         using (var client = new HttpClient())
@@ -186,19 +136,12 @@ public class CheckoutController : Controller
                         string emailBody = "<h1>Order Confirmation</h1><p>Thank you for your order!</p><ul>";
                         foreach (CartItem item in shoppingCart)
                         {
-                            // var book = _dbContext.Books.FirstOrDefault(b => b.ISBN == item.ISBN);
-                            // bool isPurchased = item.Action == "Buy";
-                            // UserBook newUserBook = new UserBook(userEmail, item.ISBN, isPurchased);
-                            // _dbContext.UserBook.Add(newUserBook);
-                            // await _dbContext.SaveChangesAsync();
-                            // emailBody += $"<li>{book.Title} - 1 x {book.BuyPrice}$ = {book.BuyPrice}$</li>";
                              UserBook newUserBook = new UserBook(userEmail, item.ISBN, item.Action == "Buy");
                              await _dbContext.UserBook.AddAsync(newUserBook);
                              await _dbContext.SaveChangesAsync();
                              emailBody += $"<li>{item.Title} - 1 x {item.Price}$ = {item.Price}$</li>";
                         }
                         var totalPrice = ShoppingCart.GetCartPrice();
-                        // double totalPrice = ShoppingCart.GetCartPrice();
                         emailBody += $"</ul><p>Total: {totalPrice}$</p>";
                         await _emailService.SendEmailAsync(
                             userEmail,
