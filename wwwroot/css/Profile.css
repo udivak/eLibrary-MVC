@@ -8,15 +8,16 @@
     text-color: #ffffff
 }
 
-
 .card .card-body > div {
     margin: 0;
     border: none;
 }
+
 .nav-link {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
     font-size: 20px !important;
-    color: #052c65 !important;
+    /*color: #052c65 !important;*/
+    color: #ffffff !important;
     border: 1px solid #007bff !important;
     padding: 10px 15px !important;
     border-radius: 5px !important;
@@ -24,7 +25,6 @@
     text-decoration: none !important;
     transition: background-color 0.3s ease !important;
     margin-right: 15px !important;
-
     display: flex !important;
     align-items: center !important;
     border-right: none !important;
@@ -35,13 +35,21 @@
 
 .nav-link.active {
     background-color: #2d2b2b !important;
-    color: #000000 !important;
+    /*color: #000000 !important;*/
+    color: #FFFFFF !important;
     position: relative !important;
     z-index: 2 !important;
 }
-.sidebar .nav-item {
-    color: #000000; 
+
+.nav-link:not(.active) {
+    color: #ffffff !important;
 }
+
+.sidebar .nav-item {
+    /*color: #000000;*/
+    color: #FFFFFF;
+}
+
 .sidebar .nav-item.active {
     color: #fff3cd; 
 }

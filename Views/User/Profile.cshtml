@@ -28,18 +28,18 @@
         <div class="sidebar flex-column p-3" style="width: 250px; background-color: #0e57a0;">
             <ul class="nav nav-pills flex-column" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link profile-nav-link active" data-bs-toggle="pill" href="#MyList" role="tab" data-url="/User/MyList">
-                        <i class="bi bi-list-task me-2"></i>My List
+                    <a class="nav-link profile-nav-link active text-white" data-bs-toggle="pill" href="#MyList" role="tab" data-url="/User/MyList">
+                        <i class="bi bi-list-task me-2 text-white"></i>My List
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link profile-nav-link" data-bs-toggle="pill" href="#MyBooks" role="tab" data-url="/User/MyBooks">
-                        <i class="bi bi-book me-2"></i>My Books
+                    <a class="nav-link profile-nav-link text-white" data-bs-toggle="pill" href="#MyBooks" role="tab" data-url="/User/MyBooks">
+                        <i class="bi bi-book me-2 text-white"></i>My Books
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link profile-nav-link" data-bs-toggle="pill" href="#PersonalDetails" role="tab" data-url="/User/PersonalDetails">
-                        <i class="bi bi-person me-2"></i>Personal Details
+                    <a class="nav-link profile-nav-link text-white" data-bs-toggle="pill" href="#PersonalDetails" role="tab" data-url="/User/PersonalDetails">
+                        <i class="bi bi-person me-2 text-white"></i>Personal Details
                     </a>
                 </li>
             </ul>
@@ -70,7 +70,9 @@
                 $(".tab-pane").removeClass("show active");
                 $(".profile-nav-link").removeClass("active");
                 clickedTab.addClass("active");
-
+                
+                clickedTab.addClass("text-white");
+                
                 // Load the content if needed
                 loadTabContent(clickedTab);
 
