@@ -5,7 +5,7 @@
 }
 
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-<link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/FindABook.css" asp-append-version="true" />
 
 <!-- Hero Section -->
@@ -160,7 +160,6 @@
 </script>
 
 <script>
-    // Handle filter button click
     document.getElementById("applyFilters").addEventListener("click", function () {
         const title = document.getElementById("titleFilter").value;
         const author = document.getElementById("authorFilter").value;
@@ -177,7 +176,6 @@
         window.location.href = `/Book/FindABook?${queryString}`;
     });
 
-    // Handle genre button clicks
     document.querySelectorAll('.category-button').forEach(button => {
         button.addEventListener('click', function() {
             const genre = this.getAttribute('data-category');
@@ -185,7 +183,6 @@
         });
     });
 
-    // Set the radio button state based on the sale parameter in the URL
     document.addEventListener("DOMContentLoaded", function() {
         const urlParams = new URLSearchParams(window.location.search);
         const saleParam = urlParams.get('sale');

@@ -70,12 +70,6 @@ namespace eLibrary.Models
             return await Books.ToListAsync();
         }
         
-        // Retrieve all books sync
-        public List<Book> GetAllBooks()
-        {
-            return Books.ToList();
-        }
-        
         // Retrieve a book by ISBN
         public async Task<Book> GetBookByIsbnAsync(string isbn)
         {
@@ -106,6 +100,7 @@ namespace eLibrary.Models
                 await SaveChangesAsync();
             }
         }
+        
         public async Task<List<User>> GetAllUsersAsync()        // Retrieve all users
         {
             return await Users.ToListAsync();
@@ -129,8 +124,7 @@ namespace eLibrary.Models
             Users.Update(user);
             await SaveChangesAsync();
         }
-
-        // Delete a user by ID
+        
         public async void DeleteUserByEmailAsync(string userEmail)
         {
             var user = await GetUserByEmailAsync(userEmail);

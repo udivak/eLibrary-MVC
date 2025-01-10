@@ -11,14 +11,14 @@ eLibrary is a web-based library management system built using ASP.NET Core and E
 * Book browsing and borrowing
 * User account management
 * Waiting list management
-* Email notifications for book availability
+* Email notifications for book availability, Checkout summary
 * Payment processing using PayPal
 
 ## Technologies Used
 
 * ASP.NET Core
 * Entity Framework Core
-* SQL Server
+* SQLite
 * PayPal API
 * JavaScript and HTML/CSS for front-end development
 

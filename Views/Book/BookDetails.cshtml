@@ -8,7 +8,7 @@
 }
 
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-<link rel="stylesheet" href="~/css/_layout.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true"/>
 <link rel="stylesheet" href="~/css/BookDetails.css" asp-append-version="true"/>
 
 <div class="book-details-container">
@@ -99,6 +99,12 @@
                         <option value="Borrow">Borrow</option>
                     </select>
                 }
+                @if (Model.Book.isPopular == 1)
+                {
+                    <p>
+                        <span class="badge text-white">Most Popular</span>
+                    </p>
+                }
             </div>
         </div>
         <div class="card-footer text-end">
@@ -115,48 +121,46 @@
             <a href="@Url.Action("DownloadPdf", "Book", new { isbn = Model.Book.ISBN })" class="btn btn-warning pdf-btn">Download PDF</a>
             <div id="quantityContainer" style="display: none; margin-top: 10px;"></div>
             <button type="button" class="btn btn-success add-to-cart-btn" id="addToCartButton">Add to Cart</button>
-            <button type="button" class="btn btn-success add-to-cart-btn" id="buynowButton">Buy Now</button>
-            
-            <div id="feedback-form" class="feedback-form" style="display: none;">
-                <div class="review-container">
-                    <h2 class="text-center text-white">Submit Your Review</h2>
-                    <form id="reviewForm" class="review-form"
-                          action="@Url.Action("BookReviewSubmit", "Book")" method="post">
-                        <div class="form-group">
-                            <label for="email" class="text-white">Email address</label>
-                            <input type="email" class="form-control" id="email" name="Email" value="@userEmail" readonly required>
-                        </div>
+        </div>
+        <div id="feedback-form" class="feedback-form" style="display: none;">
+            <div class="review-container">
+                <h2 class="text-center text-white">Submit Your Review</h2>
+                <form id="reviewForm" class="review-form"
+                      action="@Url.Action("BookReviewSubmit", "Book")" method="post">
+                    <div class="form-group">
+                        <label for="email" class="text-white">Email address</label>
+                        <input type="email" class="form-control" id="email" name="Email" value="@userEmail" readonly required>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="isbn" class="text-white">Book ISBN</label>
-                            <input type="text" class="form-control" id="isbn" name="ISBN" value="@Model.Book.ISBN" readonly required>
-                        </div>
+                    <div class="form-group">
+                        <label for="isbn" class="text-white">Book ISBN</label>
+                        <input type="text" class="form-control" id="isbn" name="ISBN" value="@Model.Book.ISBN" readonly required>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="stars" class="text-white">Rating</label>
-                            <div class="stars-container" id="stars-container">
-                                <!-- Stars will be dynamically created here -->
-                            </div>
-                            <input type="hidden" id="stars" name="Stars" required>
+                    <div class="form-group">
+                        <label for="stars" class="text-white">Rating</label>
+                        <div class="stars-container" id="stars-container">
+                            <!-- Stars will be dynamically created here -->
                         </div>
+                        <input type="hidden" id="stars" name="Stars" required>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="title" class="text-white">Review Title:</label>
-                            <input type="text" class="form-control" id="title" name="Title" value="@Model.Book.Title">
-                        </div>
+                    <div class="form-group">
+                        <label for="title" class="text-white">Review Title:</label>
+                        <input type="text" class="form-control" id="title" name="Title" value="@Model.Book.Title">
+                    </div>
                         
-                        <div class="form-group">
-                            <label for="content" class="text-white">Review Content:</label>
-                            <textarea class="form-control" id="content" name="Content" rows="4" required></textarea>
-                        </div>
+                    <div class="form-group">
+                        <label for="content" class="text-white">Review Content:</label>
+                        <textarea class="form-control" id="content" name="Content" rows="4" required></textarea>
+                    </div>
 
-                        <div class="form-group text-center">
-                            <button type="submit" class="btn btn-info submit-feedback" id="submit-feedback">Submit Feedback</button>
-                        </div>
-                    </form>
-                </div>
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-info submit-feedback" id="submit-feedback">Submit Feedback</button>
+                    </div>
+                </form>
             </div>
-                <script> 
+            <script> 
                 document.addEventListener('DOMContentLoaded', function () {
                     const starsContainer = document.getElementById('stars-container');
                     const hiddenInput = document.getElementById('stars');
@@ -165,11 +169,11 @@
                     // Create stars dynamically
                     for (let i = 1; i <= totalStars; i++) {
                         const star = document.createElement('span');
-                        star.textContent = '★'; // Star symbol
+                        star.textContent = '★'; 
                         star.classList.add('star');
                         star.dataset.value = i;
 
-                        // Add hover effect
+                        
                         star.addEventListener('mouseover', function () {
                             highlightStars(i);
                         });
@@ -179,9 +183,8 @@
                             selectStars(i);
                         });
 
-                        // Remove hover effect
                         starsContainer.addEventListener('mouseleave', function () {
-                            highlightStars(hiddenInput.value); // Retain selection on mouse leave
+                            highlightStars(hiddenInput.value);
                         });
 
                         starsContainer.appendChild(star);
@@ -201,24 +204,25 @@
 
                     // Select stars on click
                     function selectStars(rating) {
-                        hiddenInput.value = rating; // Update hidden input with selected value
-                        highlightStars(rating); // Ensure correct stars remain highlighted
+                        hiddenInput.value = rating; 
+                        highlightStars(rating);
                     }
                 });
             </script>
-            </div>
-            <!-- BOOK REVIEWS -->
-            @if (Model.BookReviews.Any())
-            {
-                ViewBag.CurrentBookTitle = @Model.Book.Title;
-                @await Html.PartialAsync("_BookReviews", Model.BookReviews)
-            }
-            else
-            {
-                <p class="text-white">No reviews available for '@Model.Book.Title'.</p>
-            }
         </div>
+        
+        <!-- BOOK REVIEWS -->
+        @if (Model.BookReviews.Any())
+        {
+            ViewBag.CurrentBookTitle = @Model.Book.Title;
+            @await Html.PartialAsync("_BookReviews", Model.BookReviews)
+        }
+        else
+        {
+            <p class="text-white">No reviews available for '@Model.Book.Title'.</p>
+        }
     </div>
+</div>
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
@@ -295,23 +299,7 @@
             feedbackForm.style.display = feedbackForm.style.display === 'none' ? 'block' : 'none';
         });
     });
-    //buy now 
-    $(document).ready(function() {
-        $('#buynowButton').on('click', function() {
-            const isLoggedIn = @Json.Serialize(!string.IsNullOrEmpty(_context.HttpContext.Session.GetString("userName")));
-            if (isLoggedIn) {
-                $.ajax({
-                    url: '@Url.Action("AddToCart", "Book")',
-                    data: { isbn: '@Model.Book.ISBN', cartAction: 'Buy', qty: 1 },
-                    method: 'POST'
-                }).done(function() {
-                    window.location.href = '@Url.Action("CheckoutPage", "Checkout")';
-                });
-            } else {
-                alert('Please Log in before proceeding.');
-            }
-        });
-    });
+    
     // Add to Cart
     $(document).ready(function() {
         $('#addToCartButton').on('click', function() {
@@ -344,7 +332,7 @@
             // If action is Borrow, check if user can borrow more books
             if (cartAction === "Borrow") {
                 $.ajax({
-                    url: '@Url.Action("CanBorrowMore", "User")',
+                    url: '@Url.Action("CanBorrowMore", "User")' + '?bookISBN=@Model.Book.ISBN',
                     type: 'GET',
                     data: { isbn: '@Model.Book.ISBN' },
                     success: function(response) {
@@ -357,20 +345,19 @@
                     },
                     error: function(xhr, status, error) {
                         console.error("Error occurred:", error);
-                        alert("You already have 3 books borrowed. The book was added to your waiting list.");
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            alert(xhr.responseJSON.message);
                         }
+                    }
                 });
             } else {
                 addToCart(); // Proceed directly if action = Buy
             }
 
             function addToCart() {
-                const url = '@Url.Action("AddToCart", "Book")' +
+                window.location.href = '@Url.Action("AddToCart", "Book")' +
                     '?isbn=@Model.Book.ISBN' +
-                    '&cartAction=' + encodeURIComponent(cartAction) +
-                    '&qty=' + encodeURIComponent(qty);
-
-                window.location.href = url;
+                    '&cartAction=' + encodeURIComponent(cartAction);
             }
         });
     });
@@ -388,8 +375,8 @@
             star.style.width = '1.5rem';
             star.style.height = '1.5rem';
             star.style.fontSize = '1.5rem';
-            star.style.color = 'gray'; // Base color for empty stars
-            star.textContent = '★'; // Star character
+            star.style.color = 'gray'; 
+            star.textContent = '★'; 
 
             if (i <= Math.floor(averageRating)) {
                 // Full star
@@ -401,7 +388,7 @@
                 overlay.textContent = '★';
                 overlay.style.color = 'gold';
                 overlay.style.position = 'absolute';
-                overlay.style.width = `${fractionalPart * 100}%`; // Width proportional to fractional part
+                overlay.style.width = `${fractionalPart * 100}%`;
                 overlay.style.height = '100%';
                 overlay.style.overflow = 'hidden';
                 overlay.style.whiteSpace = 'nowrap';
@@ -414,7 +401,6 @@
             starsContainer.appendChild(star);
         }
     });
-
 </script>
 
 

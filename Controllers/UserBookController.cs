@@ -17,49 +17,7 @@ public class UserBookController : Controller
         _dbContext = dbContext;
         _context = context;
     }
-    /*
-    // Borrow a book
-    [HttpPost]
-    public IActionResult BorrowBook(int bookId, int days = 14)
-    {
-        var userEmail = HttpContext.Session.GetString("userEmail");
-        var borrowDate = DateTime.Now;
-        var expiryDate = borrowDate.AddDays(days);
-
-        var userBook = new UserBook
-        {
-            UserEmail = userEmail,
-            BookId = bookId,
-            BorrowDate = borrowDate,
-            BorrowExpiryDate = expiryDate,
-            IsPurchased = false
-        };
-        
-        _dbContext.UserBooks.Add(userBook);
-        _dbContext.SaveChanges();
-
-        return Ok("Book borrowed successfully.");
-    }
-
-    // Purchase a book
-    [HttpPost]
-    public IActionResult PurchaseBook(string userEmail, int bookId)
-    {
-        var userBook = new UserBook
-        {
-            UserEmail = userEmail,
-            BookId = bookId,
-            PurchaseDate = DateTime.Now,
-            IsPurchased = true
-        };
-
-        _dbContext.UserBooks.Add(userBook);
-        _dbContext.SaveChanges();
-
-        return Ok("Book purchased successfully.");
-    }*/
-
-    // Clean up expired borrowed books
+    
     [HttpPost]
     public async Task<IActionResult> CleanupExpiredBorrowedBooks()
     {

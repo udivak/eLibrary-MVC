@@ -10,10 +10,9 @@ public class CartItem
     public bool IsOnSale { get; set; }
     public int SalePercentage { get; set; }
     
-
     public CartItem()
     {
-        
+        //default ctor
     }
     
     public CartItem(string isbn, string title, string author, string action, int price, bool isOnSale, int salePercentage)

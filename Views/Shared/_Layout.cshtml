@@ -12,18 +12,17 @@
         </script>
     }
 }
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"]</title>
-    <link rel="stylesheet" href="/css/_layout.css">
+    <link rel="stylesheet" href="/css/Layout.css">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-    <!-- 
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/> 
-    <link rel="stylesheet" href="~/eLibrary.styles.css" asp-append-version="true"/> -->
 </head>
+
 <body>
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3">
@@ -35,12 +34,6 @@
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
-                    <!--<li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                    </li> -->
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li> -->
                     <li class="nav-item">
                         @if (_context.HttpContext.Session.GetInt32("isAdmin") == 1)
                         {
@@ -92,7 +85,7 @@
                                 <h2>Login</h2>
                                 <form action="@Url.Action("Login", "User")" method="post">
                                     <div class="form-group">
-                                        <label for="username">Email</label>
+                                        <label for="email">Email</label>
                                         <input type="text" id="email" name="email" required/>
                                     </div>
                                     <div class="form-group">
@@ -121,36 +114,34 @@
         &copy; 2024 - eLibrary - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </div>
 </footer>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const loginLink = document.getElementById('loginLink');
         const loginModal = document.getElementById('loginModal');
         const modalOverlay = document.querySelector('.modal-overlay');
-
-        // Function to show the modal with a dropdown effect
+        
         function showModal() {
-            loginModal.style.display = 'block';  // Show modal
-            modalOverlay.style.display = 'block';  // Show overlay
+            loginModal.style.display = 'block';  
+            modalOverlay.style.display = 'block'; 
 
-            // Ensure that the modal is not initially visible
+            
             loginModal.style.visibility = 'visible';
-            loginModal.style.opacity = '1';  // Make modal fully visible
-            loginModal.style.transition = 'none';  // Temporarily remove the transition
+            loginModal.style.opacity = '1'; 
+            loginModal.style.transition = 'none';
+            
+            loginModal.offsetHeight; 
 
-            // Trigger a reflow to reset the layout and enable the transition
-            loginModal.offsetHeight; // Accessing offsetHeight forces a reflow
-
-            // Now apply the transition
-            loginModal.style.transition = 'all 0.5s ease-in-out';  // Apply transition for animation
-            loginModal.style.maxHeight = '286px';  // Adjust this value based on the content height
+            loginModal.style.transition = 'all 0.5s ease-in-out';
+            loginModal.style.maxHeight = '286px';
         }
 
         // Function to hide the modal
         function hideModal() {
-            loginModal.style.maxHeight = '0';  // Collapse modal (sliding up effect)
-            loginModal.style.opacity = '0';  // Make modal invisible
-            loginModal.style.visibility = 'hidden';  // Ensure modal is hidden
-            modalOverlay.style.display = 'none';  // Hide overlay
+            loginModal.style.maxHeight = '0'; 
+            loginModal.style.opacity = '0';
+            loginModal.style.visibility = 'hidden';
+            modalOverlay.style.display = 'none';
         }
 
         // Event listeners
@@ -159,15 +150,13 @@
 
         // Close the modal when clicking outside of it
         window.addEventListener('click', function(event) {
-            // Check if the modal is currently displayed
             if (loginModal.style.display === 'block') {
-                // If the click is not inside the modal content, close the modal
                 if (!loginModal.contains(event.target) && event.target !== loginLink) {
                     hideModal();
                 }
             }
         });
-        // Hover effect for animated buttons
+        
         const animatedButtons = document.querySelectorAll(".animate-btn");
 
         animatedButtons.forEach(button => {
@@ -181,8 +170,8 @@
             });
         });
     });
-
 </script>
+
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>

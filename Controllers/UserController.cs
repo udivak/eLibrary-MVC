@@ -22,8 +22,8 @@ public class UserController : Controller
     
     public IActionResult Logout()
     {
-        Session.Clear(); // This clears all session data
-        return RedirectToAction("Index", "Home"); // Redirects to home page after logout
+        Session.Clear();
+        return RedirectToAction("Index", "Home");
     }
     
     public IActionResult Registration()
@@ -35,26 +35,22 @@ public class UserController : Controller
     [HttpPost]
     public async Task<IActionResult> RegistrationSubmit(User newUser)
     {
-        // Set the creation date and other default properties
         newUser.CreatedAt = DateTime.Today.ToString("d");
         ModelState.Remove("CreatedAt");
     
-        // Hash the password before saving to database
         newUser.Password = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
     
-        // Set default IsAdmin value
         newUser.IsAdmin = 0;
 
         if (ModelState.IsValid)
         {
-            // Add the new user to the database
-            _dbContext.Users.Add(newUser);
+            await _dbContext.Users.AddAsync(newUser);
             try
             {
                 await _emailService.SendEmailAsync(
                     newUser.Email,
                     "Registration Email",
-                    "<h1>Hello</h1><p>Thank you for registering with us. You can now log in to access your account. Have a nice day :W</p>"
+                    "<h1>Hello</h1><p>Thank you for registering iReadit. You can now log in to access your account.</p>"
                 );
             }
             catch (Exception ex)
@@ -63,10 +59,8 @@ public class UserController : Controller
             }
             await _dbContext.SaveChangesAsync();
 
-            // Redirect to RegistrationSuccessful page with email
             return RedirectToAction("RegistrationSuccessful", "User", new { email = newUser.Email });
         }
-
         // If model state is invalid, return the registration view
         return View("UserRegistration", newUser);
     }
@@ -75,28 +69,26 @@ public class UserController : Controller
     [HttpPost]
     public async Task<IActionResult> CanBorrowMore(string bookISBN)
     {
-        string userEmail = HttpContext.Session.GetString("userEmail");
+        string userEmail = Session.GetString("userEmail");
         var userBooks = await _dbContext.UserBook.Where(ub => ub.UserEmail == userEmail && !ub.IsPurchased).CountAsync();
         var borrowed_in_Cart = ShoppingCart.GetBorrowdBookCount();
         if (userBooks + borrowed_in_Cart < 3)
         {
-            return Json(new { status = "OK" });
+            return Ok(new { status = "OK" });
         }
         else
         {
             // Add the book to the waiting list
             var waitingListItem = new WaitingList(bookISBN, userEmail, 1);
-            _dbContext.WaitingLists.Add(waitingListItem);
+            await _dbContext.WaitingLists.AddAsync(waitingListItem);
             await _dbContext.SaveChangesAsync();
-            return Json(new { status = "Error", message = "You already have 3 books borrowed. The book was added to your waiting list." });
+            return BadRequest(new { status = "Error", message = "You already have 3 books borrowed. The book was added to your waiting list." });
         }
-        
-        return Json(new { status = "Error", message = "You already have 3 books borrowed." });
     }
     
     public async Task<IActionResult> CheckBookAvailabilityByEmail()
     {
-        CheckBookStock();
+        await CheckBookStock();
 
         var booksInStock = new List<string>();
         var userEmail = HttpContext.Session.GetString("userEmail");
@@ -104,40 +96,35 @@ public class UserController : Controller
         if (waitingList != null)
         {
             // Check if any books are in stock
-            foreach (var item in waitingList){
-            var book = await _dbContext.Books.FirstOrDefaultAsync(b => b.ISBN == item.BookISBN);
-            if (book != null)
+            foreach (var item in waitingList)
             {
-                booksInStock.Add(book.Title);
-                try
+                var book = await _dbContext.Books.FirstOrDefaultAsync(b => b.ISBN == item.BookISBN);
+                if (book != null)
                 {
-                    await _emailService.SendEmailAsync(
-                        item.UserEmail,
-                        "Book Availability",
-                        $"<h1>Hello</h1><p>The book {book.Title} with ISBN {item.BookISBN} is now available. You were waiting for it.</p>"
-                    );
-                    Console.WriteLine("Email sent to " + item.UserEmail);
-                    _dbContext.WaitingLists.Remove(item);
-                    await _dbContext.SaveChangesAsync();
+                    booksInStock.Add(book.Title);
+                    try
+                    {
+                        await _emailService.SendEmailAsync(
+                            item.UserEmail,
+                            "Book Availability",
+                            $"<h1>Hello</h1><p>The book {book.Title} with ISBN {item.BookISBN} is now available. You were waiting for it.</p>"
+                        );
+                        Console.WriteLine("Email sent to " + item.UserEmail);
+                        _dbContext.WaitingLists.Remove(item);
+                        await _dbContext.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error sending email to {item.UserEmail}: {ex.Message}");
+                        return StatusCode(500, new { success = false, message = "Error sending email." });
+                    }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error sending email to {item.UserEmail}: {ex.Message}");
-                    return StatusCode(500, new { success = false, message = "Error sending email." });
-                }
-            }
-
-            // Return the book title as JSON
-            // return Ok(new { success = true, booksInStock = new[] { book.Title } });
             }
             return Ok(new { success = true, booksInStock = booksInStock.ToArray() });
         }
-
         // If no books are in stock, return an empty list
         return Ok(new { success = true, booksInStock = new string[] { } });
     }
-
-    
     
     public async Task<IActionResult> CheckBookAvailability()
     {
@@ -146,7 +133,7 @@ public class UserController : Controller
         foreach (var waiting in waitingList)
         {
             var book = await _dbContext.Books.FirstOrDefaultAsync(b => b.ISBN == waiting.BookISBN);
-            if (book != null )
+            if (book != null)
             {
                 try
                 {
@@ -223,7 +210,6 @@ public class UserController : Controller
             return BadRequest(new { Message = "Email is required." });
         }
 
-        // Current date
         var currentDate = DateTime.Now;
 
         // Query UserBook for books that are borrowed and expire in 5 days
@@ -278,9 +264,9 @@ public class UserController : Controller
         return Ok(new { Message = "Email notification sent successfully.", Books = booksEndingInFiveDays });
     }
     
-    public IActionResult RegistrationSuccessful(string email)
+    public async Task<IActionResult> RegistrationSuccessful(string email)
     {
-        var userAdded = _dbContext.Users.FirstOrDefault(u => u.Email == email);
+        var userAdded = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
         if (userAdded == null)
         {
             return RedirectToAction("Index", "Home");
@@ -288,14 +274,9 @@ public class UserController : Controller
         return View("UserAdded", userAdded);
     }
 
-    public IActionResult LoginPage()            //old
+    public async Task<IActionResult> Login(string email, string password)
     {
-        return View("UserLogin");
-    }
-
-    public IActionResult Login(string email, string password)
-    {
-        var user = _dbContext.Users.FirstOrDefault(u => u.Email == email);
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
         if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))     //Login failed
         {
             ModelState.AddModelError("", "Invalid login attempt.");
@@ -308,61 +289,14 @@ public class UserController : Controller
         Session.SetInt32("isAdmin", user.IsAdmin);
         return RedirectToAction("Index", "Home");
     }
-
-    
-    public IActionResult LoginTest(string userName, string password)
-    {
-        //Assume that verify user details for now;
-        //check if the user is in the db
-        User currentUser = new User
-        {
-            UserName = userName,
-            Address = "nothing",
-            Email = "nothing",
-            CreatedAt = DateTime.Today.ToShortDateString(),
-            IsAdmin = 0,
-            Password = password,
-            FirstName = "nothing",
-            LastName = "nothing"
-        };
-        if (currentUser.IsAdmin ==0)
-        {
-            // Login successful
-            //login to admin dashboard
-            return RedirectToAction("Dashboard");  // Redirect to a Dashboard 
-        }
-        else
-        {
-            // Invalid credentials
-            // ViewBag.ErrorMessage = "Invalid username or password.";
-            //return dashboard for simple users
-            return RedirectToAction();
-        }
-    }
-
-    /*public IActionResult Checkout()
-    {
-        //Testing with current data
-        List<Book> books = _dbContext.GetAllBooks().Take(4).ToList();
-        List<CartItem> cart = new List<CartItem>();
-        Random random = new Random();
-        foreach (var book in books)
-        {
-            CartItem temp = new CartItem(book.isbnNumber, book.Title, "Buy", book.BuyPrice, random.Next(1, 6));
-            cart.Add(temp);
-        }
-
-        return View("Checkout", cart);
-    }*/
     
     public IActionResult Profile()
     {
-        List<Book> featuredBooks = _dbContext.GetAllBooks().Take(8).ToList();
         return View("Profile");
     }
+    
     public async Task<IActionResult> MyList()
     {
-        // Get the user's email from the session
         string userEmail = HttpContext.Session.GetString("userEmail");
 
         if (string.IsNullOrEmpty(userEmail))
@@ -389,31 +323,23 @@ public class UserController : Controller
                     })
                 .ToListAsync();
 
-            // Check if the waiting list is empty
             if (!waitingList.Any())
             {
-                // Log or debug to check if the waiting list is empty
                 Console.WriteLine($"Waiting list is empty for user: {userEmail}");
                 return PartialView("_MyList", new List<WaitingListViewModel>());
             }
 
-            // Return the books in the waiting list as a partial view
             return PartialView("_MyList", waitingList);
         }
         catch (Exception ex)
         {
-            // Log the error (could be improved with more sophisticated logging)
             Console.WriteLine($"Error retrieving books for user {userEmail}: {ex.Message}");
             return StatusCode(500, "An error occurred while processing your request.");
         }
     }
-
-
-
-    // Action to display the user's purchased books
+    
     public async Task<IActionResult> MyBooks()
     {
-        // Get the user's email from the session
         string userEmail = HttpContext.Session.GetString("userEmail");
 
         if (string.IsNullOrEmpty(userEmail))
@@ -450,24 +376,11 @@ public class UserController : Controller
         // Return the user books with titles as a partial view
         return PartialView("_MyBooks", userBooks);
     }
-
     
-    public IActionResult PersonalDetails()
+    public async Task<IActionResult> PersonalDetails()
     {
-        var user = _dbContext.Users.FirstOrDefault(user => user.Email == Session.GetString("userEmail"));
+        var user = await _dbContext.Users.FirstOrDefaultAsync(user => user.Email == Session.GetString("userEmail"));
         return PartialView("_PersonalDetails", user);
-    }
-    
-    private IEnumerable<Book> GetUserList()
-    {
-        // Replace with actual logic to fetch user's list
-        return new List<Book> { new Book { Title = "Book 1" }, new Book { Title = "Book 2" } };
-    }
-
-    private IEnumerable<Book> GetUserBooks()
-    {
-        // Replace with actual logic to fetch user's books
-        return new List<Book> { new Book { Title = "My Book 1" }, new Book { Title = "My Book 2" } };
     }
 
     public async Task<IActionResult> ManageUsers()
@@ -484,9 +397,7 @@ public class UserController : Controller
             return View("Error");
         }
         _dbContext.Users.Remove(deleteUser);
-        _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
         return RedirectToAction("ManageUsers");
     }
-    
-
 }

@@ -1,5 +1,4 @@
 @using System.Text.Json
-
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Profile";
@@ -13,129 +12,129 @@
     }
 }
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/Profile.css" asp-append-version="true">
+<link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true"/>
+<link rel="stylesheet" href="/css/Profile.css" asp-append-version="true">
     
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+<!-- Notifications Section -->
+<div class="notifications"></div>
 
-    <!-- Notifications Section -->
-    <div class="notifications"></div>
-
-    <div class="layout-container d-flex">
-        <!-- Sidebar with vertical tabs -->
-        <div class="sidebar flex-column p-3" style="width: 250px; background-color: #0e57a0;">
-            <ul class="nav nav-pills flex-column" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link profile-nav-link active" data-bs-toggle="pill" href="#MyList" role="tab" data-url="/User/MyList">
-                        <i class="bi bi-list-task me-2"></i>My List
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link profile-nav-link" data-bs-toggle="pill" href="#MyBooks" role="tab" data-url="/User/MyBooks">
-                        <i class="bi bi-book me-2"></i>My Books
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link profile-nav-link" data-bs-toggle="pill" href="#PersonalDetails" role="tab" data-url="/User/PersonalDetails">
-                        <i class="bi bi-person me-2"></i>Personal Details
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Content Wrapper -->
-        <div class="content-wrapper flex-grow-1 p-3">
-            <!-- Content Card Container -->
-            <div id="content-card" class="tab-content active">
-                <div class="tab-pane fade show active" id="MyList" role="tabpanel"></div>
-                <div class="tab-pane fade" id="MyBooks" role="tabpanel"></div>
-                <div class="tab-pane fade" id="PersonalDetails" role="tabpanel"></div>
-            </div>
-        </div>
+<div class="layout-container d-flex">
+    <!-- Sidebar with vertical tabs -->
+    <div class="sidebar flex-column p-3" style="width: 250px; background-color: #0e57a0;">
+        <ul class="nav nav-pills flex-column" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link profile-nav-link active text-white" data-bs-toggle="pill" href="#MyList" role="tab" data-url="/User/MyList">
+                    <i class="bi bi-list-task me-2 text-white"></i>My List
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link profile-nav-link text-white" data-bs-toggle="pill" href="#MyBooks" role="tab" data-url="/User/MyBooks">
+                    <i class="bi bi-book me-2 text-white"></i>My Books
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link profile-nav-link text-white" data-bs-toggle="pill" href="#PersonalDetails" role="tab" data-url="/User/PersonalDetails">
+                    <i class="bi bi-person me-2 text-white"></i>Personal Details
+                </a>
+            </li>
+        </ul>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Content Wrapper -->
+    <div class="content-wrapper flex-grow-1 p-3">
+        <!-- Content Card Container -->
+        <div id="content-card" class="tab-content active">
+            <div class="tab-pane fade show active" id="MyList" role="tabpanel"></div>
+            <div class="tab-pane fade" id="MyBooks" role="tabpanel"></div>
+            <div class="tab-pane fade" id="PersonalDetails" role="tabpanel"></div>
+        </div>
+    </div>
+</div>
 
-    <script>
-        $(document).ready(function () {
-            // Handle tab clicks and load content specifically for profile nav links
-            $(".profile-nav-link").on("click", function (event) {
-                event.preventDefault(); // Prevent default anchor behavior
-                const clickedTab = $(this);
-                const targetPaneId = clickedTab.attr("href");
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
-                // Hide other tab panes and activate the clicked tab
-                $(".tab-pane").removeClass("show active");
-                $(".profile-nav-link").removeClass("active");
-                clickedTab.addClass("active");
+<script>
+    $(document).ready(function () {
+        // Handle tab clicks and load content specifically for profile nav links
+        $(".profile-nav-link").on("click", function (event) {
+            event.preventDefault(); // Prevent default anchor behavior
+            const clickedTab = $(this);
+            const targetPaneId = clickedTab.attr("href");
 
-                // Load the content if needed
-                loadTabContent(clickedTab);
+            $(".tab-pane").removeClass("show active");
+            $(".profile-nav-link").removeClass("active");
+            clickedTab.addClass("active");
+            
+            clickedTab.addClass("text-white");
+            
+            // Load the content if needed
+            loadTabContent(clickedTab);
 
-                // Animate sliding effect and activate the target pane
-                $(targetPaneId).addClass("show active");
+            // Animate sliding effect and activate the target pane
+            $(targetPaneId).addClass("show active");
 
-                // Update content card background color based on the active tab
-                $("#content-card").addClass("active"); // Activate content card and apply styles
-            });
+            // Update content card background color based on the active tab
+            $("#content-card").addClass("active");
+        });
 
-        // Function to load tab content via AJAX
-            function loadTabContent(tab) {
-                const url = tab.data("url");
-                const target = tab.attr("href");
+    // Function to load tab content
+        function loadTabContent(tab) {
+            const url = tab.data("url");
+            const target = tab.attr("href");
 
-                if (url && $(target).is(":empty")) {
-                    $.ajax({
-                        url: url,
-                        type: "GET",
-                        success: function (data) {
-                            $(target).html(data);
-                        },
-                        error: function () {
-                            $(target).html("<div class='text-danger'>No Books Found</div>");
-                        }
-                    });
-                }
-        }
-
-        // Notification logic
-        const notificationDiv = $(".notifications");
-
-        function checkBookStock() {
-            $.ajax({
-                url: "/User/CheckBookAvailabilityByEmail", // Replace with your server endpoint
-                type: "GET",
-                success: function (data) {
-                    if (data && data.success && data.booksInStock && data.booksInStock.length > 0) {
-                        // Create notification message
-                        const bookTitles = data.booksInStock.join(", ");
-                        showNotification(`The following books are back in stock: ${bookTitles}`);
-                    } else {
-                        console.log("No books are back in stock.");
+            if (url && $(target).is(":empty")) {
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    success: function (data) {
+                        $(target).html(data);
+                    },
+                    error: function () {
+                        $(target).html("<div class='text-danger'>No Books Found</div>");
                     }
-                },
-                error: function () {
-                    console.error("Error checking book stock.");
+                });
+            }
+    }
+
+    // Notification logic
+    const notificationDiv = $(".notifications");
+
+    function checkBookStock() {
+        $.ajax({
+            url: "@Url.Action("CheckBookAvailabilityByEmail","User")", // Replace with your server endpoint
+            type: "GET",
+            success: function (data) {
+                if (data && data.success && data.booksInStock && data.booksInStock.length > 0) {
+                    // Create notification message
+                    const bookTitles = data.booksInStock.join(", ");
+                    showNotification(`The following books are back in stock: ${bookTitles}`);
+                } else {
+                    console.log("No books are back in stock.");
                 }
-            });
-        }
+            },
+            error: function () {
+                console.error("Error checking book stock.");
+            }
+        });
+    }
 
-        function showNotification(message) {
-            // Update notification content
-            notificationDiv.text(message);
-            // Show notification with fade-in effect
-            notificationDiv.fadeIn().delay(5000).fadeOut();
-        }
+    function showNotification(message) {
+        // Update notification content
+        notificationDiv.text(message);
+        // Show notification with fade-in effect
+        notificationDiv.fadeIn().delay(5000).fadeOut();
+    }
 
-        // Check stock every 5 minutes (300,000 ms)
-        setInterval(checkBookStock, 300000);
+    // Check stock every 5 minutes (300,000 ms)
+    setInterval(checkBookStock, 300000);
 
-        // Trigger an initial check when the page loads
-        checkBookStock();
-    });
+    // Trigger an initial check when the page loads
+    checkBookStock();
+});
 
 </script>
     

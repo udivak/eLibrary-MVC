@@ -75,7 +75,7 @@ public class BookReview
     
     public BookReview()
     {
-       
+       //default ctor
     }
 
     public BookReview(string email, string isbn, string title, int stars, string content, string userName)
