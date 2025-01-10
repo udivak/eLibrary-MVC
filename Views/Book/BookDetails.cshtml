@@ -319,8 +319,8 @@
         });
     });
     // Add to Cart
-    $(document).ready(function() {
-        $('#addToCartButton').on('click', function() {
+    $(document).ready(function () {
+        $('#addToCartButton').on('click', function () {
             let cartAction = $('#cartAction').val();
             const qty = parseInt($('#quantity').val()) || 1;
             const isLoggedIn = @Json.Serialize(!string.IsNullOrEmpty(_context.HttpContext.Session.GetString("userName")));
@@ -341,41 +341,66 @@
                 </text>
             }
 
-
             if (!isLoggedIn) {
                 alert("Please Log in before adding to cart.");
                 return;
             }
 
-            // If action is Borrow, check if user can borrow more books
-            if (cartAction === "Borrow") {
+            checkAvailability();
+
+            function checkAvailability() {
                 $.ajax({
-                    url: '@Url.Action("CanBorrowMore", "User")' + '?bookISBN=@Model.Book.ISBN',
+                    url: '@Url.Action("IsAvailable", "Book")',
                     type: 'GET',
                     data: { isbn: '@Model.Book.ISBN' },
-                    success: function(response) {
-                        // If the user can borrow more books, proceed with adding to cart
-                        if (response.status === "OK") {
-                            addToCart();
-                        } else if (response.status === "Error"){
-                            alert(response.message); // Display error message
+                    success: function (response) {
+                        console.log(response);
+                        if (response.available) {
+                            // Proceed if the book is available
+                            proceedWithCartAction();
+                        } else {
+                            // Ask the user if they want to join the waiting list
+                            const joinWaitlist = confirm("This book is currently unavailable. Would you like to join the waiting list?");
+                            proceedWithCartAction(joinWaitlist);
                         }
                     },
-                    error: function(xhr, status, error) {
-                        console.error("Error occurred:", error);
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            alert(xhr.responseJSON.message);
-                        }
+                    error: function (xhr, status, error) {
+                        console.error("Error occurred while checking availability:", error);
+                        alert("An error occurred. Please try again later.");
                     }
                 });
-            } else {
-                addToCart(); // Proceed directly if action = Buy
             }
 
-            function addToCart() {
+            function proceedWithCartAction(joinWaitlist = false) {
+                if (cartAction === "Borrow") {
+                    $.ajax({
+                        url: '@Url.Action("CanBorrowMore", "User")' + '?bookISBN=@Model.Book.ISBN',
+                        type: 'GET',
+                        data: { isbn: '@Model.Book.ISBN' },
+                        success: function (response) {
+                            if (response.status === "OK") {
+                                addToCart(joinWaitlist);
+                            } else if (response.status === "Error") {
+                                alert(response.message); // Display error message
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error occurred:", error);
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                alert(xhr.responseJSON.message);
+                            }
+                        }
+                    });
+                } else {
+                    addToCart(joinWaitlist); // Proceed directly if action = Buy
+                }
+            }
+
+            function addToCart(joinWaitlist) {
                 window.location.href = '@Url.Action("AddToCart", "Book")' +
                     '?isbn=@Model.Book.ISBN' +
-                    '&cartAction=' + encodeURIComponent(cartAction);
+                    '&cartAction=' + encodeURIComponent(cartAction) +
+                    '&joinWaitlist=' + joinWaitlist;
             }
         });
     });

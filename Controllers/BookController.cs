@@ -278,8 +278,26 @@ public class BookController : Controller
         return View("BookAdded", addedBook);
     }
     
-    public async Task<IActionResult> AddToCart(string isbn, string cartAction)
+    [HttpGet]
+    public async Task<IActionResult> IsAvailable(string isbn)
     {
+        var book = await _dbContext.Books.FirstOrDefaultAsync(b => b.ISBN == isbn);
+        if (book == null)
+        {
+            return Json(new { available = false });
+        }
+        bool isAvailable = await _dbContext.UserBook.CountAsync(ub => ub.BookISBN == isbn && !ub.IsPurchased) < 3;
+        return Json(new { available = isAvailable });
+    }
+    public async Task<IActionResult> AddToCart(string isbn, string cartAction,bool joinWaitlist)
+    {
+        if (!joinWaitlist)
+        {
+            var userEmail = _context.HttpContext.Session.GetString("userEmail");
+            var waitingListItem = new WaitingList(isbn, userEmail, 1);
+            await _dbContext.WaitingLists.AddAsync(waitingListItem);
+            await _dbContext.SaveChangesAsync();
+        }
         var book = await _dbContext.Books.FirstOrDefaultAsync(b => b.ISBN == isbn);
         if (book == null)
             return RedirectToAction("Error", "Home");

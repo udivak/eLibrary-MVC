@@ -79,9 +79,9 @@ public class UserController : Controller
         else
         {
             // Add the book to the waiting list
-            var waitingListItem = new WaitingList(bookISBN, userEmail, 1);
-            await _dbContext.WaitingLists.AddAsync(waitingListItem);
-            await _dbContext.SaveChangesAsync();
+            // var waitingListItem = new WaitingList(bookISBN, userEmail, 1);
+            // await _dbContext.WaitingLists.AddAsync(waitingListItem);
+            // await _dbContext.SaveChangesAsync();
             return BadRequest(new { status = "Error", message = "You already have 3 books borrowed. The book was added to your waiting list." });
         }
     }
