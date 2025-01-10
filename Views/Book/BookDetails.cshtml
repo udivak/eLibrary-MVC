@@ -120,7 +120,9 @@
             }
             <a href="@Url.Action("DownloadPdf", "Book", new { isbn = Model.Book.ISBN })" class="btn btn-warning pdf-btn">Download PDF</a>
             <div id="quantityContainer" style="display: none; margin-top: 10px;"></div>
-            <button type="button" class="btn btn-success add-to-cart-btn" id="addToCartButton">Add to Cart</button>
+            <button type="button" class="btn btn-success add-to-cart-btn" id="addToCartButton">Add to Cart</button> 
+            <button type="button" class="btn btn-success add-to-cart-btn" id="buynowButton">Buy Now</button>
+
         </div>
         <div id="feedback-form" class="feedback-form" style="display: none;">
             <div class="review-container">
@@ -299,7 +301,23 @@
             feedbackForm.style.display = feedbackForm.style.display === 'none' ? 'block' : 'none';
         });
     });
-    
+    //buy now
+    $(document).ready(function() {
+        $('#buynowButton').on('click', function() {
+            const isLoggedIn = @Json.Serialize(!string.IsNullOrEmpty(_context.HttpContext.Session.GetString("userName")));
+            if (isLoggedIn) {
+                $.ajax({
+                    url: '@Url.Action("AddToCart", "Book")',
+                    data: { isbn: '@Model.Book.ISBN', cartAction: 'Buy', qty: 1 },
+                    method: 'POST'
+                }).done(function() {
+                    window.location.href = '@Url.Action("CheckoutPage", "Checkout")';
+                });
+            } else {
+                alert('Please Log in before proceeding.');
+            }
+        });
+    });
     // Add to Cart
     $(document).ready(function() {
         $('#addToCartButton').on('click', function() {
