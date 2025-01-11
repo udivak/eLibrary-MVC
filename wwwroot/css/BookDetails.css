@@ -63,6 +63,11 @@
     margin-left: 10px;
 }
 
+.buy-now-btn {
+    margin-left: 10px;
+    background-color: #D9DDFC;
+}
+
 .book-details-container .write-a-review-btn {
     margin-right: 10px;
     margin-left: 10px;
@@ -210,6 +215,6 @@
     font-size: 1.5rem;
     padding: 0.5em 1em;
     border-radius: 0.5em;
-    background-color: #9939c5;
+    background-color: #00FFFF;
     margin-left: 10px;
 }

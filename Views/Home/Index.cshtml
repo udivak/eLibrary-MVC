@@ -36,7 +36,7 @@
     {
         if (TempData["BookReviewMSG"].ToString().Equals("SUCCESS"))
         {
-            msg = "Thank you! Your rating has been submitted.";
+            msg = "Thank you! Your review has been submitted.";
         }
         else
         {
@@ -154,6 +154,7 @@
                                         }
                                     </div>
                                 </a>
+                                <button type="button" class="btn btn-success buy-now-btn text-white" data-isbn="@book.ISBN">Buy Now</button>
                             </div>
                         }
                     </div>
@@ -230,45 +231,72 @@
 <!-- The Overlay -->
 <div class="modal-overlay"></div>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    var carousel = document.querySelector('#featuredBooksCarousel');
-    var carouselInstance = new bootstrap.Carousel(carousel, {
-        interval: 5000,
-        wrap: true
-    });
-
-    var totalSlides = carousel.querySelectorAll('.carousel-item').length;
-    var currentSlide = 0;
-
-    carousel.addEventListener('slide.bs.carousel', function (event) {
-        if (event.direction === 'right') {
-            currentSlide = (currentSlide + 1) % totalSlides;
-        } else {
-            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-        }
-
-        var items = carousel.querySelectorAll('.carousel-item');
-        
-        // Remove any existing transform styles
-        items.forEach(item => {
-            item.style.transform = '';
+    document.addEventListener('DOMContentLoaded', function() {
+        var carousel = document.querySelector('#featuredBooksCarousel');
+        var carouselInstance = new bootstrap.Carousel(carousel, {
+            interval: 5000,
+            wrap: true
         });
-
-        // Ensure proper positioning for infinite loop
-        if (currentSlide === 0 && event.direction === 'right') {
-            items[totalSlides - 1].style.transform = 'translateX(-100%)';
-            items[0].style.transform = 'translateX(0)';
-        } else if (currentSlide === totalSlides - 1 && event.direction === 'right') {
-            items[0].style.transform = 'translateX(100%)';
-            items[totalSlides - 1].style.transform = 'translateX(0)';
-        }
-    });
     
-    carousel.addEventListener('slid.bs.carousel', function () {
-        var items = carousel.querySelectorAll('.carousel-item');
-        items.forEach(item => {
-            item.style.transform = '';
+        var totalSlides = carousel.querySelectorAll('.carousel-item').length;
+        var currentSlide = 0;
+    
+        carousel.addEventListener('slide.bs.carousel', function (event) {
+            if (event.direction === 'right') {
+                currentSlide = (currentSlide + 1) % totalSlides;
+            } else {
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            }
+    
+            var items = carousel.querySelectorAll('.carousel-item');
+            
+            // Remove any existing transform styles
+            items.forEach(item => {
+                item.style.transform = '';
+            });
+    
+            // Ensure proper positioning for infinite loop
+            if (currentSlide === 0 && event.direction === 'right') {
+                items[totalSlides - 1].style.transform = 'translateX(-100%)';
+                items[0].style.transform = 'translateX(0)';
+            } else if (currentSlide === totalSlides - 1 && event.direction === 'right') {
+                items[0].style.transform = 'translateX(100%)';
+                items[totalSlides - 1].style.transform = 'translateX(0)';
+            }
+        });
+        
+        carousel.addEventListener('slid.bs.carousel', function () {
+            var items = carousel.querySelectorAll('.carousel-item');
+            items.forEach(item => {
+                item.style.transform = '';
+            });
         });
     });
-});
+    $(document).ready(function () {
+        $(document).on('click', '.buy-now-btn', function () {
+            const isLoggedIn = @Json.Serialize(!string.IsNullOrEmpty(_context.HttpContext.Session.GetString("userName")));
+            const isbn = $(this).data('isbn'); // Get the ISBN from the button's data attribute
+            console.log("Button clicked with ISBN:", isbn);
+
+            if (isLoggedIn) {
+                $.ajax({
+                    url: '@Url.Action("BuyNow", "Book")',
+                    data: { isbn: isbn },
+                    method: 'POST',
+                    success: function (response) {
+                        if (response.success) {
+                            window.location.href = response.redirectUrl;
+                        } else {
+                            alert(response.message || "An error occurred while processing your request.");
+                        }
+                    },
+                    error: function () {
+                        alert("Failed to process your request. Please try again.");
+                    }
+                });
+            } else {
+                alert('Please log in before proceeding.');
+            }
+        });
+    });
 </script>
