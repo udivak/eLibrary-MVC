@@ -289,11 +289,11 @@ public class BookController : Controller
         bool isAvailable = await _dbContext.UserBook.CountAsync(ub => ub.BookISBN == isbn && !ub.IsPurchased) < 3;
         return Json(new { available = isAvailable });
     }
-    public async Task<IActionResult> AddToCart(string isbn, string cartAction,bool joinWaitlist)
+    public async Task<IActionResult> AddToCart(string isbn, string cartAction, bool joinWaitlist)
     {
         if (!joinWaitlist)
         {
-            var userEmail = _context.HttpContext.Session.GetString("userEmail");
+            var userEmail = Session.GetString("userEmail");
             var waitingListItem = new WaitingList(isbn, userEmail, 1);
             await _dbContext.WaitingLists.AddAsync(waitingListItem);
             await _dbContext.SaveChangesAsync();
@@ -317,6 +317,22 @@ public class BookController : Controller
         ShoppingCart.Add(addItem);
         TempData["AddToCartMessage"] = "SUCCESS";
         return RedirectToAction("Index", "Home");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> BuyNow(string isbn)
+    {
+        if (string.IsNullOrEmpty(isbn))
+        {
+            return Json(new { success = false, message = "A problem occured passing the book's ISBN. please try again." });
+        }
+        var book = await _dbContext.Books.FirstOrDefaultAsync(b => b.ISBN == isbn);
+        if (book == null)
+            return Json(new { success = false, message = "Book not found. please try again." });
+        bool isOnSale = book.isOnSale == 1;
+        CartItem addItem = new CartItem(book.ISBN, book.Title, book.Author, "Buy", book.BuyPrice, isOnSale, book.SalePercentage);
+        ShoppingCart.Add(addItem);
+        return Json(new { success = true, redirectUrl = Url.Action("CheckoutPage", "Checkout") });
     }
     
     public async Task<IActionResult> RemoveFromCart(string isbn)

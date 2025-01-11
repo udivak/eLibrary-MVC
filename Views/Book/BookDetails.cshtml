@@ -102,7 +102,7 @@
                 @if (Model.Book.isPopular == 1)
                 {
                     <p>
-                        <span class="badge text-white">Most Popular</span>
+                        <span class="badge text-black">Most Popular</span>
                     </p>
                 }
             </div>
@@ -118,10 +118,10 @@
                 <button type="button" id="popular-btn" class="btn btn-secondary popular-btn" style="background-color: #9400D3">Mark as Popular</button>
                 <button type="button" id="on-sale-btn" class="btn btn-dark on-sale-btn">Mark on Sale</button>
             }
-            <a href="@Url.Action("DownloadPdf", "Book", new { isbn = Model.Book.ISBN })" class="btn btn-warning pdf-btn">Download PDF</a>
+            <a href="@Url.Action("DownloadPdf", "Book", new { isbn = Model.Book.ISBN })" class="btn btn-warning pdf-btn">Summary (PDF)</a>
             <div id="quantityContainer" style="display: none; margin-top: 10px;"></div>
             <button type="button" class="btn btn-success add-to-cart-btn" id="addToCartButton">Add to Cart</button> 
-            <button type="button" class="btn btn-success add-to-cart-btn" id="buynowButton">Buy Now</button>
+            <button type="button" class="btn btn-success buy-now-btn text-black" id="buynowButton">Buy Now</button>
 
         </div>
         <div id="feedback-form" class="feedback-form" style="display: none;">
@@ -301,14 +301,14 @@
             feedbackForm.style.display = feedbackForm.style.display === 'none' ? 'block' : 'none';
         });
     });
-    //buy now
+    // Buy Now
     $(document).ready(function() {
         $('#buynowButton').on('click', function() {
             const isLoggedIn = @Json.Serialize(!string.IsNullOrEmpty(_context.HttpContext.Session.GetString("userName")));
             if (isLoggedIn) {
                 $.ajax({
                     url: '@Url.Action("AddToCart", "Book")',
-                    data: { isbn: '@Model.Book.ISBN', cartAction: 'Buy', qty: 1 },
+                    data: { isbn: '@Model.Book.ISBN', cartAction: 'Buy' },
                     method: 'POST'
                 }).done(function() {
                     window.location.href = '@Url.Action("CheckoutPage", "Checkout")';
