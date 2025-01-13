@@ -100,7 +100,13 @@
                 })
             });
             const order = await response.json();
-            return order.id;
+            if (response.message != null)
+            {
+                alert(response.message);
+            }
+            else {
+                return order.id;
+            }
         },
         async onApprove(data) {
             const response = await fetch("@Url.Action("CompleteOrder", "Checkout")", {

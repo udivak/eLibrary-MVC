@@ -56,6 +56,16 @@ public class CheckoutController : Controller
     [HttpPost]
     public async Task<JsonResult> CreateOrder([FromBody] JsonObject data)
     {
+        string userEmail = Session.GetString("userEmail");
+        var shoppingCart = JsonSerializer.Deserialize<List<CartItem>>(Session.GetString("ShoppingCart"));
+        foreach (var item in shoppingCart)
+        {
+            var userBooks = await _dbContext.UserBook.Where(ub => !ub.IsPurchased && ub.BookISBN == item.ISBN).CountAsync();
+            if (userBooks >= 3)
+            {
+                return new JsonResult(new { message = $"you cant borrow copies of {item.Title}" });
+            }
+        }
         var totalAmount = data?["amount"]?.ToString();
         if (totalAmount == null)
         {
