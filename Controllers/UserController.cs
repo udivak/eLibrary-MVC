@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using eLibrary.Models;
@@ -32,13 +34,47 @@ public class UserController : Controller
         return View("UserRegistration", user);
     }
     
-    [HttpPost]
+    // [HttpPost]
+    // public async Task<IActionResult> RegistrationSubmit(User newUser)
+    // {
+    //     newUser.CreatedAt = DateTime.Today.ToString("d");
+    //     ModelState.Remove("CreatedAt");
+    //
+    //     newUser.Password = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
+    //
+    //     newUser.IsAdmin = 0;
+    //
+    //     if (ModelState.IsValid)
+    //     {
+    //         await _dbContext.Users.AddAsync(newUser);
+    //         try
+    //         {
+    //             await _emailService.SendEmailAsync(
+    //                 newUser.Email,
+    //                 "Registration Email",
+    //                 "<h1>Hello</h1><p>Thank you for registering iReadit. You can now log in to access your account.</p>"
+    //             );
+    //         }
+    //         catch (Exception ex)
+    //         {
+    //             return BadRequest($"Failed to send email: {ex.Message}");
+    //         }
+    //         await _dbContext.SaveChangesAsync();
+    //
+    //         return RedirectToAction("RegistrationSuccessful", "User", new { email = newUser.Email });
+    //     }
+    //     // If model state is invalid, return the registration view
+    //     return View("UserRegistration", newUser);
+    // }
+    
     public async Task<IActionResult> RegistrationSubmit(User newUser)
     {
         newUser.CreatedAt = DateTime.Today.ToString("d");
         ModelState.Remove("CreatedAt");
     
-        newUser.Password = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
+        using var sha256 = SHA256.Create();
+        var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(newUser.Password));
+        newUser.Password = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
     
         newUser.IsAdmin = 0;
 
@@ -64,6 +100,7 @@ public class UserController : Controller
         // If model state is invalid, return the registration view
         return View("UserRegistration", newUser);
     }
+    
     
     [HttpGet]
     [HttpPost]
@@ -171,6 +208,36 @@ public class UserController : Controller
         return RedirectToAction("Profile");
     }
     
+    // [HttpPost]
+    // public async Task<IActionResult> ChangePassword(string currentPassword, string newPassword, string confirmNewPassword)
+    // {
+    //     if (newPassword != confirmNewPassword)
+    //     {
+    //         TempData["ChangePasswordMsg"] = "New passwords do not match. please try again.";
+    //         return View("Profile");
+    //     }
+    //
+    //     var userEmail = Session.GetString("userEmail");
+    //     var user = _dbContext.Users.FirstOrDefault(u => u.Email == userEmail); 
+    //     if (user == null)
+    //     {
+    //         return NotFound();
+    //     }
+    //     
+    //     if (!BCrypt.Net.BCrypt.Verify(currentPassword, user.Password))
+    //     {
+    //         TempData["ChangePasswordMsg"] = "Current password is incorrect. please try again.";
+    //         return RedirectToAction("Profile");
+    //     }
+    //     
+    //     var hashedNewPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
+    //     user.Password = hashedNewPassword;
+    //     await _dbContext.SaveChangesAsync();
+    //
+    //     TempData["ChangePasswordMsg"] = "Password changed successfully.";
+    //     return RedirectToAction("Profile");
+    // }
+    
     [HttpPost]
     public async Task<IActionResult> ChangePassword(string currentPassword, string newPassword, string confirmNewPassword)
     {
@@ -187,19 +254,24 @@ public class UserController : Controller
             return NotFound();
         }
         
-        if (!BCrypt.Net.BCrypt.Verify(currentPassword, user.Password))
+        using (var sha256 = SHA256.Create())
         {
-            TempData["ChangePasswordMsg"] = "Current password is incorrect. please try again.";
-            return RedirectToAction("Profile");
+            var currentPasswordHash = BitConverter.ToString(sha256.ComputeHash(Encoding.UTF8.GetBytes(currentPassword))).Replace("-", "").ToLower();
+            if (currentPasswordHash != user.Password)
+            {
+                TempData["ChangePasswordMsg"] = "Current password is incorrect. please try again.";
+                return RedirectToAction("Profile");
+            }
+            
+            var newPasswordHash = BitConverter.ToString(sha256.ComputeHash(Encoding.UTF8.GetBytes(newPassword))).Replace("-", "").ToLower();
+            user.Password = newPasswordHash;
         }
-        
-        var hashedNewPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
-        user.Password = hashedNewPassword;
         await _dbContext.SaveChangesAsync();
 
         TempData["ChangePasswordMsg"] = "Password changed successfully.";
         return RedirectToAction("Profile");
     }
+    
     
     [HttpGet]
     public async Task<IActionResult> CheckBookStock()
@@ -274,14 +346,42 @@ public class UserController : Controller
         return View("UserAdded", userAdded);
     }
 
+    // public async Task<IActionResult> Login(string email, string password)
+    // {
+    //     var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+    //     if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))     //Login failed
+    //     {
+    //         ModelState.AddModelError("", "Invalid login attempt.");
+    //         TempData["LoginMessage"] = "The Password is incorrect. Please try again.";
+    //         return RedirectToAction("Index", "Home");
+    //     }
+    //     // init all Session vars for user
+    //     Session.SetString("userName", user.UserName);
+    //     Session.SetString("userEmail", user.Email);
+    //     Session.SetInt32("isAdmin", user.IsAdmin);
+    //     return RedirectToAction("Index", "Home");
+    // }
+    
     public async Task<IActionResult> Login(string email, string password)
     {
         var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
-        if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))     //Login failed
+        if (user == null)
         {
             ModelState.AddModelError("", "Invalid login attempt.");
-            TempData["LoginMessage"] = "The Password is incorrect. Please try again.";
+            TempData["LoginMessage"] = "User not found. Please try again.";
             return RedirectToAction("Index", "Home");
+        }
+
+        using (var sha256 = SHA256.Create())
+        {
+            var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+            var hashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+            if (hashedPassword != user.Password)
+            {
+                ModelState.AddModelError("", "Invalid login attempt.");
+                TempData["LoginMessage"] = "The Password is incorrect. Please try again.";
+                return RedirectToAction("Index", "Home");
+            }
         }
         // init all Session vars for user
         Session.SetString("userName", user.UserName);
@@ -289,6 +389,7 @@ public class UserController : Controller
         Session.SetInt32("isAdmin", user.IsAdmin);
         return RedirectToAction("Index", "Home");
     }
+    
     
     public IActionResult Profile()
     {
@@ -399,5 +500,36 @@ public class UserController : Controller
         _dbContext.Users.Remove(deleteUser);
         await _dbContext.SaveChangesAsync();
         return RedirectToAction("ManageUsers");
+    }
+
+    public async Task<IActionResult> ForgotPassword()
+    {
+        return View("ForgotPassword");
+    }
+    
+    public async Task<IActionResult> ForgotPasswordSubmit(string email, string newPassword, string confirmNewPassword)
+    {
+        var currentUser = _dbContext.Users.FirstOrDefault(u => u.Email == email);
+        if (currentUser == null)
+        {
+            TempData["ForgotPasswordMSG"] = "FAIL-email";
+            return RedirectToAction("Index", "Home");
+        }
+        if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmNewPassword) || newPassword != confirmNewPassword)
+        {
+            TempData["ForgotPasswordMSG"] = "FAIL";
+            return RedirectToAction("Index", "Home");
+        }
+        
+        var bytes = Encoding.UTF8.GetBytes(newPassword);
+        using (var sha256 = SHA256.Create())
+        {
+            var hashedBytes = sha256.ComputeHash(bytes);
+            var hashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+            currentUser.Password = hashedPassword;
+        }
+        await _dbContext.SaveChangesAsync();
+        TempData["ForgotPasswordMSG"] = "SUCCESS";
+        return RedirectToAction("Index", "Home");
     }
 }

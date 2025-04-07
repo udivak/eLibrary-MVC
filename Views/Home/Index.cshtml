@@ -60,6 +60,22 @@
         }
     }
     
+    if (TempData["ForgotPasswordMSG"] != null)
+    {
+        if (TempData["ForgotPasswordMSG"].ToString().Equals("FAIL-email"))
+        {
+            msg = "Invalid email. Please try again.";
+        }
+        if (TempData["ForgotPasswordMSG"].ToString().Equals("FAIL"))
+        {
+            msg = "New Password is invalid. Please try again.";
+        }
+        if (TempData["ForgotPasswordMSG"].ToString().Equals("SUCCESS"))
+        {
+            msg = "Password Changed Successfully.";
+        }
+    }
+    
     if (!string.IsNullOrEmpty(msg))
     {
         var jsonMsg = JsonSerializer.Serialize(msg);
