@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
+
 namespace eLibrary.Models;
 
 [Table("users2")]
@@ -70,6 +72,14 @@ public class User2
         get => _email;
         set => _email = value;
     }
+
+    private string _password;
+    [Required]
+    public string Password
+    {
+        get => _password;
+        set => _password = value;
+    }
     
     public User2()
     {
@@ -77,8 +87,7 @@ public class User2
     }
 
     public User2(string firstName, string lastName, string id, string role, string credit_card_number,
-        string valid_date,
-        int cvc, string email)
+        string valid_date, int cvc, string email, string password)
     {
         FirstName = firstName;
         LastName = lastName;
@@ -88,5 +97,6 @@ public class User2
         ValidDate = valid_date;
         CVC = cvc;
         Email = email;
+        Password = password;
     }
 }

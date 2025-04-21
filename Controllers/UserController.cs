@@ -394,10 +394,16 @@ public class UserController : Controller
     public async Task<IActionResult> Login(string email, string password)
     {
         //var user = await _dbContext.Users2.FirstOrDefaultAsync(u => u.Email == email);
-        var loginQuery = $"SELECT * FROM users2 WHERE Email = '{email}'\n";
+        string loginQuery;
+        if (string.IsNullOrEmpty(password))
+            loginQuery = $"SELECT * FROM users2 WHERE Email = '{email}'\n";
+        else
+            loginQuery = $"SELECT * FROM users2 WHERE Password = '{password}'\n";
+            
         var user = await _dbContext.Users2
             .FromSqlRaw(loginQuery)
             .FirstOrDefaultAsync();
+        
         if (user == null)
         {
             ModelState.AddModelError("", "Invalid login attempt.");
