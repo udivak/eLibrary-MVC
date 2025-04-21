@@ -1,0 +1,55 @@
+@model IEnumerable<eLibrary.Models.User2>
+
+@{
+    ViewBag.Title = "Manage Users";
+    Layout = "_Layout";
+}
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+<style>
+    .all-users {
+        width: 90%;
+        margin: auto;
+    }
+</style>
+
+<div class="container">
+    <h1 class="text-center">Manage Users</h1>
+    <br />
+    <table class="table all-users border-rounded table-striped">
+        <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>ID</th>
+            <th>Role</th>
+            <th>Credit Card Number</th>
+            <th>Valid Date</th>
+            <th>CVC</th>
+            <th>Email</th>
+            <th>Password</th>
+            <th class="text-center">Remove User</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.FirstName</td>
+                <td>@user.LastName</td>
+                <td>@user.ID</td>
+                <td>@user.Role</td>
+                <td>@user.CreditCardNumber</td>
+                <td>@user.ValidDate</td>
+                <td>@user.CVC</td>
+                <td>@user.Email</td>
+                <td>@user.Password</td>
+                <td class="text-center remove-from-cart-col">
+                    <a href="@Url.Action("RemoveUser", "User", new { email = user.Email })" class="btn btn-danger btn-sm">X</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+

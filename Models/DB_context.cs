@@ -110,6 +110,11 @@ namespace eLibrary.Models
             return await Users.ToListAsync();
         }
         
+        public async Task<List<User2>> GetAllUsers2Async()        // Retrieve all users2
+        {
+            return await Users2.ToListAsync();
+        }
+        
         public async Task<User> GetUserByEmailAsync(string userEmail)       // Retrieve a user by Email
         {
             return await Users.FirstOrDefaultAsync(u => u.Email == userEmail);

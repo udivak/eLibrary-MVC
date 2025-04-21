@@ -523,10 +523,15 @@ public class UserController : Controller
         return PartialView("_PersonalDetails", user);
     }
 
-    public async Task<IActionResult> ManageUsers()
+    /*public async Task<IActionResult> ManageUsers()
     {
         List<User> allUsers = await _dbContext.GetAllUsersAsync();
         return View("ManageUsers", allUsers);
+    }*/
+    public async Task<IActionResult> ManageUsers()
+    {
+        List<User2> allUsers = await _dbContext.GetAllUsers2Async();
+        return View("ManageUsers2", allUsers);
     }
 
     public async Task<IActionResult> RemoveUser(string email)
