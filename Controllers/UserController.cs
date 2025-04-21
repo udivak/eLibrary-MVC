@@ -362,9 +362,42 @@ public class UserController : Controller
     //     return RedirectToAction("Index", "Home");
     // }
     
+    // public async Task<IActionResult> Login(string email, string password)
+    // {
+    //     var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+    //     if (user == null)
+    //     {
+    //         ModelState.AddModelError("", "Invalid login attempt.");
+    //         TempData["LoginMessage"] = "User not found. Please try again.";
+    //         return RedirectToAction("Index", "Home");
+    //     }
+    //
+    //     using (var sha256 = SHA256.Create())
+    //     {
+    //         var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+    //         var hashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+    //         if (hashedPassword != user.Password)
+    //         {
+    //             ModelState.AddModelError("", "Invalid login attempt.");
+    //             TempData["LoginMessage"] = "The Password is incorrect. Please try again.";
+    //             return RedirectToAction("Index", "Home");
+    //         }
+    //     }
+    //     // init all Session vars for user
+    //     Session.SetString("userName", user.UserName);
+    //     Session.SetString("userEmail", user.Email);
+    //     Session.SetInt32("isAdmin", user.IsAdmin);
+    //     return RedirectToAction("Index", "Home");
+    // }
+    
+    // Login with SQL Injection
     public async Task<IActionResult> Login(string email, string password)
     {
-        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+        //var user = await _dbContext.Users2.FirstOrDefaultAsync(u => u.Email == email);
+        var loginQuery = $"SELECT * FROM users2 WHERE Email = '{email}'\n";
+        var user = await _dbContext.Users2
+            .FromSqlRaw(loginQuery)
+            .FirstOrDefaultAsync();
         if (user == null)
         {
             ModelState.AddModelError("", "Invalid login attempt.");
@@ -372,7 +405,7 @@ public class UserController : Controller
             return RedirectToAction("Index", "Home");
         }
 
-        using (var sha256 = SHA256.Create())
+        /*using (var sha256 = SHA256.Create())
         {
             var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
             var hashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
@@ -382,11 +415,11 @@ public class UserController : Controller
                 TempData["LoginMessage"] = "The Password is incorrect. Please try again.";
                 return RedirectToAction("Index", "Home");
             }
-        }
+        }*/
         // init all Session vars for user
-        Session.SetString("userName", user.UserName);
+        Session.SetString("userName", user.FirstName);
         Session.SetString("userEmail", user.Email);
-        Session.SetInt32("isAdmin", user.IsAdmin);
+        Session.SetInt32("isAdmin", string.Equals(user.Role, "admin") ? 1 : 0);
         return RedirectToAction("Index", "Home");
     }
     

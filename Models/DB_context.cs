@@ -15,6 +15,7 @@ namespace eLibrary.Models
         public DbSet<WaitingList> WaitingLists { get; set; }
         public DbSet<eLibraryFeedback> eLibraryFeedbacks { get; set; }
         public DbSet<BookReview> BookReviews { get; set; }
+        public DbSet<User2> Users2 { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,6 +23,9 @@ namespace eLibrary.Models
             
             modelBuilder.Entity<User>()
                 .HasKey(u => u.Email);
+            
+            modelBuilder.Entity<User2>()
+                .HasKey(u => u.ID);
             
             modelBuilder.Entity<Book>()
                 .HasKey(b => b.ISBN);
