@@ -363,33 +363,33 @@ public class UserController : Controller
     // }
     
     //Login with SHA256
-    public async Task<IActionResult> Login(string email, string password)
-    {
-        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
-        if (user == null)
-        {
-            ModelState.AddModelError("", "Invalid login attempt.");
-            TempData["LoginMessage"] = "User not found. Please try again.";
-            return RedirectToAction("Index", "Home");
-        }
-    
-        using (var sha256 = SHA256.Create())
-        {
-            var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-            var hashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
-            if (hashedPassword != user.Password)
-            {
-                ModelState.AddModelError("", "Invalid login attempt.");
-                TempData["LoginMessage"] = "The Password is incorrect. Please try again.";
-                return RedirectToAction("Index", "Home");
-            }
-        }
-        // init all Session vars for user
-        Session.SetString("userName", user.UserName);
-        Session.SetString("userEmail", user.Email);
-        Session.SetInt32("isAdmin", user.IsAdmin);
-        return RedirectToAction("Index", "Home");
-    }
+    // public async Task<IActionResult> Login(string email, string password)
+    // {
+    //     var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+    //     if (user == null)
+    //     {
+    //         ModelState.AddModelError("", "Invalid login attempt.");
+    //         TempData["LoginMessage"] = "User not found. Please try again.";
+    //         return RedirectToAction("Index", "Home");
+    //     }
+    //
+    //     using (var sha256 = SHA256.Create())
+    //     {
+    //         var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+    //         var hashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+    //         if (hashedPassword != user.Password)
+    //         {
+    //             ModelState.AddModelError("", "Invalid login attempt.");
+    //             TempData["LoginMessage"] = "The Password is incorrect. Please try again.";
+    //             return RedirectToAction("Index", "Home");
+    //         }
+    //     }
+    //     // init all Session vars for user
+    //     Session.SetString("userName", user.UserName);
+    //     Session.SetString("userEmail", user.Email);
+    //     Session.SetInt32("isAdmin", user.IsAdmin);
+    //     return RedirectToAction("Index", "Home");
+    // }
     
     // Login with SQL Injection
     // public async Task<IActionResult> Login(string email, string password)
@@ -419,6 +419,74 @@ public class UserController : Controller
     //     return RedirectToAction("Index", "Home");
     // }
     
+    // Merged Login Functions -> SHA256 && SQL Injection
+    public async Task<IActionResult> Login(string email, string password)
+{
+    bool isInjectionAttempt =
+        email.Contains("'") || email.Contains("--") || email.ToLower().Contains("or") ||
+        password.Contains("'") || password.Contains("--") || password.ToLower().Contains("or");
+
+    if (isInjectionAttempt)
+    {
+        // Hacker simulation with SQL injection (insecure on purpose)
+        string loginQuery = $"SELECT * FROM users2 WHERE Email = '{email}' AND Password = '{password}'";
+
+        try
+        {
+            var user = await _dbContext.Users2
+                .FromSqlRaw(loginQuery)
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Invalid login attempt (SQL).");
+                TempData["LoginMessage"] = "Injection failed.";
+                return RedirectToAction("Index", "Home");
+            }
+
+            Session.SetString("userName", user.FirstName);
+            Session.SetString("userEmail", user.Email);
+            Session.SetInt32("isAdmin", user.Role?.ToLower() == "admin" ? 1 : 0);
+            return RedirectToAction("Index", "Home");
+        }
+        catch (Exception)
+        {
+            ModelState.AddModelError("", "SQL execution error.");
+            TempData["LoginMessage"] = "SQL error during injection attempt.";
+            return RedirectToAction("Index", "Home");
+        }
+    }
+    else
+    {
+        // Legit login with SHA256 hashing
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+        if (user == null)
+        {
+            ModelState.AddModelError("", "Invalid login attempt.");
+            TempData["LoginMessage"] = "User not found.";
+            return RedirectToAction("Index", "Home");
+        }
+
+        using (var sha256 = SHA256.Create())
+        {
+            var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+            var hashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+
+            if (hashedPassword != user.Password)
+            {
+                ModelState.AddModelError("", "Invalid login attempt.");
+                TempData["LoginMessage"] = "Incorrect password.";
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        Session.SetString("userName", user.UserName);
+        Session.SetString("userEmail", user.Email);
+        Session.SetInt32("isAdmin", user.IsAdmin);
+        return RedirectToAction("Index", "Home");
+    }
+}
+
     
     public IActionResult Profile()
     {
